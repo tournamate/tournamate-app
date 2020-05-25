@@ -24,12 +24,12 @@ const App = () => {
       setTheme(nextTheme);
       AppStorage.setValue('theme', theme);
     },
-    isDarkMode: () => (theme === 'dark' ? true : false),
+    isDarkMode: theme === 'dark' ? true : false,
   };
 
   return (
     <React.Fragment>
-      <IconRegistry icons={[EvaIconsPack]} />
+      <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider
         {...eva}
         customMapping={mapping as any}

@@ -1,12 +1,15 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {StatusBar, StatusBarProps} from 'react-native';
 import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {ThemeContext} from '../services/theme.service';
 
 const TMStatusBar = (props: StatusBarProps): React.ReactElement => {
+  const theming = useContext(ThemeContext);
+
   const styles = useStyleSheet(themedStyles);
   const properties: StatusBarProps = {
     backgroundColor: styles.statusBar.backgroundColor,
-    barStyle: 'default',
+    barStyle: theming.isDarkMode ? 'light-content' : 'dark-content',
     translucent: false,
   };
   if (props.backgroundColor) {

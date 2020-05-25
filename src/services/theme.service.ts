@@ -5,11 +5,11 @@ export type Theme = 'light' | 'dark';
 export interface ThemeContextValue {
   currentTheme: Theme;
   setCurrentTheme: (theme: Theme) => void;
-  isDarkMode: () => boolean;
+  isDarkMode: boolean;
 }
 
 export const ThemeContext = createContext<ThemeContextValue>({
   currentTheme: 'light',
   setCurrentTheme: (theme) => theme,
-  isDarkMode: () => false,
+  isDarkMode: false,
 });

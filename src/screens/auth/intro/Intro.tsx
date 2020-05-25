@@ -1,12 +1,14 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {Text} from '@ui-kitten/components';
+import {Text, Button} from '@ui-kitten/components';
 import {ImageOverlay} from '../../../components/image-overlay.component';
 import TMStatusBar from '../../../components/status-bar.component';
 import {AppIcon} from '../../../constants/icons';
+import TMView from '../../../components/view.component';
+import {RouterConstants} from '../../../constants/router.constants';
 
-const Intro = (): React.ReactElement => {
+const Intro = ({navigation}: any): React.ReactElement => {
   const insets = useSafeAreaInsets();
   return (
     <React.Fragment>
@@ -14,15 +16,35 @@ const Intro = (): React.ReactElement => {
         source={require('./assets/background-image-1.png')}
         style={[styles.container, {paddingTop: insets.top}]}>
         <TMStatusBar translucent backgroundColor="transparent" />
-        <View style={{marginTop: 40}}>
-          <AppIcon />
-          <Text style={styles.text} category="h1" status="basic">
-            Tournamate
+        <TMView marginTop={30} alignItems="center">
+          {/* <AppIcon /> */}
+          <TMView marginBottom={10}>
+            <Text category="h1" status="control">
+              TournaMate
+            </Text>
+          </TMView>
+          <Text category="s1" status="control">
+            Start earning money by
           </Text>
-        </View>
-        <View>
-          <Text>Hello</Text>
-        </View>
+          <Text category="s1" status="control">
+            playing your favourite games
+          </Text>
+        </TMView>
+
+        <TMView marginBottom={20} width="100%" paddingHorizontal={50}>
+          <TMView marginBottom={30}>
+            <Button
+              size="giant"
+              onPress={() =>
+                navigation.navigate(RouterConstants.WelcomeScreen)
+              }>
+              Get started
+            </Button>
+          </TMView>
+          <Button appearance="ghost" status="basic">
+            Already have an account? Log in
+          </Button>
+        </TMView>
       </ImageOverlay>
     </React.Fragment>
   );
