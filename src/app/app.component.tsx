@@ -5,6 +5,8 @@ import * as eva from '@eva-design/eva';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import auth from '@react-native-firebase/auth';
+
 import {
   ThemeContext,
   ThemeContextValue,
@@ -28,6 +30,21 @@ const App = () => {
     },
     isDarkMode: theme === 'dark' ? true : false,
   };
+
+  React.useEffect(() => {
+    auth()
+      .signInAnonymously()
+      .then(() => {
+        console.log('User signed in anonymously');
+      })
+      .catch((error) => {
+        if (error.code === 'auth/operation-not-allowed') {
+          console.log('Enable anonymous in your firebase console.');
+        }
+
+        console.error(error);
+      });
+  }, []);
 
   return (
     <React.Fragment>
