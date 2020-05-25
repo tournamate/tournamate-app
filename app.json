@@ -1,4 +1,5 @@
 {
   "name": "tournamateFrontend",
-  "displayName": "tournamateFrontend"
+  "displayName": "tournamateFrontend",
+  "defaultTheme": "light"
 }

@@ -1,0 +1,11 @@
+export const COMMON_TYPES = 'COMMON_TYPES';
+export const LOADING = 'LOADING';
+export const SIGNIN_USER = 'SIGNIN_USER';
+export const AUTHENTICATED = 'AUTHENTICATED';
+export const SIGN_OUT_USER = 'SIGN_OUT_USER';
+export const SELECT_USER_TYPE = 'SELECT_USER_TYPE';
+export const SIGNUP_USER = 'SIGNUP_USER';
+export const ADD_SKILLS = 'ADD_SKILLS';
+export const REMOVE_SKILLS = 'REMOVE_SKILLS';
+export const ADD_DETAILS = 'ADD_DETAILS';
+export const COMPLETE_ONBOARDING = 'COMPLETE_ONBOARDING';

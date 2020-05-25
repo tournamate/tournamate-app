@@ -11,11 +11,26 @@
   },
   "dependencies": {
     "@eva-design/eva": "2.0.0",
+    "@react-native-community/async-storage": "^1.10.3",
+    "@react-native-community/masked-view": "^0.1.10",
+    "@react-navigation/native": "^5.4.3",
+    "@react-navigation/stack": "^5.4.0",
     "@ui-kitten/components": "5.0.0",
     "@ui-kitten/eva-icons": "5.0.0",
+    "metro-config": "^0.59.0",
     "react": "16.11.0",
     "react-native": "0.62.2",
-    "react-native-svg": "^12.1.0"
+    "react-native-appearance": "^0.3.4",
+    "react-native-gesture-handler": "^1.6.1",
+    "react-native-reanimated": "^1.9.0",
+    "react-native-safe-area-context": "^2.0.0",
+    "react-native-screens": "^2.8.0",
+    "react-native-svg": "^12.1.0",
+    "react-native-svg-transformer": "^0.14.3",
+    "redux": "^4.0.5",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
@@ -31,8 +46,8 @@
     "eslint": "^6.5.1",
     "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.58.0",
-    "react-test-renderer": "16.11.0",
     "prettier": "^2.0.2",
+    "react-test-renderer": "16.11.0",
     "typescript": "^3.8.3"
   },
   "jest": {
