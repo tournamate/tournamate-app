@@ -7,6 +7,7 @@ import TMStatusBar from '../../../components/status-bar.component';
 import {AppIcon} from '../../../constants/icons';
 import TMView from '../../../components/view.component';
 import {RouterConstants} from '../../../constants/router.constants';
+import normalize from '../../../shared/methods/normalize';
 
 const Intro = ({navigation}: any): React.ReactElement => {
   const insets = useSafeAreaInsets();
@@ -17,7 +18,7 @@ const Intro = ({navigation}: any): React.ReactElement => {
         style={[styles.container, {paddingTop: insets.top}]}>
         <TMStatusBar translucent backgroundColor="transparent" />
         <TMView marginTop={30} alignItems="center">
-          {/* <AppIcon /> */}
+          <AppIcon />
           <TMView marginBottom={10}>
             <Text category="h1" status="control">
               TournaMate
@@ -31,7 +32,10 @@ const Intro = ({navigation}: any): React.ReactElement => {
           </Text>
         </TMView>
 
-        <TMView marginBottom={20} width="100%" paddingHorizontal={50}>
+        <TMView
+          marginBottom={20}
+          width="100%"
+          paddingHorizontal={normalize(40, 'width')}>
           <TMView marginBottom={30}>
             <Button
               size="giant"

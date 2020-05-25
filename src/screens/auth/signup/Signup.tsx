@@ -2,46 +2,47 @@ import React, {useState} from 'react';
 import {View, TouchableWithoutFeedback} from 'react-native';
 import {
   Button,
+  CheckBox,
   Input,
   Layout,
   StyleService,
-  Text,
   useStyleSheet,
   Icon,
+  Text,
 } from '@ui-kitten/components';
 
-import {KeyboardAvoidingView} from '../../../components/kb-avoiding-view.component';
-import TMView from '../../../components/view.component';
 import {
+  PersonLineIcon,
+  EmailLineIcon,
   FacebookIcon,
   GoogleIcon,
-  CaptionIcon,
-  EmailLineIcon,
 } from '../../../components/icons.component';
+import {KeyboardAvoidingView} from '../../../components/kb-avoiding-view.component';
 import {RouterConstants} from '../../../constants/router.constants';
+import TMView from '../../../components/view.component';
 
-export default ({navigation}: any): React.ReactElement => {
+export default ({navigation}): React.ReactElement => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [userName, setUserName] = React.useState<string>();
   const [email, setEmail] = React.useState<string>();
   const [password, setPassword] = React.useState<string>();
+  const [termsAccepted, setTermsAccepted] = React.useState<boolean>(false);
 
   const styles = useStyleSheet(themedStyles);
 
   const onSignUpButtonPress = (): void => {
-    navigation && navigation.navigate(RouterConstants.Signup);
+    navigation && navigation.goBack();
   };
 
-  const onForgotPasswordButtonPress = (): void => {
-    navigation && navigation.navigate(RouterConstants.ForgotPassword);
+  const onSignInButtonPress = (): void => {
+    navigation?.navigate(RouterConstants.Signin);
   };
 
   const toggleSecureEntry = () => {
     setSecureTextEntry(!secureTextEntry);
   };
   const renderIcon = (props: any) => (
-    <TouchableWithoutFeedback
-      onPress={toggleSecureEntry}
-      style={styles.rightIcon}>
+    <TouchableWithoutFeedback onPress={toggleSecureEntry}>
       <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'} />
     </TouchableWithoutFeedback>
   );
@@ -49,44 +50,45 @@ export default ({navigation}: any): React.ReactElement => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text category="h1" status="control">
-          Hello
-        </Text>
-        <Text style={styles.signInLabel} category="s1" status="control">
-          Sign in to your account
-        </Text>
+        <Text>Hello, Sign up here</Text>
       </View>
       <Layout style={styles.formContainer} level="1">
         <Input
+          autoCapitalize="none"
+          placeholder="User Name"
+          accessoryRight={PersonLineIcon}
+          value={userName}
+          onChangeText={setUserName}
+        />
+        <Input
+          style={styles.emailInput}
+          autoCapitalize="none"
           placeholder="Email"
-          value={email}
-          caption="Enter a valid email"
-          onChangeText={setEmail}
-          captionIcon={CaptionIcon}
           accessoryRight={EmailLineIcon}
+          value={email}
+          onChangeText={setEmail}
         />
         <Input
           style={styles.passwordInput}
-          placeholder="Password"
-          value={password}
-          caption="Enter a valid email"
-          captionIcon={CaptionIcon}
+          autoCapitalize="none"
           secureTextEntry={!secureTextEntry}
-          onChangeText={setPassword}
+          placeholder="Password"
           accessoryRight={renderIcon}
+          value={password}
+          onChangeText={setPassword}
         />
-        <View style={styles.forgotPasswordContainer}>
-          <Button
-            style={styles.forgotPasswordButton}
-            appearance="ghost"
-            status="basic"
-            onPress={onForgotPasswordButtonPress}>
-            Forgot your password?
-          </Button>
-        </View>
+        <CheckBox
+          style={styles.termsCheckBox}
+          checked={termsAccepted}
+          onChange={(checked: boolean) => setTermsAccepted(checked)}>
+          I read and agree to Terms & Conditions
+        </CheckBox>
       </Layout>
-      <Button style={styles.signInButton} size="giant">
-        Sign in
+      <Button
+        style={styles.signUpButton}
+        size="giant"
+        onPress={onSignUpButtonPress}>
+        Sign up
       </Button>
       <TMView flexDirection="row" width="100%" justifyContent="center">
         <Button
@@ -97,13 +99,12 @@ export default ({navigation}: any): React.ReactElement => {
         />
         <Button size="large" appearance="ghost" accessoryLeft={GoogleIcon} />
       </TMView>
-
       <Button
-        style={styles.signUpButton}
+        style={styles.signInButton}
         appearance="ghost"
         status="basic"
-        onPress={onSignUpButtonPress}>
-        Don't have an account? Create
+        onPress={onSignInButtonPress}>
+        Already have an account? Sign In
       </Button>
     </KeyboardAvoidingView>
   );
@@ -119,33 +120,32 @@ const themedStyles = StyleService.create({
     minHeight: 216,
     backgroundColor: 'color-primary-default',
   },
+
   formContainer: {
     flex: 1,
     paddingTop: 32,
     paddingHorizontal: 16,
   },
-  signInLabel: {
+  emailInput: {
     marginTop: 16,
-  },
-  signInButton: {
-    marginHorizontal: 16,
-  },
-  signUpButton: {
-    marginVertical: 12,
-    marginHorizontal: 16,
-  },
-  forgotPasswordContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
   },
   passwordInput: {
     marginTop: 16,
   },
-  forgotPasswordButton: {
-    paddingHorizontal: 0,
+  termsCheckBox: {
+    marginTop: 24,
+  },
+  termsCheckBoxText: {
+    color: 'text-hint-color',
+  },
+  signUpButton: {
+    marginHorizontal: 16,
+  },
+  signInButton: {
+    marginVertical: 12,
+    marginHorizontal: 16,
   },
   googleBtn: {
     marginRight: 30,
   },
-  rightIcon: {padding: 20},
 });

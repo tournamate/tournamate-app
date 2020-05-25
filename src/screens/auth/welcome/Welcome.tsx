@@ -1,17 +1,17 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Layout, Text, Button} from '@ui-kitten/components';
 import TMStatusBar from '../../../components/status-bar.component';
 import ImageCarousel from '../../../components/image-carousel.component';
 import normalize from '../../../shared/methods/normalize';
 import TMView from '../../../components/view.component';
 import {RouterConstants} from '../../../constants/router.constants';
+import {LockIcon, PlusSquareIcon} from '../../../components/icons.component';
 
-const Welcome = ({navigation}) => {
-  const insets = useSafeAreaInsets();
+// TODO: define types for navigation
+const Welcome = ({navigation}: any) => {
   return (
-    <Layout style={[styles.container, {paddingTop: insets.top}]}>
+    <Layout style={[styles.container]}>
       <TMStatusBar translucent backgroundColor="transparent" />
       <ImageCarousel sliderHeight={normalize(300, 'height')} autoplay={false} />
       <TMView
@@ -19,25 +19,26 @@ const Welcome = ({navigation}) => {
         alignItems="center"
         marginBottom={50}
         marginTop={30}>
-        <TMView marginBottom={20}>
-          <Text category="h2">Create your own match</Text>
-        </TMView>
+        <Text category="h4" style={styles.text1}>
+          Create your own match
+        </Text>
         <Text category="p1">It's very easy to create </Text>
         <Text category="p1">your own matches</Text>
         <TMView
           width="100%"
           paddingHorizontal={30}
           marginBottom={15}
-          marginTop={50}>
+          marginTop={normalize(60, 'height')}>
           <Button
             appearance="filled"
             size="large"
-            onPress={() => navigation.navigate(RouterConstants.Signin)}>
+            onPress={() => navigation.navigate(RouterConstants.Signin)}
+            accessoryLeft={LockIcon}>
             Login
           </Button>
         </TMView>
         <TMView width="100%" paddingHorizontal={30}>
-          <Button status="basic" size="large">
+          <Button status="basic" size="large" accessoryLeft={PlusSquareIcon}>
             Create Account
           </Button>
         </TMView>
@@ -52,4 +53,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  text1: {textAlign: 'center', marginBottom: 35},
 });

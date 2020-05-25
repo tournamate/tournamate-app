@@ -15,9 +15,11 @@ import {appThemes} from './app-theming';
 import * as mapping from './app-mapping.json';
 import {AppNavigator} from '../navigation/app.navigator';
 import StatusBar from '../components/status-bar.component';
+// import {default as customMapping} from './app-mapping.json';
+// import { default as mapping } from './mapping.json'; // <-- Import app mapping
 
 const App = () => {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>('dark');
   const themeValue: ThemeContextValue = {
     currentTheme: theme,
     setCurrentTheme: (nextTheme) => {
@@ -31,9 +33,9 @@ const App = () => {
     <React.Fragment>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider
-        {...eva}
-        customMapping={mapping as any}
-        theme={{...appThemes.eva[theme]}}>
+        mapping={eva.mapping}
+        theme={appThemes.eva[theme]}
+        customMapping={mapping as any}>
         <ThemeContext.Provider value={themeValue}>
           <SafeAreaProvider>
             <StatusBar />
