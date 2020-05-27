@@ -9,6 +9,8 @@ import {
   useStyleSheet,
   Icon,
 } from '@ui-kitten/components';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 
 import {KeyboardAvoidingView} from '../../../components/kb-avoiding-view.component';
 import TMView from '../../../components/view.component';
@@ -20,10 +22,16 @@ import {
 } from '../../../components/icons.component';
 import {RouterConstants} from '../../../constants/router.constants';
 
+const SigninSchema = Yup.object().shape({
+  email: Yup.string().email('Invalid email').required('Email is Required'),
+  password: Yup.string()
+    .min(2, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('Password is Required'),
+});
+
 export default ({navigation}: any): React.ReactElement => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [email, setEmail] = React.useState<string>();
-  const [password, setPassword] = React.useState<string>();
 
   const styles = useStyleSheet(themedStyles);
 
@@ -42,9 +50,26 @@ export default ({navigation}: any): React.ReactElement => {
     <TouchableWithoutFeedback
       onPress={toggleSecureEntry}
       style={styles.rightIcon}>
-      <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'} />
+      <Icon {...props} name={secureTextEntry ? 'eye' : 'eye-off'} />
     </TouchableWithoutFeedback>
   );
+
+  const fields = [
+    {
+      fieldName: 'email',
+      placeholder: 'Email',
+      captionIcon: CaptionIcon,
+      keyboardType: 'email-address',
+      accessoryRight: EmailLineIcon,
+    },
+    {
+      fieldName: 'password',
+      placeholder: 'Password',
+      captionIcon: CaptionIcon,
+      secureTextEntry: secureTextEntry,
+      accessoryRight: renderIcon,
+    },
+  ];
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -56,38 +81,59 @@ export default ({navigation}: any): React.ReactElement => {
           Sign in to your account
         </Text>
       </View>
-      <Layout style={styles.formContainer} level="1">
-        <Input
-          placeholder="Email"
-          value={email}
-          caption="Enter a valid email"
-          onChangeText={setEmail}
-          captionIcon={CaptionIcon}
-          accessoryRight={EmailLineIcon}
-        />
-        <Input
-          style={styles.passwordInput}
-          placeholder="Password"
-          value={password}
-          caption="Enter a valid email"
-          captionIcon={CaptionIcon}
-          secureTextEntry={!secureTextEntry}
-          onChangeText={setPassword}
-          accessoryRight={renderIcon}
-        />
-        <View style={styles.forgotPasswordContainer}>
-          <Button
-            style={styles.forgotPasswordButton}
-            appearance="ghost"
-            status="basic"
-            onPress={onForgotPasswordButtonPress}>
-            Forgot your password?
-          </Button>
-        </View>
-      </Layout>
-      <Button style={styles.signInButton} size="giant">
-        Sign in
-      </Button>
+      <Formik
+        initialValues={{email: '', password: '', isAccepetedTerms: false}}
+        validationSchema={SigninSchema}
+        onSubmit={(values) => {
+          console.log(values);
+          // props.signinUser(values);
+        }}>
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+          setFieldValue,
+        }: any) => (
+          <>
+            <Layout style={styles.formContainer} level="1">
+              {fields.map((field) => (
+                <Input
+                  key={field.fieldName}
+                  placeholder={field.placeholder}
+                  value={values[field.fieldName]}
+                  caption={errors[field.fieldName]}
+                  onChangeText={handleChange(field.fieldName)}
+                  onBlur={handleBlur(field.fieldName)}
+                  captionIcon={
+                    errors[field.fieldName] ? field.captionIcon : undefined
+                  }
+                  accessoryRight={field.accessoryRight}
+                  status={errors[field.fieldName] ? 'danger' : ''}
+                  secureTextEntry={field.secureTextEntry}
+                />
+              ))}
+              <View style={styles.forgotPasswordContainer}>
+                <Button
+                  style={styles.forgotPasswordButton}
+                  appearance="ghost"
+                  status="basic"
+                  onPress={onForgotPasswordButtonPress}>
+                  Forgot your password?
+                </Button>
+              </View>
+            </Layout>
+            <Button
+              style={styles.signInButton}
+              size="giant"
+              onPress={handleSubmit}>
+              Sign in
+            </Button>
+          </>
+        )}
+      </Formik>
       <TMView flexDirection="row" width="100%" justifyContent="center">
         <Button
           size="large"

@@ -19,8 +19,7 @@ import * as mapping from './app-mapping.json';
 import {AppNavigator} from '../navigation/app.navigator';
 import StatusBar from '../components/status-bar.component';
 import {persistedStore, store} from '../store/configureStore';
-// import {default as customMapping} from './app-mapping.json';
-// import { default as mapping } from './mapping.json'; // <-- Import app mapping
+import {AppConfig} from '../../app.config';
 
 const App = () => {
   const [theme, setTheme] = useState<Theme>('dark');
@@ -35,8 +34,7 @@ const App = () => {
 
   React.useEffect(() => {
     GoogleSignin.configure({
-      webClientId:
-        '17695708413-55ovaq26d192gboeoj9o6vkttrh1ec29.apps.googleusercontent.com',
+      webClientId: AppConfig.webClientId,
     });
   }, []);
 

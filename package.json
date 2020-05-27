@@ -19,8 +19,11 @@
     "@react-navigation/native": "^5.4.3",
     "@react-navigation/stack": "^5.4.0",
     "@types/node": "^14.0.5",
+    "@types/react-redux": "^7.1.9",
+    "@types/yup": "^0.29.0",
     "@ui-kitten/components": "5.0.0",
     "@ui-kitten/eva-icons": "5.0.0",
+    "formik": "^2.1.4",
     "react": "16.11.0",
     "react-native": "0.62.2",
     "react-native-appearance": "^0.3.4",
@@ -38,7 +41,8 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "yup": "^0.29.1"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
