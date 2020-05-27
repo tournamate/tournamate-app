@@ -8,9 +8,37 @@ import {AppIcon} from '../../../constants/icons';
 import TMView from '../../../components/view.component';
 import {RouterConstants} from '../../../constants/router.constants';
 import normalize from '../../../shared/methods/normalize';
+import {AccessToken, LoginManager} from 'react-native-fbsdk';
+import auth from '@react-native-firebase/auth';
 
 const Intro = ({navigation}: any): React.ReactElement => {
   const insets = useSafeAreaInsets();
+  async function onFacebookButtonPress() {
+    // Attempt login with permissions
+    const result = await LoginManager.logInWithPermissions([
+      'public_profile',
+      'email',
+    ]);
+    console.log(result);
+    if (result.isCancelled) {
+      throw 'User cancelled the login process';
+    }
+
+    // Once signed in, get the users AccesToken
+    const data = await AccessToken.getCurrentAccessToken();
+
+    if (!data) {
+      throw 'Something went wrong obtaining access token';
+    }
+
+    // Create a Firebase credential with the AccessToken
+    const facebookCredential = auth.FacebookAuthProvider.credential(
+      data.accessToken,
+    );
+
+    // Sign-in the user with the credential
+    return auth().signInWithCredential(facebookCredential);
+  }
   return (
     <React.Fragment>
       <ImageOverlay
@@ -30,6 +58,16 @@ const Intro = ({navigation}: any): React.ReactElement => {
           <Text category="s1" status="control">
             playing your favourite games
           </Text>
+
+          <Button
+            size="giant"
+            onPress={() =>
+              onFacebookButtonPress().then(() =>
+                console.log('Signed in with Facebook!'),
+              )
+            }>
+            Login with facebook
+          </Button>
         </TMView>
 
         <TMView
