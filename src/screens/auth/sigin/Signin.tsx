@@ -21,6 +21,8 @@ import {
   EmailLineIcon,
 } from '../../../components/icons.component';
 import {RouterConstants} from '../../../constants/router.constants';
+import OAuthService from '../../../services/o-auth.service';
+import ScreenLoader from '../../../components/screen-loader.component';
 
 const SigninSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is Required'),
@@ -32,6 +34,7 @@ const SigninSchema = Yup.object().shape({
 
 export default ({navigation}: any): React.ReactElement => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const styles = useStyleSheet(themedStyles);
 
@@ -41,6 +44,13 @@ export default ({navigation}: any): React.ReactElement => {
 
   const onForgotPasswordButtonPress = (): void => {
     navigation && navigation.navigate(RouterConstants.ForgotPassword);
+  };
+
+  const handleFacebookSignin = async () => {
+    setIsLoading(true);
+
+    // const fbAccesToken = await OAuthService.getFBAccessToken();
+    setIsLoading(false);
   };
 
   const toggleSecureEntry = () => {
@@ -73,6 +83,7 @@ export default ({navigation}: any): React.ReactElement => {
 
   return (
     <KeyboardAvoidingView style={styles.container}>
+      {isLoading ? <ScreenLoader loading={isLoading} /> : null}
       <View style={styles.headerContainer}>
         <Text category="h1" status="control">
           Hello
@@ -88,15 +99,7 @@ export default ({navigation}: any): React.ReactElement => {
           console.log(values);
           // props.signinUser(values);
         }}>
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-          setFieldValue,
-        }: any) => (
+        {({handleChange, handleBlur, handleSubmit, values, errors}: any) => (
           <>
             <Layout style={styles.formContainer} level="1">
               {fields.map((field) => (
@@ -141,7 +144,12 @@ export default ({navigation}: any): React.ReactElement => {
           accessoryLeft={FacebookIcon}
           style={styles.googleBtn}
         />
-        <Button size="large" appearance="ghost" accessoryLeft={GoogleIcon} />
+        <Button
+          size="large"
+          appearance="ghost"
+          accessoryLeft={GoogleIcon}
+          onPress={handleFacebookSignin}
+        />
       </TMView>
 
       <Button

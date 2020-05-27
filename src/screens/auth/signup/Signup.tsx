@@ -23,13 +23,14 @@ import {
 import {KeyboardAvoidingView} from '../../../components/kb-avoiding-view.component';
 import {RouterConstants} from '../../../constants/router.constants';
 import TMView from '../../../components/view.component';
+import AuthService from '../../../services/auth.service';
 
 const SignupSchema = Yup.object().shape({
   fullName: Yup.string()
     .min(3, 'Too short!')
     .max(30, 'Too long!')
     .required('Full is required'),
-  userName: Yup.string().max(15, 'Too long!').required(),
+  nickName: Yup.string().max(15, 'Too long!').required(),
   email: Yup.string().email('Invalid email').required('Email is Required'),
   password: Yup.string()
     .min(2, 'Too Short!')
@@ -66,8 +67,8 @@ export default ({navigation}): React.ReactElement => {
       accessoryRight: PersonLineIcon,
     },
     {
-      fieldName: 'userName',
-      placeholder: 'User name',
+      fieldName: 'nickName',
+      placeholder: 'Nick name',
       captionIcon: CaptionIcon,
       autoCompleteType: 'name',
       autoCapitalize: 'words',
@@ -103,12 +104,19 @@ export default ({navigation}): React.ReactElement => {
           email: '',
           password: '',
           fullName: '',
-          userName: '',
+          nickName: '',
           isAccepetedTerms: false,
         }}
         validationSchema={SignupSchema}
-        onSubmit={(values) => {
-          console.log(values);
+        onSubmit={async (values) => {
+          const payload = {
+            email: values.email,
+            fullName: values.fullName,
+            nickName: values.nickName,
+            password: values.password,
+          };
+          const result = await AuthService.signUpWithEmail(payload);
+          console.log(result);
         }}>
         {({
           handleChange,
