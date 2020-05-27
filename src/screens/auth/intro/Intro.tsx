@@ -10,6 +10,7 @@ import {RouterConstants} from '../../../constants/router.constants';
 import normalize from '../../../shared/methods/normalize';
 import {AccessToken, LoginManager} from 'react-native-fbsdk';
 import auth from '@react-native-firebase/auth';
+import {GoogleSignin} from '@react-native-community/google-signin';
 
 const Intro = ({navigation}: any): React.ReactElement => {
   const insets = useSafeAreaInsets();
@@ -39,6 +40,16 @@ const Intro = ({navigation}: any): React.ReactElement => {
     // Sign-in the user with the credential
     return auth().signInWithCredential(facebookCredential);
   }
+  async function onGoogleButtonPress() {
+    // Get the users ID token
+    const {idToken} = await GoogleSignin.signIn();
+
+    // Create a Google credential with the token
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+    // Sign-in the user with the credential
+    return auth().signInWithCredential(googleCredential);
+  }
   return (
     <React.Fragment>
       <ImageOverlay
@@ -67,6 +78,15 @@ const Intro = ({navigation}: any): React.ReactElement => {
               )
             }>
             Login with facebook
+          </Button>
+          <Button
+            size="giant"
+            onPress={() =>
+              onGoogleButtonPress().then(() =>
+                console.log('Signed in with Google!'),
+              )
+            }>
+            Login with Google
           </Button>
         </TMView>
 

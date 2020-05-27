@@ -5,8 +5,9 @@ import * as eva from '@eva-design/eva';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import auth from '@react-native-firebase/auth';
-
+import {GoogleSignin} from '@react-native-community/google-signin';
+import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
 import {
   ThemeContext,
   ThemeContextValue,
@@ -17,6 +18,7 @@ import {appThemes} from './app-theming';
 import * as mapping from './app-mapping.json';
 import {AppNavigator} from '../navigation/app.navigator';
 import StatusBar from '../components/status-bar.component';
+import {persistedStore, store} from '../store/configureStore';
 // import {default as customMapping} from './app-mapping.json';
 // import { default as mapping } from './mapping.json'; // <-- Import app mapping
 
@@ -32,18 +34,10 @@ const App = () => {
   };
 
   React.useEffect(() => {
-    auth()
-      .signInAnonymously()
-      .then(() => {
-        console.log('User signed in anonymously');
-      })
-      .catch((error) => {
-        if (error.code === 'auth/operation-not-allowed') {
-          console.log('Enable anonymous in your firebase console.');
-        }
-
-        console.error(error);
-      });
+    GoogleSignin.configure({
+      webClientId:
+        '17695708413-55ovaq26d192gboeoj9o6vkttrh1ec29.apps.googleusercontent.com',
+    });
   }, []);
 
   return (
@@ -56,7 +50,13 @@ const App = () => {
         <ThemeContext.Provider value={themeValue}>
           <SafeAreaProvider>
             <StatusBar />
-            <AppNavigator />
+            <Provider store={store}>
+              <PersistGate
+                // loading={<Splash />}
+                persistor={persistedStore}>
+                <AppNavigator />
+              </PersistGate>
+            </Provider>
           </SafeAreaProvider>
         </ThemeContext.Provider>
       </ApplicationProvider>
