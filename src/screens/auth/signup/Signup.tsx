@@ -12,6 +12,7 @@ import {
 } from '@ui-kitten/components';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import {connect} from 'react-redux';
 
 import {
   PersonLineIcon,
@@ -28,6 +29,7 @@ import TMStatusBar from '../../../components/status-bar.component';
 import ScreenLoader from '../../../components/screen-loader.component';
 import OAuthService from '../../../services/o-auth.service';
 import UserNameField from '../../../components/user-name-field.component';
+import {signupUser} from '../../../store/actions/authActions';
 
 const SignupSchema = Yup.object().shape({
   fullName: Yup.string()
@@ -43,11 +45,13 @@ const SignupSchema = Yup.object().shape({
   isAccepetedTerms: Yup.boolean().equals([true]),
 });
 
-export default ({navigation}): React.ReactElement => {
+const Signup = ({navigation, signupUserData}): React.ReactElement => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isUserNameField, setIsUserNameField] = useState(false);
-  const [currentLoginType, setCurrentLoginType] = useState('');
+  const [currentLoginType, setCurrentLoginType] = useState<
+    'google' | 'facebook' | ''
+  >('');
 
   const styles = useStyleSheet(themedStyles);
 
@@ -67,19 +71,43 @@ export default ({navigation}): React.ReactElement => {
   const handleGoogleSignin = async () => {
     setIsUserNameField(true);
     setCurrentLoginType('google');
-    // console.log(result, 'result');
   };
-  const handleFacebookSignin = () => {};
+  const handleFacebookSignin = () => {
+    setIsUserNameField(true);
+    setCurrentLoginType('facebook');
+  };
   const submitOAuth = async (userName: string) => {
     setIsUserNameField(false);
-    const result = await OAuthService.getGoogleOAuthCodes();
-    if (result.idToken && typeof result.idToken === 'string') {
-      AuthService.signOut();
-      const out = await AuthService.signInWithGoogle({
-        idToken: result.idToken,
-        userName,
-      });
-      console.log(out, 'out');
+    switch (currentLoginType) {
+      case 'facebook':
+        const {accessToken} = await OAuthService.getFBAccessToken();
+        if (accessToken) {
+          AuthService.signOut();
+          try {
+            const result = await AuthService.siginWithFacebook({
+              accessToken,
+              userName,
+            });
+            console.log(result);
+          } catch (error) {
+            console.error(error);
+            // Toast.show(error);
+          }
+        }
+        break;
+      case 'google':
+        const {idToken} = await OAuthService.getGoogleOAuthCodes();
+        if (idToken && typeof idToken === 'string') {
+          AuthService.signOut();
+          const out = await AuthService.signInWithGoogle({
+            idToken: idToken,
+            userName,
+          });
+          console.log(out, 'out');
+        }
+        break;
+      default:
+        break;
     }
   };
 
@@ -163,8 +191,8 @@ export default ({navigation}): React.ReactElement => {
               'This user name is already taken. Choose different!',
             );
           }
-          if (userDetails) {
-            console.log(userDetails, 'userdetaisl');
+          if (Object.keys(userDetails || {}).length > 1) {
+            signupUserData(userDetails);
           }
           setIsLoading(false);
         }}>
@@ -194,7 +222,9 @@ export default ({navigation}): React.ReactElement => {
                   }
                   status={errors[field.fieldName] ? 'danger' : ''}
                   caption={errors[field.fieldName]}
-                  secureTextEntry={secureTextEntry}
+                  secureTextEntry={
+                    field.fieldName === 'password' ? secureTextEntry : false
+                  }
                 />
               ))}
 
@@ -207,7 +237,7 @@ export default ({navigation}): React.ReactElement => {
                 }>
                 {() => (
                   <Text status="danger" style={styles.agreement}>
-                    I read and agree to Terms & Conditions
+                    I read and agree to Terms &#38; Conditions
                   </Text>
                 )}
               </CheckBox>
@@ -284,3 +314,15 @@ const themedStyles = StyleService.create({
     marginLeft: 10,
   },
 });
+
+const mapStateToProps = (state) => {
+  return {
+    authData: state.auth,
+  };
+};
+
+const mapDispatchToProps = {
+  signupUserData: signupUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

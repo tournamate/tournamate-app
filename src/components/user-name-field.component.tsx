@@ -33,7 +33,11 @@ const UserNameField = ({
     console.log(isUserNameExists);
   };
   return (
-    <Modal transparent animationType="none" visible={isOpen}>
+    <Modal
+      transparent
+      animationType="none"
+      visible={isOpen}
+      onRequestClose={onClose}>
       <View style={styles.modalBackground}>
         <Layout style={styles.activityIndicatorWrapper} level="3">
           <View style={styles.iconContainer}>

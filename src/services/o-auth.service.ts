@@ -12,7 +12,10 @@ abstract class OAuthType {
 }
 
 class OAuthService implements OAuthType {
-  static async getFBAccessToken() {
+  static async getFBAccessToken(): Promise<{
+    accessToken: string;
+    isCancelled: boolean;
+  }> {
     const fbResult = {
       accessToken: '',
       isCancelled: false,

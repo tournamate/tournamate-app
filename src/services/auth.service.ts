@@ -1,5 +1,4 @@
 import auth from '@react-native-firebase/auth';
-
 import {SignupWithEmail, UserDataType} from './../models/user.models';
 import User from './user.service';
 
@@ -13,7 +12,7 @@ interface SignupEmailReturnType {
 
 interface SignEmailReturnType {
   userInfo?: UserDataType | {};
-  errors: {
+  errors?: {
     wrongPassword?: boolean;
     notFound?: boolean;
     tooManyAttempts?: boolean;
@@ -28,14 +27,11 @@ class AuthService {
     let result = {};
     try {
       const isUserNameExists = await User.isUserNameExists(userName);
-      console.log(isUserNameExists);
       if (!isUserNameExists) {
-        console.log('inside');
         const userCredential = await auth().createUserWithEmailAndPassword(
           email,
           password,
         );
-        console.log(userCredential);
         const {
           user: {uid: userId},
         } = userCredential;
@@ -48,14 +44,14 @@ class AuthService {
           userId,
         };
         await User.set(userId, userDetails);
-        result = {userDetails: {...userDetails}};
+        result = {...result, userDetails: {...userDetails}};
       } else {
-        result = {errors: {isUserNameExists: true}};
+        result = {...result, errors: {isUserNameExists: true}};
       }
     } catch (error) {
       console.log(error);
       if (error.code === 'auth/email-already-in-use') {
-        result = {errors: {isEmailExists: true}};
+        result = {...result, errors: {isEmailExists: true}};
       }
     }
     return result;
@@ -65,14 +61,7 @@ class AuthService {
     email: string;
     password: string;
   }): Promise<SignEmailReturnType> => {
-    let result = {
-      userInfo: {},
-      errors: {
-        wrongPassword: false,
-        notFound: false,
-        tooManyAttempts: false,
-      },
-    };
+    let result = {};
     try {
       const {
         user: {uid: userId},
@@ -81,16 +70,19 @@ class AuthService {
         payload.password,
       );
       const userInfo = await User.get(userId);
-      if (userInfo.isUserExists) {
-        result.userInfo = userInfo;
-      }
+      result = {...result, userDetails: {...userInfo}};
     } catch (error) {
+      const errors = {
+        wrongPassword: false,
+        notFound: false,
+        tooManyAttempts: false,
+      };
       if (error.code === 'auth/wrong-password') {
-        result.errors.wrongPassword = true;
+        errors.wrongPassword = true;
       } else if (error.code === 'auth/user-not-found') {
-        result.errors.notFound = true;
+        errors.notFound = true;
       } else if (error.code === 'auth/unknown') {
-        result.errors.tooManyAttempts = true;
+        errors.tooManyAttempts = true;
       }
     }
     return result;
@@ -113,6 +105,40 @@ class AuthService {
     );
     try {
       const authData = await auth().signInWithCredential(googleCredential);
+      const userDetails = {
+        signedInWithEmail: false,
+        fullName: authData.user.displayName,
+        userName: payload.userName,
+        createdAt: new Date().toISOString(),
+        email: authData.user.email,
+        userId: authData.user.uid,
+        photo: authData.user.photoURL,
+      };
+      await User.set(authData.user.uid, userDetails);
+      return userDetails;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
+  static siginWithFacebook = async (payload: {
+    accessToken: string;
+    userName: string;
+  }): Promise<{
+    signedInWithEmail: boolean;
+    fullName: string | null;
+    userName: string;
+    createdAt: string;
+    email: string | null;
+    userId: string;
+    photo: string | null;
+  }> => {
+    const facebookCredential = auth.FacebookAuthProvider.credential(
+      payload.accessToken,
+    );
+    try {
+      const authData = await auth().signInWithCredential(facebookCredential);
       const userDetails = {
         signedInWithEmail: false,
         fullName: authData.user.displayName,
