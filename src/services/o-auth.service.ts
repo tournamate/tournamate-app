@@ -1,5 +1,5 @@
 import {AccessToken, LoginManager} from 'react-native-fbsdk';
-import {GoogleSignin} from '@react-native-community/google-signin';
+import {GoogleSignin, User} from '@react-native-community/google-signin';
 
 interface FBResultType {
   accessToken: string;
@@ -39,16 +39,16 @@ class OAuthService implements OAuthType {
     };
   }
 
-  static async getGoogleOAuthCodes() {
+  static async getGoogleOAuthCodes(): Promise<User> {
     await GoogleSignin.signOut();
     await GoogleSignin.hasPlayServices();
-    let data = {};
     try {
-      data = await GoogleSignin.signIn();
+      let data = await GoogleSignin.signIn();
+      return data;
     } catch (error) {
       console.log(error);
+      return error;
     }
-    return data;
   }
 }
 

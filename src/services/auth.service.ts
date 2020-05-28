@@ -1,13 +1,14 @@
+import auth from '@react-native-firebase/auth';
+
 import {SignupWithEmail, UserDataType} from './../models/user.models';
-import {LoginManager} from 'react-native-fbsdk';
-import {GoogleSignin} from '@react-native-community/google-signin';
-import auth, {firebase} from '@react-native-firebase/auth';
 import User from './user.service';
 
 interface SignupEmailReturnType {
-  token: null | string;
-  userExists: boolean | null;
-  userId: string | null;
+  errors?: {
+    isUserNameExists?: boolean;
+    isEmailExists?: boolean;
+  };
+  userDetails?: UserDataType;
 }
 
 interface SignEmailReturnType {
@@ -23,33 +24,41 @@ class AuthService {
   static signUpWithEmail = async (
     payload: SignupWithEmail,
   ): Promise<SignupEmailReturnType> => {
-    const {fullName, nickName, email, password} = payload;
+    const {fullName, userName, email, password} = payload;
+    let result = {};
     try {
-      const userCredential = await auth().createUserWithEmailAndPassword(
-        email,
-        password,
-      );
-      const {
-        user: {uid: userId, getIdToken},
-      } = userCredential;
-      const token = await getIdToken();
-      const userDetails = {
-        signedInWithEmail: true,
-        fullName,
-        nickName,
-        email,
-        userId,
-      };
-      const data = await User.set(userId, userDetails);
-      console.log(data);
-      return {token, userExists: false, userId};
+      const isUserNameExists = await User.isUserNameExists(userName);
+      console.log(isUserNameExists);
+      if (!isUserNameExists) {
+        console.log('inside');
+        const userCredential = await auth().createUserWithEmailAndPassword(
+          email,
+          password,
+        );
+        console.log(userCredential);
+        const {
+          user: {uid: userId},
+        } = userCredential;
+        const userDetails = {
+          signedInWithEmail: true,
+          fullName,
+          userName,
+          createdAt: new Date().toISOString(),
+          email,
+          userId,
+        };
+        await User.set(userId, userDetails);
+        result = {userDetails: {...userDetails}};
+      } else {
+        result = {errors: {isUserNameExists: true}};
+      }
     } catch (error) {
-      console.log('Sign up using email and password', error);
+      console.log(error);
       if (error.code === 'auth/email-already-in-use') {
-        return {token: null, userExists: true, userId: null};
+        result = {errors: {isEmailExists: true}};
       }
     }
-    return {token: null, userExists: null, userId: null};
+    return result;
   };
 
   static signinWithEmail = async (payload: {
@@ -66,14 +75,12 @@ class AuthService {
     };
     try {
       const {
-        user: {uid: userId, getIdToken},
+        user: {uid: userId},
       } = await auth().signInWithEmailAndPassword(
         payload.email,
         payload.password,
       );
-      const token = await getIdToken();
       const userInfo = await User.get(userId);
-      userInfo.token = token;
       if (userInfo.isUserExists) {
         result.userInfo = userInfo;
       }
@@ -88,6 +95,46 @@ class AuthService {
     }
     return result;
   };
+
+  static signInWithGoogle = async (payload: {
+    idToken: string;
+    userName: string;
+  }): Promise<{
+    signedInWithEmail: boolean;
+    fullName: string | null;
+    userName: string;
+    createdAt: string;
+    email: string | null;
+    userId: string;
+    photo: string | null;
+  }> => {
+    const googleCredential = auth.GoogleAuthProvider.credential(
+      payload.idToken,
+    );
+    try {
+      const authData = await auth().signInWithCredential(googleCredential);
+      const userDetails = {
+        signedInWithEmail: false,
+        fullName: authData.user.displayName,
+        userName: payload.userName,
+        createdAt: new Date().toISOString(),
+        email: authData.user.email,
+        userId: authData.user.uid,
+        photo: authData.user.photoURL,
+      };
+      await User.set(authData.user.uid, userDetails);
+      return userDetails;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
+  static signOut() {
+    auth()
+      .signOut()
+      .then(() => console.log('User signed out!'));
+  }
 }
 
 export default AuthService;

@@ -22,3 +22,6 @@ export const EmailLineIcon = (style: any): IconElement => (
 export const PersonLineIcon = (style: any): IconElement => (
   <Icon {...style} name="person-outline" />
 );
+export const CloseFilledIcon = (style: any): IconElement => (
+  <Icon {...style} name="close-circle" />
+);

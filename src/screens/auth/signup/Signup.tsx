@@ -24,13 +24,17 @@ import {KeyboardAvoidingView} from '../../../components/kb-avoiding-view.compone
 import {RouterConstants} from '../../../constants/router.constants';
 import TMView from '../../../components/view.component';
 import AuthService from '../../../services/auth.service';
+import TMStatusBar from '../../../components/status-bar.component';
+import ScreenLoader from '../../../components/screen-loader.component';
+import OAuthService from '../../../services/o-auth.service';
+import UserNameField from '../../../components/user-name-field.component';
 
 const SignupSchema = Yup.object().shape({
   fullName: Yup.string()
     .min(3, 'Too short!')
     .max(30, 'Too long!')
     .required('Full is required'),
-  nickName: Yup.string().max(15, 'Too long!').required(),
+  userName: Yup.string().max(15, 'Too long!').required(),
   email: Yup.string().email('Invalid email').required('Email is Required'),
   password: Yup.string()
     .min(2, 'Too Short!')
@@ -41,6 +45,9 @@ const SignupSchema = Yup.object().shape({
 
 export default ({navigation}): React.ReactElement => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isUserNameField, setIsUserNameField] = useState(false);
+  const [currentLoginType, setCurrentLoginType] = useState('');
 
   const styles = useStyleSheet(themedStyles);
 
@@ -53,9 +60,28 @@ export default ({navigation}): React.ReactElement => {
   };
   const renderIcon = (props: any) => (
     <TouchableWithoutFeedback onPress={toggleSecureEntry}>
-      <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'} />
+      <Icon {...props} name={!secureTextEntry ? 'eye-off' : 'eye'} />
     </TouchableWithoutFeedback>
   );
+
+  const handleGoogleSignin = async () => {
+    setIsUserNameField(true);
+    setCurrentLoginType('google');
+    // console.log(result, 'result');
+  };
+  const handleFacebookSignin = () => {};
+  const submitOAuth = async (userName: string) => {
+    setIsUserNameField(false);
+    const result = await OAuthService.getGoogleOAuthCodes();
+    if (result.idToken && typeof result.idToken === 'string') {
+      AuthService.signOut();
+      const out = await AuthService.signInWithGoogle({
+        idToken: result.idToken,
+        userName,
+      });
+      console.log(out, 'out');
+    }
+  };
 
   const fields = [
     {
@@ -67,7 +93,7 @@ export default ({navigation}): React.ReactElement => {
       accessoryRight: PersonLineIcon,
     },
     {
-      fieldName: 'nickName',
+      fieldName: 'userName',
       placeholder: 'Nick name',
       captionIcon: CaptionIcon,
       autoCompleteType: 'name',
@@ -96,6 +122,15 @@ export default ({navigation}): React.ReactElement => {
 
   return (
     <KeyboardAvoidingView style={styles.container}>
+      <TMStatusBar translucent backgroundColor="transparent" />
+      {isUserNameField ? (
+        <UserNameField
+          isOpen={isUserNameField}
+          onClose={() => setIsUserNameField(false)}
+          submitCallback={submitOAuth}
+        />
+      ) : null}
+      {isLoading ? <ScreenLoader loading={isLoading} /> : null}
       <View style={styles.headerContainer}>
         <Text>Hello, Sign up here</Text>
       </View>
@@ -104,19 +139,34 @@ export default ({navigation}): React.ReactElement => {
           email: '',
           password: '',
           fullName: '',
-          nickName: '',
+          userName: '',
           isAccepetedTerms: false,
         }}
         validationSchema={SignupSchema}
-        onSubmit={async (values) => {
-          const payload = {
-            email: values.email,
+        onSubmit={async (values, actions) => {
+          setIsLoading(true);
+          const {errors, userDetails} = await AuthService.signUpWithEmail({
             fullName: values.fullName,
-            nickName: values.nickName,
+            userName: values.userName,
+            email: values.email,
             password: values.password,
-          };
-          const result = await AuthService.signUpWithEmail(payload);
-          console.log(result);
+          });
+          if (errors?.isEmailExists) {
+            actions.setFieldError(
+              'email',
+              'Email id is already exists. Please signin',
+            );
+          }
+          if (errors?.isUserNameExists) {
+            actions.setFieldError(
+              'userName',
+              'This user name is already taken. Choose different!',
+            );
+          }
+          if (userDetails) {
+            console.log(userDetails, 'userdetaisl');
+          }
+          setIsLoading(false);
         }}>
         {({
           handleChange,
@@ -144,6 +194,7 @@ export default ({navigation}): React.ReactElement => {
                   }
                   status={errors[field.fieldName] ? 'danger' : ''}
                   caption={errors[field.fieldName]}
+                  secureTextEntry={secureTextEntry}
                 />
               ))}
 
@@ -174,10 +225,16 @@ export default ({navigation}): React.ReactElement => {
         <Button
           size="large"
           appearance="ghost"
-          accessoryLeft={FacebookIcon}
+          accessoryLeft={GoogleIcon}
           style={styles.googleBtn}
+          onPress={handleGoogleSignin}
         />
-        <Button size="large" appearance="ghost" accessoryLeft={GoogleIcon} />
+        <Button
+          size="large"
+          appearance="ghost"
+          accessoryLeft={FacebookIcon}
+          onPress={handleFacebookSignin}
+        />
       </TMView>
       <Button
         style={styles.signInButton}
