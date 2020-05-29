@@ -90,69 +90,100 @@ class AuthService {
 
   static signInWithGoogle = async (payload: {
     idToken: string;
-    userName: string;
-  }): Promise<{
-    signedInWithEmail: boolean;
-    fullName: string | null;
-    userName: string;
-    createdAt: string;
-    email: string | null;
-    userId: string;
-    photo: string | null;
-  }> => {
+  }): Promise<
+    | {
+        data: object;
+        isNewUser: boolean | undefined;
+      }
+    | {errors: object}
+    | undefined
+  > => {
     const googleCredential = auth.GoogleAuthProvider.credential(
       payload.idToken,
     );
     try {
       const authData = await auth().signInWithCredential(googleCredential);
-      const userDetails = {
-        signedInWithEmail: false,
-        fullName: authData.user.displayName,
-        userName: payload.userName,
-        createdAt: new Date().toISOString(),
-        email: authData.user.email,
-        userId: authData.user.uid,
-        photo: authData.user.photoURL,
+      const {user, additionalUserInfo} = authData;
+      const userDetails: any = {
+        fullName: user.displayName,
+        email: user.email,
+        userId: user.uid,
+        photo: user.photoURL,
+        mobileNumber: user.phoneNumber,
+        emailIdVerified: user.emailVerified,
+        mobileNumberVerified: false,
+        others: {
+          aud: additionalUserInfo?.profile?.aud,
+          provider: user.providerId,
+          iss: additionalUserInfo?.profile?.iss,
+        },
       };
-      await User.set(authData.user.uid, userDetails);
-      return userDetails;
+      if (additionalUserInfo?.isNewUser) {
+        userDetails.createdAt = new Date().toISOString();
+      }
+      const userInfo: any = await User.set(authData.user.uid, userDetails);
+      userInfo.isNewUser = additionalUserInfo?.isNewUser ? true : false;
+      return userInfo;
     } catch (error) {
       console.log(error);
-      return error;
+      if (error.code === 'auth/account-exists-with-different-credential') {
+        return {
+          errors: {
+            accountExists:
+              'An account already exists with the same email address but different sign-in credentials.',
+          },
+        };
+      }
     }
   };
 
   static siginWithFacebook = async (payload: {
     accessToken: string;
-    userName: string;
-  }): Promise<{
-    signedInWithEmail: boolean;
-    fullName: string | null;
-    userName: string;
-    createdAt: string;
-    email: string | null;
-    userId: string;
-    photo: string | null;
-  }> => {
+  }): Promise<
+    | {
+        data: object;
+        isNewUser: boolean | undefined;
+      }
+    | {errors: object}
+    | undefined
+  > => {
     const facebookCredential = auth.FacebookAuthProvider.credential(
       payload.accessToken,
     );
     try {
       const authData = await auth().signInWithCredential(facebookCredential);
-      const userDetails = {
-        signedInWithEmail: false,
-        fullName: authData.user.displayName,
-        userName: payload.userName,
-        createdAt: new Date().toISOString(),
-        email: authData.user.email,
-        userId: authData.user.uid,
-        photo: authData.user.photoURL,
+      const {user, additionalUserInfo} = authData;
+      const userDetails: any = {
+        fullName: user.displayName,
+        email: user.email,
+        userId: user.uid,
+        photo: user.photoURL,
+        mobileNumber: user.phoneNumber,
+        emailIdVerified: user.emailVerified,
+        mobileNumberVerified: false,
+        others: {
+          aud: additionalUserInfo?.profile?.aud,
+          provider: user.providerId,
+          iss: additionalUserInfo?.profile?.iss,
+        },
       };
-      await User.set(authData.user.uid, userDetails);
-      return userDetails;
+      if (additionalUserInfo?.isNewUser) {
+        userDetails.createdAt = new Date().toISOString();
+      }
+      console.log(authData, 'auth data');
+      const userInfo: any = await User.set(authData.user.uid, userDetails);
+      userInfo.isNewUser = additionalUserInfo?.isNewUser ? true : false;
+      return userInfo;
     } catch (error) {
       console.log(error);
-      return error;
+      if (error.code === 'auth/account-exists-with-different-credential') {
+        return {
+          errors: {
+            accountExists:
+              'An account already exists with the same email address but different sign-in credentials.',
+          },
+        };
+      }
     }
   };
 

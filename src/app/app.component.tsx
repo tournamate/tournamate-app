@@ -43,7 +43,7 @@ const App = () => {
         'email',
         'https://www.googleapis.com/auth/profile.agerange.read',
         'https://www.googleapis.com/auth/user.gender.read',
-        'https://www.googleapis.com/auth/user.phonenumbers.read	',
+        'https://www.googleapis.com/auth/user.phonenumbers.read',
       ],
     });
     // Subscribing to internet on/off

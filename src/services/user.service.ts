@@ -33,13 +33,23 @@ class User {
     }
   }
 
-  static async set(userId: string, userDetails: object): Promise<void> {
+  static async set(
+    userId: string,
+    userDetails: object,
+  ): Promise<{data: object | undefined; exists: boolean} | undefined> {
     try {
-      const isAdded = await firestore()
+      await firestore()
         .collection(User.collectionName)
         .doc(userId)
-        .set(userDetails);
-      return isAdded;
+        .set(userDetails, {merge: true});
+      const result = await firestore()
+        .collection(User.collectionName)
+        .doc(userId)
+        .get();
+      return {
+        data: result.data(),
+        exists: result.exists,
+      };
     } catch (error) {
       console.log(error);
     }

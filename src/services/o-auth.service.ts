@@ -45,11 +45,12 @@ class OAuthService implements OAuthType {
   static async getGoogleOAuthCodes(): Promise<User> {
     await GoogleSignin.signOut();
     await GoogleSignin.hasPlayServices();
+    console.log('he');
     try {
       let data = await GoogleSignin.signIn();
       return data;
     } catch (error) {
-      console.log(error);
+      console.log(error, 'Google OAuth');
       return error;
     }
   }
