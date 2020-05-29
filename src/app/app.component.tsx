@@ -38,6 +38,13 @@ const App = () => {
   React.useEffect(() => {
     GoogleSignin.configure({
       webClientId: AppConfig.webClientId,
+      scopes: [
+        'profile',
+        'email',
+        'https://www.googleapis.com/auth/profile.agerange.read',
+        'https://www.googleapis.com/auth/user.gender.read',
+        'https://www.googleapis.com/auth/user.phonenumbers.read	',
+      ],
     });
     // Subscribing to internet on/off
     const unsubscribe = NetInfo.addEventListener((state) => {

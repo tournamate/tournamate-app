@@ -78,6 +78,7 @@ const Signup = ({navigation, signupUserData}): React.ReactElement => {
   };
   const submitOAuth = async (userName: string) => {
     setIsUserNameField(false);
+    AuthService.signOut();
     switch (currentLoginType) {
       case 'facebook':
         const {accessToken} = await OAuthService.getFBAccessToken();
