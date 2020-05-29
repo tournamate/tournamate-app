@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 
 import {KeyboardAvoidingView} from '../../../components/kb-avoiding-view.component';
 import {FacebookIcon, GoogleIcon} from '../../../components/icons.component';
-import {RouterConstants} from '../../../constants/router.constants';
 import ScreenLoader from '../../../components/screen-loader.component';
 import normalize from '../../../shared/methods/normalize';
 import OAuthService from '../../../services/o-auth.service';
@@ -34,7 +33,11 @@ const SocialSignin = ({
           setErrorText(result?.errors.accountExists);
         } else if (result?.exists) {
           setErrorText('');
-          signupUserState({...result.data, isNewUser: result.isNewUser});
+          signupUserState({
+            ...result.data,
+            isNewUser: result.isNewUser,
+            createdAt: result?.data?.createdAt?.toDate()?.getTime(),
+          });
         }
       } catch (error) {
         console.log(error);
@@ -44,7 +47,7 @@ const SocialSignin = ({
   };
 
   const handleSigninWithGoogle = async () => {
-    AuthService.signOut();
+    await AuthService.signOut();
     setIsLoading(true);
     const {idToken} = await OAuthService.getGoogleOAuthCodes();
     if (idToken && typeof idToken === 'string') {
@@ -55,7 +58,11 @@ const SocialSignin = ({
         if (result.errors?.accountExists) {
           setErrorText(result.errors.accountExists);
         } else if (result.exists) {
-          signupUserState({...result.data, isNewUser: result.isNewUser});
+          signupUserState({
+            ...result.data,
+            isNewUser: result.isNewUser,
+            createdAt: result?.data?.createdAt?.toDate()?.getTime(),
+          });
         }
       } catch (error) {
         console.log(error);

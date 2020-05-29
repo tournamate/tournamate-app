@@ -1,4 +1,5 @@
 import auth from '@react-native-firebase/auth';
+import firebase from '@react-native-firebase/app';
 import {SignupWithEmail, UserDataType} from './../models/user.models';
 import User from './user.service';
 
@@ -39,7 +40,7 @@ class AuthService {
           signedInWithEmail: true,
           fullName,
           userName,
-          createdAt: new Date().toISOString(),
+          createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
           email,
           userId,
         };
@@ -108,6 +109,7 @@ class AuthService {
         fullName: user.displayName,
         email: user.email,
         userId: user.uid,
+        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
         photo: user.photoURL,
         mobileNumber: user.phoneNumber,
         emailIdVerified: user.emailVerified,
@@ -119,7 +121,9 @@ class AuthService {
         },
       };
       if (additionalUserInfo?.isNewUser) {
-        userDetails.createdAt = new Date().toISOString();
+        userDetails.createdAt = firebase.firestore.Timestamp.fromDate(
+          new Date(),
+        );
       }
       const userInfo: any = await User.set(authData.user.uid, userDetails);
       userInfo.isNewUser = additionalUserInfo?.isNewUser ? true : false;
@@ -158,6 +162,7 @@ class AuthService {
         email: user.email,
         userId: user.uid,
         photo: user.photoURL,
+
         mobileNumber: user.phoneNumber,
         emailIdVerified: user.emailVerified,
         mobileNumberVerified: false,
@@ -168,7 +173,9 @@ class AuthService {
         },
       };
       if (additionalUserInfo?.isNewUser) {
-        userDetails.createdAt = new Date().toISOString();
+        userDetails.createdAt = firebase.firestore.Timestamp.fromDate(
+          new Date(),
+        );
       }
       console.log(authData, 'auth data');
       const userInfo: any = await User.set(authData.user.uid, userDetails);

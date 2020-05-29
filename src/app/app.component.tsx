@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import 'react-native-gesture-handler';
 import NetInfo from '@react-native-community/netinfo';
-import {Alert} from 'react-native';
 import * as eva from '@eva-design/eva';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
@@ -38,15 +37,7 @@ const App = () => {
   React.useEffect(() => {
     GoogleSignin.configure({
       webClientId: AppConfig.webClientId,
-      scopes: [
-        'profile',
-        'email',
-        'https://www.googleapis.com/auth/profile.agerange.read',
-        'https://www.googleapis.com/auth/user.gender.read',
-        'https://www.googleapis.com/auth/user.phonenumbers.read',
-      ],
     });
-    // Subscribing to internet on/off
     const unsubscribe = NetInfo.addEventListener((state) => {
       if (state.isConnected) {
         Toast.show('You are online!');
