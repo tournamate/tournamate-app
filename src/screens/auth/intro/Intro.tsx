@@ -69,25 +69,6 @@ const Intro = ({navigation}: any): React.ReactElement => {
           <Text category="s1" status="control">
             playing your favourite games
           </Text>
-
-          <Button
-            size="giant"
-            onPress={() =>
-              onFacebookButtonPress().then(() =>
-                console.log('Signed in with Facebook!'),
-              )
-            }>
-            Login with facebook
-          </Button>
-          <Button
-            size="giant"
-            onPress={() =>
-              onGoogleButtonPress().then(() =>
-                console.log('Signed in with Google!'),
-              )
-            }>
-            Login with Google
-          </Button>
         </TMView>
 
         <TMView

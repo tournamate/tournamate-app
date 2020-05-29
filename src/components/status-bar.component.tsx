@@ -21,7 +21,6 @@ const TMStatusBar = (props: StatusBarProps): React.ReactElement => {
   if (props.translucent) {
     properties.translucent = props.translucent;
   }
-  console.log(styles.statusBar);
   return <StatusBar {...properties} />;
 };
 

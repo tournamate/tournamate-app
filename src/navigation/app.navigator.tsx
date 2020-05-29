@@ -1,6 +1,9 @@
 import React from 'react';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {AuthNavigator} from './auth.navigator';
+import {useSelector} from 'react-redux';
+import {AuthSchema} from '../models/user.models';
+
 /*
  * Navigation theming: https://reactnavigation.org/docs/en/next/themes.html
  */
@@ -13,8 +16,11 @@ const navigatorTheme = {
   },
 };
 
-export const AppNavigator = (): React.ReactElement => (
-  <NavigationContainer theme={navigatorTheme}>
-    <AuthNavigator />
-  </NavigationContainer>
-);
+export const AppNavigator = (): React.ReactElement => {
+  const authData = useSelector((state: {auth: AuthSchema}) => state.auth);
+  return (
+    <NavigationContainer theme={navigatorTheme}>
+      {authData.isAuthenticated ? null : <AuthNavigator />}
+    </NavigationContainer>
+  );
+};

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import 'react-native-gesture-handler';
-
+import NetInfo from '@react-native-community/netinfo';
 import * as eva from '@eva-design/eva';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
@@ -8,6 +8,8 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {GoogleSignin} from '@react-native-community/google-signin';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
+import Toast from 'react-native-simple-toast';
+
 import {
   ThemeContext,
   ThemeContextValue,
@@ -19,8 +21,7 @@ import * as mapping from './app-mapping.json';
 import {AppNavigator} from '../navigation/app.navigator';
 import StatusBar from '../components/status-bar.component';
 import {persistedStore, store} from '../store/configureStore';
-// import {default as customMapping} from './app-mapping.json';
-// import { default as mapping } from './mapping.json'; // <-- Import app mapping
+import {AppConfig} from '../../app.config';
 
 const App = () => {
   const [theme, setTheme] = useState<Theme>('dark');
@@ -35,9 +36,18 @@ const App = () => {
 
   React.useEffect(() => {
     GoogleSignin.configure({
-      webClientId:
-        '17695708413-55ovaq26d192gboeoj9o6vkttrh1ec29.apps.googleusercontent.com',
+      webClientId: AppConfig.webClientId,
     });
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      if (state.isConnected) {
+        Toast.show('You are online!');
+      } else {
+        Toast.show('You are offline!');
+      }
+      console.log('Connection type', state.type);
+      console.log('Is connected?', state.isConnected);
+    });
+    return unsubscribe;
   }, []);
 
   return (
