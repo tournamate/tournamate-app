@@ -3,7 +3,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Intro from '../screens/auth/intro/Intro';
 import Welcome from '../screens/auth/welcome/Welcome';
 import {RouterConstants} from '../constants/router.constants';
-import Signin from '../screens/auth/sigin/Signin';
 import Signup from '../screens/auth/signup/Signup';
 import SocialLogin from '../screens/auth/social-signin/social-sigin.screen';
 import ForgotPassword from '../screens/auth/forgot-password/forgot-password.screen';

@@ -1,27 +1,29 @@
 import React from 'react';
-import {RouteProp} from '@react-navigation/core';
 import {
-  BottomTabNavigationOptions,
   createBottomTabNavigator,
+  BottomTabNavigationOptions,
 } from '@react-navigation/bottom-tabs';
-import {View, Text} from 'react-native';
+import {RouteProp} from '@react-navigation/core';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {HomeBottomNavigation} from '../screens/home/home-bottom-navigation.component';
 import {HomeDrawer} from '../screens/home/home-drawer.component';
+import {HomeBottomNavigation} from '../screens/home/home-bottom-navigation.component';
+import {RouterConstants} from '../constants/router.constants';
+import Dashboard from '../screens/dashboard/dashboard.screen';
+import Account from '../screens/account/account.screen';
+import Matches from '../screens/matches/matches.screen';
+import Notifications from '../screens/notifications/notifications.screen';
 
 const BottomTab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
-/*
- * When dev is true in .expo/settings.json (started via `start:dev`),
- * open Components tab as default.
- */
-const initialTabRoute: string = 'Components';
+// const BackAction = () => <TopNavigationAction icon={FacebookIcon} />;
 
-/*
- * Can we access it from `HomeNavigator`?
- */
-const ROOT_ROUTES: string[] = ['Home', 'Layouts', 'Components', 'Themes'];
+const ROOT_ROUTES: string[] = [
+  'Dashboard',
+  'Matches',
+  'Notifications',
+  'Account',
+];
 
 const isOneOfRootRoutes = (currentRoute: RouteProp<any, any>): boolean => {
   return ROOT_ROUTES.find((route) => currentRoute.name === route) !== undefined;
@@ -29,48 +31,33 @@ const isOneOfRootRoutes = (currentRoute: RouteProp<any, any>): boolean => {
 
 const TabBarVisibleOnRootScreenOptions = ({
   route,
-}): BottomTabNavigationOptions => {
+}: any): BottomTabNavigationOptions => {
   const currentRoute = route.state && route.state.routes[route.state.index];
   return {tabBarVisible: currentRoute && isOneOfRootRoutes(currentRoute)};
 };
 
-const LayoutsNavigator = () => (
-  <View>
-    <Text>Layout Navigators</Text>
-  </View>
-);
-const ComponentsNavigator = () => (
-  <View>
-    <Text>Components Navigators</Text>
-  </View>
-);
-const ThemesNavigator = () => (
-  <View>
-    <Text>Themes Navigator</Text>
-  </View>
-);
-const LibrariesScreen = () => (
-  <View>
-    <Text>Libraries Navigator</Text>
-  </View>
-);
-
-const HomeTabsNavigator = (): React.ReactElement => (
+export const HomeTabsNavigator = () => (
   <BottomTab.Navigator
     screenOptions={TabBarVisibleOnRootScreenOptions}
-    initialRouteName={initialTabRoute}
     tabBar={(props) => <HomeBottomNavigation {...props} />}>
-    <BottomTab.Screen name="Layouts" component={LayoutsNavigator} />
-    <BottomTab.Screen name="Components" component={ComponentsNavigator} />
-    <BottomTab.Screen name="Themes" component={ThemesNavigator} />
+    <BottomTab.Screen name={RouterConstants.Dashboard} component={Dashboard} />
+    <BottomTab.Screen name={RouterConstants.Matches} component={Matches} />
+    <BottomTab.Screen
+      name={RouterConstants.Notifications}
+      component={Notifications}
+    />
+    <BottomTab.Screen name={RouterConstants.Account} component={Account} />
   </BottomTab.Navigator>
 );
 
 export const HomeNavigator = (): React.ReactElement => (
-  <Drawer.Navigator
-    screenOptions={{gestureEnabled: false}}
-    drawerContent={(props) => <HomeDrawer {...props} />}>
-    <Drawer.Screen name="Home" component={HomeTabsNavigator} />
-    <Drawer.Screen name="Libraries" component={LibrariesScreen} />
+  <Drawer.Navigator drawerContent={(props) => <HomeDrawer {...props} />}>
+    <Drawer.Screen name={RouterConstants.Home} component={HomeTabsNavigator} />
+    <Drawer.Screen name={RouterConstants.Account} component={Account} />
+    <Drawer.Screen name={RouterConstants.Matches} component={Matches} />
+    <Drawer.Screen
+      name={RouterConstants.Notifications}
+      component={Notifications}
+    />
   </Drawer.Navigator>
 );

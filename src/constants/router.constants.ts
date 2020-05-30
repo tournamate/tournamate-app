@@ -4,4 +4,9 @@ export const RouterConstants = {
   Signin: 'Signin',
   Signup: 'Signup',
   ForgotPassword: 'ForgotPassword',
+  Home: 'Home',
+  Dashboard: 'Dashboard',
+  Matches: 'Matches',
+  Account: 'Account',
+  Notifications: 'Notifications',
 };

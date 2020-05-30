@@ -1,92 +1,181 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, ViewProps} from 'react-native';
 import {
-  // Avatar,
-  // Divider,
-  Drawer,
+  Divider,
   DrawerElement,
+  DrawerGroup,
   DrawerItem,
-  //   DrawerHeaderElement,
-  //   DrawerHeaderFooter,
-  //   DrawerHeaderFooterElement,
-  // Layout,
-  // MenuItemType,
+  IndexPath,
+  Layout,
   Text,
+  Drawer,
 } from '@ui-kitten/components';
-import {SafeAreaLayout} from '../../components/safe-area-layout.component';
-// import {WebBrowserService} from '../../services/web-browser.service';
+import {WebBrowserService} from '../../services/web-browser.service';
 import {AppInfoService} from '../../services/app-info.service';
-import {FacebookIcon, GoogleIcon} from '../../components/icons.component';
+import {ImageOverlay} from '../../components/image-overlay.component';
+import {FacebookIcon} from '../../components/icons.component';
 
-const DATA: any = [
-  {title: 'Libraries', icon: FacebookIcon},
-  {title: 'Documentation', icon: GoogleIcon},
-];
+export const HomeDrawer = ({navigation, state}): DrawerElement => {
+  const [selectedIndex, setSelectedIndex] = React.useState(
+    new IndexPath(state.index),
+  );
 
-const version: string = AppInfoService.getVersion();
+  const onHomeItemPress = ({index}): void => {
+    navigation.navigate('Home');
+    setSelectedIndex(index);
+  };
 
-export const HomeDrawer = ({navigation}): DrawerElement => {
-  //   const onItemSelect = (index: number): void => {
-  //     switch (index) {
-  //       case 0: {
-  //         navigation.toggleDrawer();
-  //         navigation.navigate('Libraries');
-  //         return;
-  //       }
-  //       case 1: {
-  //         WebBrowserService.openBrowserAsync(
-  //           'https://akveo.github.io/react-native-ui-kitten',
-  //         );
-  //         navigation.toggleDrawer();
-  //         return;
-  //       }
-  //     }
-  //   };
+  const onLibrariesItemPress = ({index}): void => {
+    navigation.navigate('Libraries');
+    setSelectedIndex(index);
+  };
 
-  //   const renderHeader = (): DrawerHeaderElement => (
-  //     <Layout style={styles.header} level="2">
-  //       <View style={styles.profileContainer}>
-  //         <Avatar
-  //           size="giant"
-  //           source={require('../../assets/images/penguine-image.svg')}
-  //         />
-  //         <Text style={styles.profileName} category="h6">
-  //           Kitten Tricks
-  //         </Text>
-  //       </View>
-  //     </Layout>
-  //   );
+  const onDocumentationItemPress = (): void => {
+    WebBrowserService.openBrowserAsync('https://hubs.ly/H0n7b4L0');
+    navigation.toggleDrawer();
+  };
 
-  //   const renderFooter = (): DrawerHeaderFooterElement => (
-  //     <React.Fragment>
-  //       <Divider />
-  //       <DrawerHeaderFooter
-  //         disabled={true}
-  //         description={`Version ${AppInfoService.getVersion()}`}
-  //       />
-  //     </React.Fragment>
-  //   );
-  const renderDrawerItems = (): React.ReactElement =>
-    DATA.map((item) => (
-      <DrawerItem title={item.title} accessoryLeft={item.icon} />
-    ));
+  const onBundlesItemPress = (): void => {
+    WebBrowserService.openBrowserAsync('https://hubs.ly/H0n79BR0');
+    navigation.toggleDrawer();
+  };
+
+  const onEvaDesignItemPress = (): void => {
+    WebBrowserService.openBrowserAsync('https://hubs.ly/H0n79zV0');
+    navigation.toggleDrawer();
+  };
+
+  const onEvaIconsItemPress = (): void => {
+    WebBrowserService.openBrowserAsync('https://akveo.github.io/eva-icons');
+    navigation.toggleDrawer();
+  };
+
+  const onNebularItemPress = (): void => {
+    WebBrowserService.openBrowserAsync('https://akveo.github.io/nebular');
+    navigation.toggleDrawer();
+  };
+
+  const onNGXAdminItemPress = (): void => {
+    WebBrowserService.openBrowserAsync('https://akveo.github.io/ngx-admin');
+    navigation.toggleDrawer();
+  };
+
+  const onUIBakeryItemPress = (): void => {
+    WebBrowserService.openBrowserAsync('https://uibakery.io');
+    navigation.toggleDrawer();
+  };
+
+  const onTwitterItemPress = (): void => {
+    WebBrowserService.openBrowserAsync('https://twitter.com/akveo_inc');
+    navigation.toggleDrawer();
+  };
+
+  const onFacebookItemPress = (): void => {
+    WebBrowserService.openBrowserAsync('https://www.facebook.com/akveo');
+    navigation.toggleDrawer();
+  };
+
+  const onMediumItemPress = (): void => {
+    WebBrowserService.openBrowserAsync('https://medium.com/akveo-engineering');
+    navigation.toggleDrawer();
+  };
+
+  const renderHeader = (props: ViewProps): React.ReactElement => (
+    <React.Fragment>
+      <ImageOverlay
+        style={[styles.header, props.style]}
+        source={require('../../assets/images/image-app-icon.png')}
+      />
+      <Divider />
+    </React.Fragment>
+  );
+
+  const renderFooter = (props: ViewProps): React.ReactElement => (
+    <React.Fragment>
+      <Divider />
+      <Layout {...props}>
+        <Text appearance="hint" category="c1">
+          {`Version ${AppInfoService.getVersion()}`}
+        </Text>
+      </Layout>
+    </React.Fragment>
+  );
+
   return (
-    <SafeAreaLayout style={styles.safeArea} insets="top">
-      <Drawer
-        header={() => (
-          <View>
-            <Text>Header</Text>
-          </View>
-        )}
-        footer={() => (
-          <View>
-            <Text>Footer</Text>
-          </View>
-        )}
-        onSelect={(index) => console.log(index)}>
-        {renderDrawerItems()}
-      </Drawer>
-    </SafeAreaLayout>
+    <Drawer
+      selectedIndex={selectedIndex}
+      header={renderHeader as any}
+      footer={renderFooter as any}>
+      <DrawerItem
+        title="Home"
+        accessoryLeft={FacebookIcon}
+        onPress={onHomeItemPress}
+      />
+      <DrawerItem
+        title="Libraries"
+        accessoryLeft={FacebookIcon}
+        onPress={onLibrariesItemPress}
+      />
+      <DrawerItem
+        title="Documentation"
+        accessoryLeft={FacebookIcon}
+        onPress={onDocumentationItemPress}
+      />
+      <DrawerGroup title="More from Akveo" accessoryLeft={FacebookIcon}>
+        <DrawerItem
+          title="UI Kitten"
+          accessoryLeft={FacebookIcon}
+          onPress={onDocumentationItemPress}
+        />
+        <DrawerItem
+          title="UI Kitten Bundles"
+          accessoryLeft={FacebookIcon}
+          onPress={onBundlesItemPress}
+        />
+        <DrawerItem
+          title="Eva Design System"
+          accessoryLeft={FacebookIcon}
+          onPress={onEvaDesignItemPress}
+        />
+        <DrawerItem
+          title="Eva Icons"
+          accessoryLeft={FacebookIcon}
+          onPress={onEvaIconsItemPress}
+        />
+        <DrawerItem
+          title="Nebular"
+          accessoryLeft={FacebookIcon}
+          onPress={onNebularItemPress}
+        />
+        <DrawerItem
+          title="ngx-admin"
+          accessoryLeft={FacebookIcon}
+          onPress={onNGXAdminItemPress}
+        />
+        <DrawerItem
+          title="UI Bakery"
+          accessoryLeft={FacebookIcon}
+          onPress={onUIBakeryItemPress}
+        />
+      </DrawerGroup>
+      <DrawerGroup title="Socials" accessoryLeft={FacebookIcon}>
+        <DrawerItem
+          title="Twitter"
+          accessoryLeft={FacebookIcon}
+          onPress={onTwitterItemPress}
+        />
+        <DrawerItem
+          title="Facebook"
+          accessoryLeft={FacebookIcon}
+          onPress={onFacebookItemPress}
+        />
+        <DrawerItem
+          title="Medium"
+          accessoryLeft={FacebookIcon}
+          onPress={onMediumItemPress}
+        />
+      </DrawerGroup>
+    </Drawer>
   );
 };
 
@@ -96,8 +185,15 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 128,
-    paddingHorizontal: 16,
-    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    marginHorizontal: 8,
+  },
+  versionText: {
+    marginVertical: 8,
+    marginHorizontal: 16,
   },
   profileContainer: {
     flexDirection: 'row',
