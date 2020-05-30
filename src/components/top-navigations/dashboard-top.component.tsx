@@ -1,22 +1,31 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import {
   Avatar,
   Icon,
   MenuItem,
   OverflowMenu,
   Text,
+  IconProps,
   TopNavigation,
   TopNavigationAction,
 } from '@ui-kitten/components';
 
-const MenuIcon = (props) => <Icon {...props} name="more-vertical" />;
+const MenuIcon = (props: IconProps) => <Icon {...props} name="more-vertical" />;
 
-const InfoIcon = (props) => <Icon {...props} name="info" />;
+const InfoIcon = (props: IconProps) => <Icon {...props} name="info" />;
 
-const LogoutIcon = (props) => <Icon {...props} name="log-out" />;
+const LogoutIcon = (props: IconProps) => <Icon {...props} name="log-out" />;
 
-export const DashboardTopNav = () => {
+export const DashboardTopNav = ({
+  name,
+  photoUrl,
+  onPressPhoto,
+}: {
+  name: string;
+  photoUrl: string;
+  onPressPhoto: () => void;
+}) => {
   const [menuVisible, setMenuVisible] = React.useState(false);
 
   const toggleMenu = () => {
@@ -39,14 +48,14 @@ export const DashboardTopNav = () => {
     </React.Fragment>
   );
 
-  const renderTitle = (props) => (
-    <View style={styles.titleContainer}>
-      <Avatar
-        style={styles.logo}
-        source={require('../../assets/images/image-app-icon.png')}
-      />
-      <Text {...props}>Eva Application</Text>
-    </View>
+  const renderTitle = (props: any) => (
+    <TouchableOpacity
+      style={styles.titleContainer}
+      activeOpacity={0.7}
+      onPress={onPressPhoto}>
+      <Avatar style={styles.logo} source={{uri: photoUrl}} />
+      <Text {...props}>{name}</Text>
+    </TouchableOpacity>
   );
 
   return (

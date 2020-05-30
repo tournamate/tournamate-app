@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, ViewProps} from 'react-native';
+import {ViewProps, View, TouchableOpacity} from 'react-native';
 import {
   Divider,
   DrawerElement,
@@ -9,23 +9,27 @@ import {
   Layout,
   Text,
   Drawer,
+  Icon,
+  useStyleSheet,
+  StyleService,
 } from '@ui-kitten/components';
 import {WebBrowserService} from '../../services/web-browser.service';
 import {AppInfoService} from '../../services/app-info.service';
 import {ImageOverlay} from '../../components/image-overlay.component';
 import {FacebookIcon} from '../../components/icons.component';
+import {ThemeContext} from '../../services/theme.service';
 
-export const HomeDrawer = ({navigation, state}): DrawerElement => {
+export const HomeDrawer = ({navigation, state}: any): DrawerElement => {
   const [selectedIndex, setSelectedIndex] = React.useState(
     new IndexPath(state.index),
   );
-
-  const onHomeItemPress = ({index}): void => {
+  const themeService = React.useContext(ThemeContext);
+  const onHomeItemPress = ({index}: any): void => {
     navigation.navigate('Home');
     setSelectedIndex(index);
   };
 
-  const onLibrariesItemPress = ({index}): void => {
+  const onLibrariesItemPress = ({index}: any): void => {
     navigation.navigate('Libraries');
     setSelectedIndex(index);
   };
@@ -80,12 +84,25 @@ export const HomeDrawer = ({navigation, state}): DrawerElement => {
     navigation.toggleDrawer();
   };
 
+  const styles = useStyleSheet(themedStyles);
+  const handleChangeTheme = () =>
+    themeService.setCurrentTheme(themeService.isDarkMode ? 'light' : 'dark');
+
   const renderHeader = (props: ViewProps): React.ReactElement => (
     <React.Fragment>
       <ImageOverlay
         style={[styles.header, props.style]}
-        source={require('../../assets/images/image-app-icon.png')}
-      />
+        source={require('../../assets/images/image-app-icon.png')}>
+        <View style={styles.themeIcon}>
+          <TouchableOpacity onPress={handleChangeTheme}>
+            <Icon
+              name="moon"
+              style={styles.themeMoonIcon}
+              fill={styles.themeMoon.backgroundColor}
+            />
+          </TouchableOpacity>
+        </View>
+      </ImageOverlay>
       <Divider />
     </React.Fragment>
   );
@@ -179,7 +196,7 @@ export const HomeDrawer = ({navigation, state}): DrawerElement => {
   );
 };
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   safeArea: {
     flex: 1,
   },
@@ -201,5 +218,21 @@ const styles = StyleSheet.create({
   },
   profileName: {
     marginHorizontal: 16,
+  },
+  themeIcon: {
+    position: 'absolute',
+    right: 10,
+    bottom: 10,
+    width: 52,
+    height: 52,
+    backgroundColor: 'background-basic-color-1',
+    borderRadius: 40,
+  },
+  themeMoonIcon: {
+    width: 52,
+    height: 52,
+  },
+  themeMoon: {
+    backgroundColor: 'color-primary-500',
   },
 });
