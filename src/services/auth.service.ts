@@ -2,6 +2,9 @@ import auth from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/app';
 import {SignupWithEmail, UserDataType} from './../models/user.models';
 import User from './user.service';
+import AsyncStorage from '@react-native-community/async-storage';
+import {AppStorage} from './app-storage.service';
+import {AppReloadService} from './app-reload.service';
 
 interface SignupEmailReturnType {
   errors?: {
@@ -194,10 +197,12 @@ class AuthService {
     }
   };
 
-  static signOut() {
+  static async signOut() {
     auth()
       .signOut()
       .then(() => console.log('User signed out!'));
+    await AppStorage.clearAll();
+    AppReloadService.reload();
   }
 }
 

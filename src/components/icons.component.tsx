@@ -25,3 +25,27 @@ export const PersonLineIcon = (style: any): IconElement => (
 export const CloseFilledIcon = (style: any): IconElement => (
   <Icon {...style} name="close-circle" />
 );
+export const FlashLineIcon = (style: any): IconElement => (
+  <Icon {...style} name="flash-outline" />
+);
+export const HomeLineIcon = (style: any): IconElement => (
+  <Icon {...style} name="home-outline" />
+);
+export const BellLineIcon = (style: any): IconElement => (
+  <Icon {...style} name="bell-outline" />
+);
+export const SmartPhoneLineIcon = (style: any): IconElement => (
+  <Icon {...style} name="smartphone-outline" />
+);
+export const MoonLineIcon = (style: any): IconElement => (
+  <Icon {...style} name="moon-outline" />
+);
+export const MoonIcon = (style: any): IconElement => (
+  <Icon {...style} name="moon" />
+);
+export const MenuIcon = (style: any): IconElement => (
+  <Icon {...style} name="menu" />
+);
+export const LogoutIcon = (style: any): IconElement => (
+  <Icon {...style} name="log-out-outline" />
+);
