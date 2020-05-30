@@ -43,3 +43,9 @@ export const MoonLineIcon = (style: any): IconElement => (
 export const MoonIcon = (style: any): IconElement => (
   <Icon {...style} name="moon" />
 );
+export const MenuIcon = (style: any): IconElement => (
+  <Icon {...style} name="menu" />
+);
+export const LogoutIcon = (style: any): IconElement => (
+  <Icon {...style} name="log-out-outline" />
+);

@@ -47,7 +47,6 @@ const SocialSignin = ({
   };
 
   const handleSigninWithGoogle = async () => {
-    await AuthService.signOut();
     setIsLoading(true);
     const {idToken} = await OAuthService.getGoogleOAuthCodes();
     if (idToken && typeof idToken === 'string') {
@@ -58,11 +57,13 @@ const SocialSignin = ({
         if (result.errors?.accountExists) {
           setErrorText(result.errors.accountExists);
         } else if (result.exists) {
+          setIsLoading(false);
           signupUserState({
             ...result.data,
             isNewUser: result.isNewUser,
             createdAt: result?.data?.createdAt?.toDate()?.getTime(),
           });
+          return;
         }
       } catch (error) {
         console.log(error);
