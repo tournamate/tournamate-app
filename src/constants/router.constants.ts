@@ -9,4 +9,5 @@ export const RouterConstants = {
   Matches: 'Matches',
   Account: 'Account',
   Notifications: 'Notifications',
+  SocialSignin: 'SocialSignin',
 };

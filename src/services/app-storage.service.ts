@@ -7,4 +7,7 @@ export class AppStorage {
   static setValue = (key: string, value: string): Promise<void> => {
     return AsyncStorage.setItem(key, value);
   };
+  static clearAll = async (): Promise<void> => {
+    return await AsyncStorage.clear();
+  };
 }

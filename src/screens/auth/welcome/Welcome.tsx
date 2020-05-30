@@ -6,7 +6,7 @@ import ImageCarousel from '../../../components/image-carousel.component';
 import normalize from '../../../shared/methods/normalize';
 import TMView from '../../../components/view.component';
 import {RouterConstants} from '../../../constants/router.constants';
-import {LockIcon, PlusSquareIcon} from '../../../components/icons.component';
+import {LockIcon} from '../../../components/icons.component';
 
 // TODO: define types for navigation
 const Welcome = ({navigation}: any) => {
@@ -66,15 +66,17 @@ const Welcome = ({navigation}: any) => {
       <TMStatusBar translucent backgroundColor="transparent" />
       <ImageCarousel onSnapToItem={handleImageChange} />
       <TMView
-        justifyContent="center"
-        alignItems="center"
-        marginBottom={50}
-        marginTop={30}>
-        <Text category="h4" style={styles.text1}>
-          {headText}
-        </Text>
-        <Text category="p1">{subtext1}</Text>
-        <Text category="p1">{subText2}</Text>
+        justifyContent="space-between"
+        alignContent="space-between"
+        flex={1}
+        marginBottom={30}>
+        <TMView justifyContent="center" alignItems="center" marginTop={30}>
+          <Text category="h4" style={styles.text1}>
+            {headText}
+          </Text>
+          <Text category="p1">{subtext1}</Text>
+          <Text category="p1">{subText2}</Text>
+        </TMView>
         <TMView
           width="100%"
           paddingHorizontal={30}
@@ -83,14 +85,9 @@ const Welcome = ({navigation}: any) => {
           <Button
             appearance="filled"
             size="large"
-            onPress={() => navigation.navigate(RouterConstants.Signin)}
+            onPress={() => navigation.navigate(RouterConstants.SocialSignin)}
             accessoryLeft={LockIcon}>
             Login
-          </Button>
-        </TMView>
-        <TMView width="100%" paddingHorizontal={30}>
-          <Button status="basic" size="large" accessoryLeft={PlusSquareIcon}>
-            Create Account
           </Button>
         </TMView>
       </TMView>

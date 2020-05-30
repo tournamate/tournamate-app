@@ -11,16 +11,12 @@ import OAuthService from '../../../services/o-auth.service';
 import AuthService from '../../../services/auth.service';
 import {signupUser} from '../../../store/actions/authActions';
 
-const SocialSignin = ({
-  navigation,
-  signupUserState,
-}: any): React.ReactElement => {
+const SocialSignin = ({signupUserState}: any): React.ReactElement => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState('');
 
   const styles = useStyleSheet(themedStyles);
   const handleSigninWithFacebook = async () => {
-    await AuthService.signOut();
     setIsLoading(true);
     const accessData = await OAuthService.getFBAccessToken();
     if (accessData.accessToken) {
@@ -28,16 +24,17 @@ const SocialSignin = ({
         const result: any = await AuthService.siginWithFacebook({
           accessToken: accessData.accessToken,
         });
-        console.log(result, 'result');
         if (result?.errors?.accountExists) {
           setErrorText(result?.errors.accountExists);
         } else if (result?.exists) {
+          setIsLoading(false);
           setErrorText('');
           signupUserState({
             ...result.data,
             isNewUser: result.isNewUser,
             createdAt: result?.data?.createdAt?.toDate()?.getTime(),
           });
+          return;
         }
       } catch (error) {
         console.log(error);
@@ -47,7 +44,6 @@ const SocialSignin = ({
   };
 
   const handleSigninWithGoogle = async () => {
-    await AuthService.signOut();
     setIsLoading(true);
     const {idToken} = await OAuthService.getGoogleOAuthCodes();
     if (idToken && typeof idToken === 'string') {
@@ -58,11 +54,13 @@ const SocialSignin = ({
         if (result.errors?.accountExists) {
           setErrorText(result.errors.accountExists);
         } else if (result.exists) {
+          setIsLoading(false);
           signupUserState({
             ...result.data,
             isNewUser: result.isNewUser,
             createdAt: result?.data?.createdAt?.toDate()?.getTime(),
           });
+          return;
         }
       } catch (error) {
         console.log(error);
