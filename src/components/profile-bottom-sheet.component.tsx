@@ -20,6 +20,13 @@ import {CaptionIcon} from './icons.component';
 import {AuthSchema} from '../models/user.models';
 import {KeyboardAvoidingView} from './kb-avoiding-view.component';
 
+=======
+import {AvatarUrls} from '../constants/data.constants';
+import normalize from '../shared/methods/normalize';
+import {CaptionIcon} from './icons.component';
+import {AuthSchema} from '../models/user.models';
+  
+  
 const phoneRegExp = /^(\+?\d{0,8})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
 
 const ProfileSchema = Yup.object().shape({
@@ -46,6 +53,7 @@ const ProfileDetailsComponent = ({
   const [nestedScrollEnabled, setNestedScrollEnabled] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState('');
   const [fullName, setFullName] = useState('');
+
 
   useEffect(() => {
     setSelectedAvatar(AvatarUrls[0]);
@@ -190,7 +198,6 @@ const ProfileDetailsComponent = ({
 const themedStyles = StyleService.create({
   scrollContainer: {
     width: '100%',
-    minHeight: 800,
   },
   sheetContainer: {
     backgroundColor: 'background-basic-color-1',

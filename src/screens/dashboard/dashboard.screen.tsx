@@ -1,13 +1,13 @@
 import React, {createRef, useState} from 'react';
 import {connect} from 'react-redux';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {Layout, Text} from '@ui-kitten/components';
 import {DashboardTopNav} from '../../components/top-navigations/dashboard-top.component';
 import {AuthSchema} from '../../models/user.models';
 import {ProfileDetails} from '../../components/profile-bottom-sheet.component';
 import ImageCarousel from '../../components/image-carousel.component';
 import {ArrowForwardIcon} from '../../components/icons.component';
-
+        
 const actionSheetRef = createRef<any>();
 const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
   const [isOpenProfile, setIsOpenProfile] = useState(false);
