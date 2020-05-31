@@ -11,10 +11,35 @@ import {
   Avatar,
   Button,
 } from '@ui-kitten/components';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
+
+import {AvatarUrls} from '../constants/data.constants';
+import {SCREEN_HEIGHT} from '../shared/methods/normalize';
+import {CaptionIcon} from './icons.component';
+import {AuthSchema} from '../models/user.models';
+import {KeyboardAvoidingView} from './kb-avoiding-view.component';
+
+=======
 import {AvatarUrls} from '../constants/data.constants';
 import normalize from '../shared/methods/normalize';
 import {CaptionIcon} from './icons.component';
 import {AuthSchema} from '../models/user.models';
+  
+  
+const phoneRegExp = /^(\+?\d{0,8})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
+
+const ProfileSchema = Yup.object().shape({
+  userName: Yup.string()
+    .min(4, 'Too short!')
+    .max(10, 'Too large!')
+    .required('Username is required'),
+  fullName: Yup.string()
+    .min(3, 'Too small!')
+    .max(35, 'Too large!')
+    .required('Full name is required'),
+  mobileNumber: Yup.string().matches(phoneRegExp, 'Phone number is not valid'),
+});
 
 const ProfileDetailsComponent = ({
   actionSheetRef,
@@ -27,12 +52,8 @@ const ProfileDetailsComponent = ({
 }) => {
   const [nestedScrollEnabled, setNestedScrollEnabled] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState('');
-  const [userName, setUserName] = useState('');
   const [fullName, setFullName] = useState('');
-  const [errors, setErrors] = useState<{userName: string; fullName: string}>({
-    userName: '',
-    fullName: '',
-  });
+
 
   useEffect(() => {
     setSelectedAvatar(AvatarUrls[0]);
@@ -47,12 +68,6 @@ const ProfileDetailsComponent = ({
       onClose();
     }
   };
-  const handlePressAvatar = (imageUrl: string) => {
-    setSelectedAvatar(imageUrl);
-  };
-  const handleSubmit = () => {
-    console.log('submit');
-  };
   const styles = useStyleSheet(themedStyles);
   return (
     <ActionSheet
@@ -65,58 +80,117 @@ const ProfileDetailsComponent = ({
       defaultOverlayOpacity={0.3}
       openAnimationSpeed={8}
       containerStyle={styles.sheetContainer}>
-      <ScrollView
-        nestedScrollEnabled={true}
-        scrollEnabled={nestedScrollEnabled}
-        style={styles.scrollContainer}>
-        <Layout>
-          <Text category="h4" style={styles.headText}>
-            Your Details!
-          </Text>
-          <Text style={styles.text1}>Choose your Avatar!</Text>
-          <ScrollView horizontal style={styles.horizontalScroll}>
-            {AvatarUrls.map((imageUrl) => (
-              <TouchableOpacity
-                onPress={handlePressAvatar.bind(this, imageUrl)}
-                key={imageUrl}>
-                <Avatar
-                  style={[
-                    styles.avatar as any,
-                    imageUrl === selectedAvatar ? styles.avatarSelected : null,
-                  ]}
-                  source={{uri: imageUrl}}
-                  size="giant"
-                />
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-          <Input
-            label="Your username"
-            placeholder="Username"
-            style={styles.input1}
-            onChangeText={setUserName}
-            captionIcon={errors.userName ? CaptionIcon : undefined}
-            caption={errors.userName}
-            status={errors.userName ? 'danger' : ''}
-            value={userName}
-          />
-          <Input
-            label="Your full name"
-            placeholder="Full name"
-            style={styles.input2}
-            value={fullName}
-            onChangeText={setFullName}
-            captionIcon={errors.fullName ? CaptionIcon : undefined}
-            caption={errors.fullName}
-            status={errors.fullName ? 'danger' : ''}
-          />
-          <View style={styles.btnContainer}>
-            <Button size="small" style={styles.saveBtn} onPress={handleSubmit}>
-              Save
-            </Button>
-          </View>
-        </Layout>
-      </ScrollView>
+      <KeyboardAvoidingView>
+        <Formik
+          initialValues={{
+            userName: '',
+            fullName: fullName,
+            avatar: selectedAvatar,
+            mobileNumber: 0,
+            dob: '',
+          }}
+          validationSchema={ProfileSchema}
+          onSubmit={(values) => {
+            console.log(values);
+            // props.signinUser(values);
+          }}>
+          {({
+            handleChange,
+            handleSubmit,
+            values,
+            errors,
+            setFieldValue,
+          }: any) => (
+            <>
+              <ScrollView
+                nestedScrollEnabled={true}
+                scrollEnabled={nestedScrollEnabled}
+                style={styles.scrollContainer}>
+                <Layout>
+                  <Text category="h4" style={styles.headText}>
+                    Your Details!
+                  </Text>
+                  <Text style={styles.text1}>Choose your Avatar!</Text>
+                  <ScrollView horizontal style={styles.horizontalScroll}>
+                    {AvatarUrls.map((imageUrl) => (
+                      <TouchableOpacity
+                        onPress={() => setFieldValue('avatar', imageUrl)}
+                        key={imageUrl}>
+                        <Avatar
+                          style={[
+                            styles.avatar as any,
+                            imageUrl === values.avatar
+                              ? styles.avatarSelected
+                              : null,
+                          ]}
+                          source={{uri: imageUrl}}
+                          size="giant"
+                        />
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                  <Input
+                    label="Your username"
+                    placeholder="Username"
+                    style={styles.input1}
+                    onChangeText={handleChange('userName')}
+                    captionIcon={errors.userName ? CaptionIcon : undefined}
+                    caption={errors.userName}
+                    status={errors.userName ? 'danger' : ''}
+                    value={values.userName}
+                  />
+                  <Input
+                    label="Your full name"
+                    placeholder="Full name"
+                    style={styles.input2}
+                    value={values.fullName}
+                    onChangeText={handleChange('fullName')}
+                    captionIcon={errors.fullName ? CaptionIcon : undefined}
+                    caption={errors.fullName}
+                    status={errors.fullName ? 'danger' : ''}
+                  />
+                  <Input
+                    label="Your mobile number"
+                    placeholder="Mobile number"
+                    style={styles.input2}
+                    value={values.mobileNumber}
+                    onChangeText={handleChange('mobileNumber')}
+                    captionIcon={errors.mobileNumber ? CaptionIcon : undefined}
+                    caption={errors.mobileNumber}
+                    status={errors.mobileNumber ? 'danger' : ''}
+                  />
+                  <Input
+                    label="Your Date of birth"
+                    placeholder="DOB"
+                    style={styles.input2}
+                    value={values.dob}
+                    onChangeText={(text) => {
+                      let value = text.replace(
+                        /^([\d]{4})([\d]{2})([\d]{2})$/,
+                        '$1/$2/$3',
+                      );
+                      console.log(value, 'value');
+                      setFieldValue('dob', value);
+                    }}
+                    captionIcon={errors.dob ? CaptionIcon : undefined}
+                    caption={errors.dob}
+                    status={errors.dob ? 'danger' : ''}
+                  />
+
+                  <View style={styles.btnContainer}>
+                    <Button
+                      size="small"
+                      style={styles.saveBtn}
+                      onPress={handleSubmit}>
+                      Save
+                    </Button>
+                  </View>
+                </Layout>
+              </ScrollView>
+            </>
+          )}
+        </Formik>
+      </KeyboardAvoidingView>
     </ActionSheet>
   );
 };
@@ -128,8 +202,8 @@ const themedStyles = StyleService.create({
   sheetContainer: {
     backgroundColor: 'background-basic-color-1',
     paddingHorizontal: 20,
-    minHeight: 900,
-    height: normalize(400, 'height'),
+    minHeight: SCREEN_HEIGHT,
+    // height: normalize(700, 'height'),
   },
   logo: {
     marginHorizontal: 16,
@@ -149,7 +223,7 @@ const themedStyles = StyleService.create({
     marginBottom: 10,
   },
   saveBtn: {width: 100},
-  btnContainer: {justifyContent: 'center', alignItems: 'center'},
+  btnContainer: {justifyContent: 'center', alignItems: 'center', marginTop: 20},
 });
 
 const mapStateToProps = (state: any) => {

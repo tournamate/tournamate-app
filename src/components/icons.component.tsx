@@ -49,3 +49,9 @@ export const MenuIcon = (style: any): IconElement => (
 export const LogoutIcon = (style: any): IconElement => (
   <Icon {...style} name="log-out-outline" />
 );
+export const CalendarIcon = (style: any): IconElement => (
+  <Icon {...style} name="calendar" />
+);
+export const ArrowForwardIcon = (style: any): IconElement => (
+  <Icon {...style} name="arrow-forward" />
+);

@@ -12,7 +12,6 @@ import {
   useStyleSheet,
   StyleService,
 } from '@ui-kitten/components';
-import {WebBrowserService} from '../../services/web-browser.service';
 import {AppInfoService} from '../../services/app-info.service';
 import {ImageOverlay} from '../../components/image-overlay.component';
 import {FacebookIcon, LogoutIcon} from '../../components/icons.component';
@@ -86,27 +85,10 @@ export const HomeDrawer = ({navigation, state}: any): DrawerElement => {
 };
 
 const themedStyles = StyleService.create({
-  safeArea: {
-    flex: 1,
-  },
   header: {
     height: 128,
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  headerTitle: {
-    marginHorizontal: 8,
-  },
-  versionText: {
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  profileContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  profileName: {
-    marginHorizontal: 16,
   },
   themeIcon: {
     position: 'absolute',

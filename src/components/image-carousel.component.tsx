@@ -1,13 +1,7 @@
 import React, {useState, useRef} from 'react';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
-import {
-  Image,
-  View,
-  TouchableHighlight,
-  ActivityIndicator,
-  Dimensions,
-  StyleSheet,
-} from 'react-native';
+import {Image, View, Dimensions, ActivityIndicator} from 'react-native';
+import {StyleService, useStyleSheet} from '@ui-kitten/components';
 
 const width = Dimensions.get('window').width;
 
@@ -23,39 +17,52 @@ const ImageCarousel = ({
   autoplay,
   parentWidth,
   loopClonesPerSide,
+  parentHeight,
   onSnapToItem = () => null,
   ...props
 }: any) => {
   const [isLoading, setIsLoading] = useState<any>({});
   const [currentImage, setCurrentImage] = useState<number>(0);
   let ref = useRef();
+  const styles = useStyleSheet(themedStyles);
   const _renderItem = ({
     item,
     index,
   }: {
-    item: string | object;
+    item: string | object | unknown;
     index: number;
   }) => {
     return (
       <View style={styles.container}>
         <Image
-          style={styles.image}
+          style={[styles.image, parentHeight && {height: parentHeight}]}
           source={typeof item === 'string' ? {uri: item} : item}
           resizeMethod={'resize'}
           resizeMode={'cover'}
           onLoad={() => {}}
-          onLoadStart={() => {}}
-          onLoadEnd={() => {
+          onLoadStart={() => {
             let t = isLoading;
             t[index] = true;
             setIsLoading({...t});
           }}
+          onLoadEnd={() => {
+            let t = isLoading;
+            t[index] = false;
+            setIsLoading({...t});
+          }}
           {...props}
         />
+        {isLoading[index] && (
+          <ActivityIndicator
+            size="large"
+            color={styles.dotStyle?.backgroundColor}
+            style={styles.activity}
+          />
+        )}
       </View>
     );
   };
-  const onSnap = (index) => {
+  const onSnap = (index: number) => {
     onSnapToItem(index);
     setCurrentImage(index);
   };
@@ -66,7 +73,8 @@ const ImageCarousel = ({
         dotsLength={images.length}
         activeDotIndex={currentImage}
         dotStyle={styles.dotStyle}
-        dotColor={colors.dotColors}
+        inactiveDotStyle={styles.inActiveDot}
+        dotColor={styles.dotStyle?.backgroundColor}
         inactiveDotColor={colors.white}
         inactiveDotScale={0.8}
         carouselRef={ref}
@@ -83,10 +91,12 @@ const ImageCarousel = ({
         layout={'default'}
         data={images}
         ref={(c: any) => (ref = c)}
-        loop={circleLoop || false}
+        loop={circleLoop || true}
         enableSnap={true}
-        autoplay={autoplay || false}
+        autoplay={autoplay || true}
         itemWidth={parentWidth || width}
+        itemHeight={parentHeight || null}
+        sliderHeight={parentHeight || null}
         sliderWidth={parentWidth || width}
         loopClonesPerSide={loopClonesPerSide || 5}
         renderItem={(item) => _renderItem(item)}
@@ -97,7 +107,7 @@ const ImageCarousel = ({
   );
 };
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   container: {
     position: 'relative',
     justifyContent: 'center',
@@ -121,13 +131,22 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   dotStyle: {
+    width: 20,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 0,
+    padding: 0,
+    margin: 0,
+    backgroundColor: 'color-primary-500',
+  },
+  inActiveDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
     marginHorizontal: 0,
     padding: 0,
     margin: 0,
-    backgroundColor: 'rgba(128, 128, 128, 0.92)',
+    backgroundColor: 'color-primary-100',
   },
 });
 const colors = {

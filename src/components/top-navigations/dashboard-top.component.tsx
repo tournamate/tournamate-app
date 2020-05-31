@@ -25,8 +25,10 @@ export const DashboardTopNav = ({
       activeOpacity={0.7}
       onPress={onPressPhoto}>
       <View>
-        <Text>Welcome again!</Text>
-        <Text {...props}>{name}</Text>
+        <Text style={styles.tAlignRight}>Welcome again!</Text>
+        <Text style={styles.tAlignRight} {...props}>
+          {name}
+        </Text>
       </View>
       <Avatar style={styles.logo} source={{uri: photoUrl}} />
     </TouchableOpacity>
@@ -52,5 +54,8 @@ const styles = StyleSheet.create({
   },
   logo: {
     marginHorizontal: 16,
+  },
+  tAlignRight: {
+    textAlign: 'right',
   },
 });

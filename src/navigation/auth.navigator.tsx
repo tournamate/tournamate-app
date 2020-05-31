@@ -13,7 +13,7 @@ export const AuthNavigator = (): React.ReactElement => (
   <Stack.Navigator headerMode="none" initialRouteName="Intro">
     <Stack.Screen name={RouterConstants.IntroScreenOne} component={Intro} />
     <Stack.Screen name={RouterConstants.WelcomeScreen} component={Welcome} />
-    <Stack.Screen name={RouterConstants.Signin} component={SocialLogin} />
+    <Stack.Screen name={RouterConstants.SocialSignin} component={SocialLogin} />
     <Stack.Screen name={RouterConstants.Signup} component={Signup} />
     <Stack.Screen
       name={RouterConstants.ForgotPassword}
