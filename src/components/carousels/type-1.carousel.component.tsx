@@ -2,10 +2,6 @@ import React, {createRef, Component} from 'react';
 import {
   Platform,
   View,
-  ScrollView,
-  Text,
-  StatusBar,
-  SafeAreaView,
   StyleSheet,
   Dimensions,
   Image,
@@ -53,27 +49,10 @@ class SliderEntry extends Component<any, {}> {
   }
 
   render() {
-    const {
-      data: {title, subtitle},
-      even,
-    } = this.props;
-
-    const uppercaseTitle = title ? (
-      <Text
-        style={[styles.title, even ? styles.titleEven : {}]}
-        numberOfLines={2}>
-        {title.toUpperCase()}
-      </Text>
-    ) : (
-      false
-    );
+    const {even} = this.props;
 
     return (
-      <TouchableOpacity
-        activeOpacity={1}
-        style={styles.slideInnerContainer}
-        // onPress={() => { alert(`You've clicked '${title}'`); }}
-      >
+      <TouchableOpacity activeOpacity={1} style={styles.slideInnerContainer}>
         <View style={styles.shadow} />
         <View
           style={[
@@ -85,22 +64,13 @@ class SliderEntry extends Component<any, {}> {
             style={[styles.radiusMask, even ? styles.radiusMaskEven : {}]}
           />
         </View>
-        {/* <View
-          style={[styles.textContainer, even ? styles.textContainerEven : {}]}>
-          {uppercaseTitle}
-          <Text
-            style={[styles.subtitle, even ? styles.subtitleEven : {}]}
-            numberOfLines={2}>
-            {subtitle}
-          </Text>
-        </View> */}
       </TouchableOpacity>
     );
   }
 }
 
 export default class ImageCarousel extends React.Component<any, any> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       slider1ActiveSlide: 1,
@@ -108,7 +78,7 @@ export default class ImageCarousel extends React.Component<any, any> {
   }
   _slider1Ref = createRef();
 
-  _renderItemWithParallax({item, index}, parallaxProps) {
+  _renderItemWithParallax({item, index}: any, parallaxProps: any) {
     return (
       <SliderEntry
         data={item}
@@ -119,13 +89,13 @@ export default class ImageCarousel extends React.Component<any, any> {
     );
   }
 
-  mainExample(number, title) {
+  mainExample() {
     const {slider1ActiveSlide} = this.state;
 
     return (
       <View style={styles.exampleContainer}>
         <Carousel
-          ref={(c) => (this._slider1Ref = c)}
+          ref={(c: any) => (this._slider1Ref = c)}
           data={ENTRIES1}
           renderItem={this._renderItemWithParallax}
           sliderWidth={sliderWidth}
@@ -161,10 +131,7 @@ export default class ImageCarousel extends React.Component<any, any> {
   }
 
   render() {
-    const example1 = this.mainExample(
-      1,
-      'Default layout | Loop | Autoplay | Parallax | Scale | Opacity | Pagination with tappable dots',
-    );
+    const example1 = this.mainExample();
     return example1;
   }
 }
