@@ -12,12 +12,11 @@ import {ArrowForwardIcon} from '../../components/icons.component';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
-  const [isOpenProfile, setIsOpenProfile] = useState(false);
   const {authData} = props;
   const handleOnPhotoPress = () => {
-    setIsOpenProfile(true);
+    // setIsOpenProfile(true);
     setTimeout(() => {
-      actionSheetRef.current.snapTo(0);
+      actionSheetRef.current.snapTo(3);
     }, 10);
   };
   useEffect(() => {
@@ -51,10 +50,7 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
           </TouchableWithoutFeedback>
         </View>
       </View>
-      <ProfileDetails
-        actionSheetRef={actionSheetRef}
-        onClose={() => setIsOpenProfile(false)}
-      />
+      <ProfileDetails actionSheetRef={actionSheetRef} />
     </Layout>
   );
 };

@@ -16,18 +16,12 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 
-import {AvatarUrls} from '../constants/data.constants';
 import {SCREEN_HEIGHT} from '../shared/methods/normalize';
+
+import {AvatarUrls} from '../constants/data.constants';
 import {CaptionIcon} from './icons.component';
 import {AuthSchema} from '../models/user.models';
 
-=======
-import {AvatarUrls} from '../constants/data.constants';
-import normalize from '../shared/methods/normalize';
-import {CaptionIcon} from './icons.component';
-import {AuthSchema} from '../models/user.models';
-  
-  
 const phoneRegExp = /^(\+?\d{0,8})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
 
 const ProfileSchema = Yup.object().shape({
@@ -48,11 +42,10 @@ const ProfileDetailsComponent = ({
 }: {
   authData: AuthSchema;
   actionSheetRef: any;
-  onClose: () => any;
+  onClose?: () => any;
 }) => {
   const [selectedAvatar, setSelectedAvatar] = useState('');
   const [fullName, setFullName] = useState('');
-
 
   useEffect(() => {
     setSelectedAvatar(AvatarUrls[0]);
@@ -60,16 +53,14 @@ const ProfileDetailsComponent = ({
       setFullName(authData.fullName);
     }
   }, [authData]);
-
   const styles = useStyleSheet(themedStyles);
-
   const renderInner = () => (
     <KeyboardAvoidingView enabled={false}>
       <Layout style={styles.panel}>
         <Formik
           initialValues={{
             userName: '',
-            fullName: fullName,
+            fullName: authData?.fullName,
             avatar: selectedAvatar,
             mobileNumber: 0,
             dob: '',
@@ -293,7 +284,6 @@ const themedStyles = StyleService.create({
 });
 
 const mapStateToProps = (state: any) => {
-  console.log(state, 'state');
   return {
     authData: state.auth,
   };

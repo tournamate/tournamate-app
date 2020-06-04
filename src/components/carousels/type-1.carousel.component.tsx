@@ -1,75 +1,16 @@
 import React, {createRef, Component} from 'react';
-import {
-  Platform,
-  View,
-  StyleSheet,
-  Dimensions,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import Carousel, {Pagination, ParallaxImage} from 'react-native-snap-carousel';
 import PropTypes from 'prop-types';
+import {SCREEN_WIDTH, SCREEN_HEIGHT} from '../../shared/methods/normalize';
+import {AppInfoService} from '../../services/app-info.service';
+import SliderEntry from './image-wrapper.component';
 
 interface Props {}
 
 interface State {}
 
-class SliderEntry extends Component<any, {}> {
-  static propTypes = {
-    data: PropTypes.object.isRequired,
-    even: PropTypes.bool,
-    parallax: PropTypes.bool,
-    parallaxProps: PropTypes.object,
-  };
-
-  get image() {
-    const {
-      data: {illustration},
-      parallax,
-      parallaxProps,
-      even,
-    } = this.props;
-
-    return parallax ? (
-      <ParallaxImage
-        source={{uri: illustration}}
-        containerStyle={[
-          styles.imageContainer,
-          even ? styles.imageContainerEven : {},
-        ]}
-        style={styles.image}
-        parallaxFactor={0.35}
-        showSpinner={true}
-        spinnerColor={even ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.25)'}
-        {...parallaxProps}
-      />
-    ) : (
-      <Image source={{uri: illustration}} style={styles.image} />
-    );
-  }
-
-  render() {
-    const {even} = this.props;
-
-    return (
-      <TouchableOpacity activeOpacity={1} style={styles.slideInnerContainer}>
-        <View style={styles.shadow} />
-        <View
-          style={[
-            styles.imageContainer,
-            even ? styles.imageContainerEven : {},
-          ]}>
-          {this.image}
-          <View
-            style={[styles.radiusMask, even ? styles.radiusMaskEven : {}]}
-          />
-        </View>
-      </TouchableOpacity>
-    );
-  }
-}
-
-export default class ImageCarousel extends React.Component<any, any> {
+export default class ImageCarousel extends SliderEntry {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -78,13 +19,13 @@ export default class ImageCarousel extends React.Component<any, any> {
   }
   _slider1Ref = createRef();
 
-  _renderItemWithParallax({item, index}: any, parallaxProps: any) {
+  _renderItemWithParallax({item, index}: any, parallaxProps: any, ...others) {
     return (
       <SliderEntry
-        data={item}
-        even={(index + 1) % 2 === 0}
+        data={item.illustration}
         parallax={true}
         parallaxProps={parallaxProps}
+        {...others}
       />
     );
   }
@@ -93,13 +34,13 @@ export default class ImageCarousel extends React.Component<any, any> {
     const {slider1ActiveSlide} = this.state;
 
     return (
-      <View style={styles.exampleContainer}>
+      <View style={{}}>
         <Carousel
           ref={(c: any) => (this._slider1Ref = c)}
           data={ENTRIES1}
           renderItem={this._renderItemWithParallax}
-          sliderWidth={sliderWidth}
-          itemWidth={itemWidth}
+          sliderWidth={SCREEN_WIDTH}
+          itemWidth={SCREEN_WIDTH}
           hasParallaxImages={true}
           firstItem={1}
           inactiveSlideScale={0.94}
@@ -164,24 +105,6 @@ export const colors = {
   background2: '#21D4FD',
 };
 
-const IS_IOS = Platform.OS === 'ios';
-const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
-
-function wp(percentage) {
-  const value = (percentage * viewportWidth) / 100;
-  return Math.round(value);
-}
-
-const slideHeight = viewportHeight * 0.36;
-const slideWidth = wp(75);
-const itemHorizontalMargin = wp(2);
-
-export const sliderWidth = viewportWidth;
-// export const itemWidth = slideWidth + itemHorizontalMargin * 2;
-export const itemWidth = viewportWidth;
-
-const entryBorderRadius = 8;
-
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -191,41 +114,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background1,
   },
-  gradient: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  scrollview: {
-    flex: 1,
-  },
-  exampleContainer: {
-    // paddingVertical: 30,
-  },
-  exampleContainerDark: {
-    backgroundColor: colors.black,
-  },
-  exampleContainerLight: {
-    backgroundColor: 'white',
-  },
-  title: {
-    paddingHorizontal: 30,
-    backgroundColor: 'transparent',
-    color: 'rgba(255, 255, 255, 0.9)',
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  titleDark: {
-    color: colors.black,
-  },
-  subtitle: {
-    marginTop: 5,
-    paddingHorizontal: 30,
-    backgroundColor: 'transparent',
-    color: 'rgba(255, 255, 255, 0.75)',
-    fontSize: 13,
-    fontStyle: 'italic',
-    textAlign: 'center',
-  },
+
   slider: {
     marginTop: 15,
     overflow: 'visible', // for custom animations
@@ -234,7 +123,8 @@ export const styles = StyleSheet.create({
     paddingVertical: 10, // for custom animation
   },
   paginationContainer: {
-    paddingVertical: 8,
+    paddingVertical: 0,
+    marginTop: -50,
   },
   paginationDot: {
     width: 8,
@@ -243,39 +133,32 @@ export const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   slideInnerContainer: {
-    width: itemWidth,
-    height: slideHeight * 0.7,
-    paddingHorizontal: itemHorizontalMargin,
+    // width: SCREEN_WIDTH - 10,
+    height: 200,
+    // paddingHorizontal: 10,
     paddingBottom: 18, // needed for shadow
   },
   shadow: {
     position: 'absolute',
     top: 0,
-    left: itemHorizontalMargin,
-    right: itemHorizontalMargin,
+    left: 10,
+    right: 10,
     bottom: 18,
     shadowColor: colors.black,
     shadowOpacity: 0.25,
     shadowOffset: {width: 0, height: 10},
     shadowRadius: 10,
-    borderRadius: entryBorderRadius,
+    borderRadius: 8,
   },
   imageContainer: {
     flex: 1,
-    marginBottom: IS_IOS ? 0 : -1, // Prevent a random Android rendering issue
+    marginBottom: AppInfoService.isIOS ? 0 : -1, // Prevent a random Android rendering issue
     backgroundColor: 'white',
-    // borderTopLeftRadius: entryBorderRadius,
-    // borderTopRightRadius: entryBorderRadius,
   },
-  imageContainerEven: {
-    backgroundColor: colors.black,
-  },
+
   image: {
     ...StyleSheet.absoluteFillObject,
     resizeMode: 'cover',
-    // borderRadius: IS_IOS ? entryBorderRadius : 0,
-    // borderTopLeftRadius: entryBorderRadius,
-    // borderTopRightRadius: entryBorderRadius,
   },
   // image's border radius is buggy on iOS; let's hack it!
   radiusMask: {
@@ -283,40 +166,17 @@ export const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: entryBorderRadius,
+    height: 8,
     backgroundColor: 'white',
   },
-  radiusMaskEven: {
-    backgroundColor: colors.black,
-  },
+
   textContainer: {
     justifyContent: 'center',
-    paddingTop: 20 - entryBorderRadius,
+    paddingTop: 20 - 8,
     paddingBottom: 20,
     paddingHorizontal: 16,
     backgroundColor: 'white',
-    borderBottomLeftRadius: entryBorderRadius,
-    borderBottomRightRadius: entryBorderRadius,
-  },
-  textContainerEven: {
-    backgroundColor: colors.black,
-  },
-  title: {
-    color: colors.black,
-    fontSize: 13,
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
-  },
-  titleEven: {
-    color: 'white',
-  },
-  subtitle: {
-    marginTop: 6,
-    color: colors.gray,
-    fontSize: 12,
-    fontStyle: 'italic',
-  },
-  subtitleEven: {
-    color: 'rgba(255, 255, 255, 0.7)',
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
   },
 });

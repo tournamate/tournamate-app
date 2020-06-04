@@ -19,3 +19,25 @@ export default function normalize(
     return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
   }
 }
+
+export const widthPercentageToDP = (widthPercent: number | string) => {
+  // Parse string percentage input and convert it to number.
+  const elemWidth =
+    typeof widthPercent === 'number' ? widthPercent : parseFloat(widthPercent);
+
+  // Use PixelRatio.roundToNearestPixel method in order to round the layout
+  // size (dp) to the nearest one that correspons to an integer number of pixels.
+  return PixelRatio.roundToNearestPixel((SCREEN_WIDTH * elemWidth) / 100);
+};
+
+export const heightPercentageToDP = (heightPercent: number | string) => {
+  // Parse string percentage input and convert it to number.
+  const elemHeight =
+    typeof heightPercent === 'number'
+      ? heightPercent
+      : parseFloat(heightPercent);
+
+  // Use PixelRatio.roundToNearestPixel method in order to round the layout
+  // size (dp) to the nearest one that correspons to an integer number of pixels.
+  return PixelRatio.roundToNearestPixel((SCREEN_HEIGHT * elemHeight) / 100);
+};
