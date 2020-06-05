@@ -1,16 +1,19 @@
 import React, {createRef, Component} from 'react';
-import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import Carousel, {Pagination, ParallaxImage} from 'react-native-snap-carousel';
-import PropTypes from 'prop-types';
-import {SCREEN_WIDTH, SCREEN_HEIGHT} from '../../shared/methods/normalize';
-import {AppInfoService} from '../../services/app-info.service';
-import SliderEntry from './image-wrapper.component';
+import {View, ImageStyle, ViewStyle} from 'react-native';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
+import SliderImage from './slider-image.component';
+import {SCREEN_WIDTH} from '../../shared/methods/normalize';
+import {withStyles} from '@ui-kitten/components';
 
-interface Props {}
+interface Props {
+  onImagePress?: () => void;
+  innerContainerStyle?: ViewStyle;
+  imageStyle?: ImageStyle;
+  data?: Array<{url: string}>;
+  eva?: {style: any};
+}
 
-interface State {}
-
-export default class ImageCarousel extends SliderEntry {
+class ImageCarouselComponent extends Component<Props, any> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -19,35 +22,37 @@ export default class ImageCarousel extends SliderEntry {
   }
   _slider1Ref = createRef();
 
-  _renderItemWithParallax({item, index}: any, parallaxProps: any, ...others) {
+  _renderItemWithParallax({item}: any, parallaxProps: any) {
+    const {onImagePress, innerContainerStyle, imageStyle} = this.props;
     return (
-      <SliderEntry
-        data={item.illustration}
+      <SliderImage
+        imageUrl={item?.url}
         parallax={true}
         parallaxProps={parallaxProps}
-        {...others}
+        innerContainerStyle={innerContainerStyle}
+        onPress={onImagePress?.bind(this, item)}
+        imageStyle={imageStyle}
       />
     );
   }
 
   mainExample() {
     const {slider1ActiveSlide} = this.state;
-
+    const styles = this.props?.eva?.style;
+    const data = this.props?.data || dataForCaoursel;
     return (
-      <View style={{}}>
+      <View>
         <Carousel
           ref={(c: any) => (this._slider1Ref = c)}
-          data={ENTRIES1}
-          renderItem={this._renderItemWithParallax}
+          data={data}
+          renderItem={this._renderItemWithParallax.bind(this)}
           sliderWidth={SCREEN_WIDTH}
           itemWidth={SCREEN_WIDTH}
           hasParallaxImages={true}
           firstItem={1}
           inactiveSlideScale={0.94}
           inactiveSlideOpacity={0.7}
-          // inactiveSlideShift={20}
-          containerCustomStyle={styles.slider}
-          contentContainerCustomStyle={styles.sliderContentContainer}
+          inactiveSlideShift={20}
           loop={true}
           loopClonesPerSide={2}
           autoplay={true}
@@ -56,16 +61,21 @@ export default class ImageCarousel extends SliderEntry {
           onSnapToItem={(index) => this.setState({slider1ActiveSlide: index})}
         />
         <Pagination
-          dotsLength={ENTRIES1.length}
+          dotsLength={data.length}
           activeDotIndex={slider1ActiveSlide}
           containerStyle={styles.paginationContainer}
-          dotColor={'rgba(255, 255, 255, 0.92)'}
+          inactiveDotStyle={styles.inActiveDot}
+          dotColor={styles.paginationDotColor.color}
+          activeOpacity={1}
+          animatedDuration={200}
           dotStyle={styles.paginationDot}
-          inactiveDotColor={colors.black}
+          animatedTension={300}
+          inactiveDotColor={styles.inActiveDotColor.color}
+          animatedFriction={50}
           inactiveDotOpacity={0.4}
           inactiveDotScale={0.6}
           carouselRef={this._slider1Ref as any}
-          tappableDots={!!this._slider1Ref}
+          tappableDots={true}
         />
       </View>
     );
@@ -77,106 +87,52 @@ export default class ImageCarousel extends SliderEntry {
   }
 }
 
-export const ENTRIES1 = [
-  {
-    illustration: 'https://i.imgur.com/UYiroysl.jpg',
-  },
-  {
-    illustration: 'https://i.imgur.com/UPrs1EWl.jpg',
-  },
-  {
-    illustration: 'https://i.imgur.com/MABUbpDl.jpg',
-  },
-  {
-    illustration: 'https://i.imgur.com/KZsmUi2l.jpg',
-  },
-  {
-    illustration: 'https://i.imgur.com/2nCt3Sbl.jpg',
-  },
-  {
-    illustration: 'https://i.imgur.com/lceHsT6l.jpg',
-  },
-];
-
-export const colors = {
-  black: '#1a1917',
-  gray: '#888888',
-  background1: '#B721FF',
-  background2: '#21D4FD',
-};
-
-export const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: colors.black,
-  },
+const ImageCarousel = withStyles(ImageCarouselComponent, (theme) => ({
   container: {
     flex: 1,
-    backgroundColor: colors.background1,
-  },
-
-  slider: {
-    marginTop: 15,
-    overflow: 'visible', // for custom animations
-  },
-  sliderContentContainer: {
-    paddingVertical: 10, // for custom animation
+    backgroundColor: theme['color-basic-1100'],
   },
   paginationContainer: {
-    paddingVertical: 0,
-    marginTop: -50,
+    position: 'absolute',
+    bottom: 0,
+    padding: 0,
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    paddingVertical: 20,
   },
   paginationDot: {
-    width: 8,
+    width: 15,
     height: 8,
     borderRadius: 4,
     marginHorizontal: 8,
   },
-  slideInnerContainer: {
-    // width: SCREEN_WIDTH - 10,
-    height: 200,
-    // paddingHorizontal: 10,
-    paddingBottom: 18, // needed for shadow
+  inActiveDot: {
+    width: 8,
   },
-  shadow: {
-    position: 'absolute',
-    top: 0,
-    left: 10,
-    right: 10,
-    bottom: 18,
-    shadowColor: colors.black,
-    shadowOpacity: 0.25,
-    shadowOffset: {width: 0, height: 10},
-    shadowRadius: 10,
-    borderRadius: 8,
+  paginationDotColor: {
+    color: theme['color-primary-500'],
   },
-  imageContainer: {
-    flex: 1,
-    marginBottom: AppInfoService.isIOS ? 0 : -1, // Prevent a random Android rendering issue
-    backgroundColor: 'white',
+  inActiveDotColor: {
+    color: theme['color-primary-100'],
   },
+}));
+export default ImageCarousel;
 
-  image: {
-    ...StyleSheet.absoluteFillObject,
-    resizeMode: 'cover',
+const dataForCaoursel = [
+  {
+    url: 'https://images.hdqwalls.com/wallpapers/pubg-android-game-4k-eh.jpg',
   },
-  // image's border radius is buggy on iOS; let's hack it!
-  radiusMask: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 8,
-    backgroundColor: 'white',
+  {
+    url:
+      'https://www.itl.cat/pngfile/big/45-450338_pubg-girl-3d-desktop-hd-wallpaper-pubg-wallpaper.jpg',
   },
-
-  textContainer: {
-    justifyContent: 'center',
-    paddingTop: 20 - 8,
-    paddingBottom: 20,
-    paddingHorizontal: 16,
-    backgroundColor: 'white',
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
+  {
+    url:
+      'https://labourenergy.org/wp-content/uploads/2019/12/pubg-winter-wallpaper-hd-scaled.jpg',
   },
-});
+  {
+    url:
+      'https://2.bp.blogspot.com/-OVduoXsA4qM/XJRu-xgsy0I/AAAAAAAAm6k/oBSVkinse_o1KESQpzCC0UyoEBCkYEvtgCLcBGAs/s1600/PUBG-HD-Wallpapers-1.jpg',
+  },
+];

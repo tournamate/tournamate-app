@@ -55,14 +55,14 @@ const ProfileDetailsComponent = ({
   }, [authData]);
   const styles = useStyleSheet(themedStyles);
   const renderInner = () => (
-    <KeyboardAvoidingView enabled={false}>
+    <KeyboardAvoidingView enabled={false} behavior="position">
       <Layout style={styles.panel}>
         <Formik
           initialValues={{
             userName: '',
             fullName: authData?.fullName,
             avatar: selectedAvatar,
-            mobileNumber: 0,
+            mobileNumber: '',
             dob: '',
           }}
           validationSchema={ProfileSchema}

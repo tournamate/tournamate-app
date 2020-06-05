@@ -55,3 +55,12 @@ export const CalendarIcon = (style: any): IconElement => (
 export const ArrowForwardIcon = (style: any): IconElement => (
   <Icon {...style} name="arrow-forward" />
 );
+export const ClockLineIcon = (style: any): IconElement => (
+  <Icon {...style} name="clock-outline" />
+);
+export const PeopleLineIcon = (style: any): IconElement => (
+  <Icon {...style} name="people-outline" />
+);
+export const PriceTagLineIcon = (style: any): IconElement => (
+  <Icon {...style} name="pricetags-outline" />
+);
