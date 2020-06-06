@@ -25,9 +25,9 @@ export const DashboardTopNav = ({
       activeOpacity={0.7}
       onPress={onPressPhoto}>
       <View>
-        <Text style={styles.tAlignRight}>Welcome again!</Text>
+        <Text style={styles.tAlignRight}>Welcome!</Text>
         <Text style={styles.tAlignRight} {...props}>
-          {name}
+          {name.split(' ')[0]}
         </Text>
       </View>
       <Avatar style={styles.logo} source={{uri: photoUrl}} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity, Image} from 'react-native';
+import {View, TouchableOpacity, Image} from 'react-native';
 import {
   widthPercentageToDP,
   heightPercentageToDP,
@@ -32,7 +32,7 @@ const CardInList = ({
 }) => {
   const styles = useStyleSheet(themedStyles);
   return (
-    <View style={[styles.container, index === 0 && {marginLeft: 20}]}>
+    <View style={[styles.container, index === 0 && styles.ml20]}>
       <TouchableOpacity activeOpacity={0.8}>
         <Image
           source={{
@@ -41,13 +41,13 @@ const CardInList = ({
           }}
           style={styles.image as any}
         />
-        <View style={[styles.priceText, {flexDirection: 'row'}]}>
-          <Text category="s2" style={{color: '#000'}}>
+        <View style={[styles.priceText, styles.flexRow]}>
+          <Text category="s2" style={styles.colorBlack}>
             ₹{entryPrice}/entry
           </Text>
           <PriceTagLineIcon
-            style={{width: 15, height: 15, marginRight: 5}}
-            fill={'#000'}
+            style={styles.icon}
+            fill={styles.iconBlack.backgroundColor}
           />
         </View>
 
@@ -55,34 +55,40 @@ const CardInList = ({
           {trimString(title, 30)}
         </Text>
       </TouchableOpacity>
-      <View style={{flexDirection: 'row'}}>
+      <View style={styles.flexRow}>
         <ClockLineIcon
-          style={{width: 15, height: 15, marginRight: 5}}
-          fill={'#000'}
+          style={styles.icon}
+          fill={styles.iconColor.backgroundColor}
         />
-        <Text category="label">Today 12PM</Text>
+        <Text category="label" style={styles.ml12}>
+          Today 12PM
+        </Text>
       </View>
-      <View style={{flexDirection: 'row'}}>
+      <View style={styles.flexRow}>
         <PeopleLineIcon
-          style={{width: 15, height: 15, marginRight: 5}}
-          fill={'#000'}
+          style={styles.icon}
+          fill={styles.iconColor.backgroundColor}
         />
-        <Text category="label">
-          Players: {participants.joined}/{participants.total}
+        <Text category="label" style={styles.ml12}>
+          {participants.joined}/{participants.total}
         </Text>
       </View>
-      <View style={{flexDirection: 'row'}}>
+      <View style={[styles.flexRow, styles.aiCenter]}>
         <PersonLineIcon
-          style={{width: 15, height: 15, marginRight: 5}}
-          fill={'#000'}
+          style={styles.icon}
+          fill={styles.iconColor.backgroundColor}
         />
-        <Text category="label" style={styles.orgText}>
-          Org: {organizer}
-        </Text>
+        <Button appearance="ghost" size="tiny" status="basic">
+          {organizer}
+        </Button>
       </View>
       <View style={styles.tagWrap}>
         {tags.map((tag) => (
-          <Button size="tiny" style={styles.tagBtn} appearance="outline">
+          <Button
+            size="tiny"
+            style={styles.tagBtn}
+            appearance="outline"
+            status="success">
             {tag}
           </Button>
         ))}
@@ -105,7 +111,7 @@ const themedStyles = StyleService.create({
     position: 'absolute',
     right: 0,
     top: 20,
-    backgroundColor: 'color-success-300',
+    backgroundColor: 'color-warning-300',
     color: 'black',
     borderTopLeftRadius: 20,
     borderBottomLeftRadius: 20,
@@ -116,4 +122,28 @@ const themedStyles = StyleService.create({
   tagWrap: {flexDirection: 'row', flexWrap: 'wrap'},
   tagBtn: {marginRight: 5, marginBottom: 5, height: 10},
   orgText: {marginBottom: 10},
+  icon: {
+    width: 15,
+    height: 15,
+    marginRight: 5,
+  },
+  iconColor: {
+    backgroundColor: 'text-basic-color',
+  },
+  flexRow: {
+    flexDirection: 'row',
+  },
+  ml12: {
+    marginLeft: 12,
+  },
+  colorBlack: {
+    color: '#000',
+  },
+  iconBlack: {
+    backgroundColor: '#000',
+  },
+  aiCenter: {alignItems: 'center'},
+  ml20: {
+    marginLeft: 20,
+  },
 });

@@ -1,33 +1,18 @@
 import React, {useRef, useEffect, useState} from 'react';
 import {connect} from 'react-redux';
-import {View, BackHandler, Image, ScrollView} from 'react-native';
-import {
-  Layout,
-  Text,
-  StyleService,
-  useStyleSheet,
-  Button,
-} from '@ui-kitten/components';
+import {View, BackHandler, ScrollView} from 'react-native';
+import {Layout, Text, StyleService, useStyleSheet} from '@ui-kitten/components';
 
 import {DashboardTopNav} from '../../components/top-navigations/dashboard-top.component';
 import {AuthSchema} from '../../models/user.models';
-import {ProfileDetails} from '../../components/profile-bottom-sheet.component';
 import ImageCarousel from '../../components/carousels/type-1.carousel.component';
 import {ArrowForwardIcon} from '../../components/icons.component';
-import {
-  TouchableWithoutFeedback,
-  TouchableOpacity,
-} from 'react-native-gesture-handler';
-import {
-  SCREEN_WIDTH,
-  SCREEN_HEIGHT,
-  widthPercentageToDP,
-  heightPercentageToDP,
-} from '../../shared/methods/normalize';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {SCREEN_WIDTH, SCREEN_HEIGHT} from '../../shared/methods/normalize';
 import {GlobalStyles} from '../../constants/global-styles';
-import {trimString} from '../../shared/methods/trimString';
 import CardInList from '../../components/game-cards/card-list.component';
 import {isCloseToRight} from '../../shared/methods/useful';
+import {RouterConstants} from '../../constants/router.constants';
 
 const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
   const {authData} = props;
@@ -118,12 +103,6 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
       actionSheetRef.current.snapTo(3);
     }, 10);
   };
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      actionSheetRef?.current?.snapTo(4);
-      return true;
-    });
-  }, []);
   const actionSheetRef = useRef<any>();
   const styles = useStyleSheet(themedstyles);
   return (
@@ -146,14 +125,16 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
           <View style={[styles.sectionInner, styles.gutter]}>
             <Text category="h5">Your upcoming games</Text>
             <TouchableWithoutFeedback
-              onPress={() => actionSheetRef.current.snapTo(0)}>
+              onPress={() =>
+                props.navigation.navigate(RouterConstants.DetailedCards)
+              }>
               <ArrowForwardIcon
                 style={GlobalStyles.icon1}
                 fill={styles.iconColor.backgroundColor}
               />
             </TouchableWithoutFeedback>
           </View>
-          <ScrollView horizontal style={{flexDirection: 'row'}}>
+          <ScrollView horizontal style={styles.flexRow}>
             {[
               {
                 title:
@@ -254,10 +235,7 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
                 console.log('close to right');
               }
             }}
-            scrollEventThrottle={400}
-            // onScrollEndDrag={() => console.log('on end')}
-            // onMomentumScrollEnd={() => console.log('on end')}
-          >
+            scrollEventThrottle={400}>
             {contestsData.map((detail, index) => (
               <CardInList
                 key={detail.organizer}
@@ -292,6 +270,7 @@ const themedstyles = StyleService.create({
   iconColor: {
     backgroundColor: 'text-basic-color',
   },
+  flexRow: {flexDirection: 'row'},
 });
 
 const mapStateToProps = (state: any) => {

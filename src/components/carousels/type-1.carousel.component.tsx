@@ -11,6 +11,7 @@ interface Props {
   imageStyle?: ImageStyle;
   data?: Array<{url: string}>;
   eva?: {style: any};
+  onSnapToItem?: (index: number) => void;
 }
 
 class ImageCarouselComponent extends Component<Props, any> {
@@ -36,6 +37,13 @@ class ImageCarouselComponent extends Component<Props, any> {
     );
   }
 
+  handleSnapItem = (index: number) => {
+    this.setState({slider1ActiveSlide: index});
+    if (this.props?.onSnapToItem) {
+      this?.props?.onSnapToItem(index);
+    }
+  };
+
   mainExample() {
     const {slider1ActiveSlide} = this.state;
     const styles = this.props?.eva?.style;
@@ -58,7 +66,7 @@ class ImageCarouselComponent extends Component<Props, any> {
           autoplay={true}
           autoplayDelay={500}
           autoplayInterval={3000}
-          onSnapToItem={(index) => this.setState({slider1ActiveSlide: index})}
+          onSnapToItem={this.handleSnapItem}
         />
         <Pagination
           dotsLength={data.length}

@@ -12,6 +12,7 @@ import Dashboard from '../screens/dashboard/dashboard.screen';
 import Account from '../screens/account/account.screen';
 import Matches from '../screens/matches/matches.screen';
 import Notifications from '../screens/notifications/notifications.screen';
+import DetailedCards from '../screens/detailed-cards/detailed-cards.screen';
 
 const BottomTab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -58,6 +59,10 @@ export const HomeNavigator = (): React.ReactElement => (
     <Drawer.Screen
       name={RouterConstants.Notifications}
       component={Notifications}
+    />
+    <Drawer.Screen
+      name={RouterConstants.DetailedCards}
+      component={DetailedCards}
     />
   </Drawer.Navigator>
 );

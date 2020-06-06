@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ScrollView} from 'react-native';
 import {Layout, Text, Button} from '@ui-kitten/components';
 import TMStatusBar from '../../../components/status-bar.component';
-import ImageCarousel from '../../../components/image-carousel.component';
-import normalize from '../../../shared/methods/normalize';
+import normalize, {
+  heightPercentageToDP,
+} from '../../../shared/methods/normalize';
 import TMView from '../../../components/view.component';
 import {RouterConstants} from '../../../constants/router.constants';
 import {LockIcon} from '../../../components/icons.component';
+import ImageCarousel from '../../../components/carousels/type-1.carousel.component';
 
 // TODO: define types for navigation
 const Welcome = ({navigation}: any) => {
@@ -63,34 +65,41 @@ const Welcome = ({navigation}: any) => {
   };
   return (
     <Layout style={[styles.container]}>
-      <TMStatusBar translucent backgroundColor="transparent" />
-      <ImageCarousel onSnapToItem={handleImageChange} />
-      <TMView
-        justifyContent="space-between"
-        alignContent="space-between"
-        flex={1}
-        marginBottom={30}>
-        <TMView justifyContent="center" alignItems="center" marginTop={30}>
-          <Text category="h4" style={styles.text1}>
-            {headText}
-          </Text>
-          <Text category="p1">{subtext1}</Text>
-          <Text category="p1">{subText2}</Text>
-        </TMView>
+      <ScrollView>
+        <TMStatusBar translucent backgroundColor="transparent" />
+        <ImageCarousel
+          innerContainerStyle={{
+            height: heightPercentageToDP(60),
+          }}
+          onSnapToItem={handleImageChange}
+        />
         <TMView
-          width="100%"
-          paddingHorizontal={30}
-          marginBottom={15}
-          marginTop={normalize(60, 'height')}>
-          <Button
-            appearance="filled"
-            size="large"
-            onPress={() => navigation.navigate(RouterConstants.SocialSignin)}
-            accessoryLeft={LockIcon}>
-            Login
-          </Button>
+          justifyContent="space-between"
+          alignContent="space-between"
+          flex={1}
+          marginBottom={30}>
+          <TMView justifyContent="center" alignItems="center" marginTop={30}>
+            <Text category="h4" style={styles.text1}>
+              {headText}
+            </Text>
+            <Text category="p1">{subtext1}</Text>
+            <Text category="p1">{subText2}</Text>
+          </TMView>
+          <TMView
+            width="100%"
+            paddingHorizontal={30}
+            marginBottom={15}
+            marginTop={normalize(60, 'height')}>
+            <Button
+              appearance="filled"
+              size="large"
+              onPress={() => navigation.navigate(RouterConstants.SocialSignin)}
+              accessoryLeft={LockIcon}>
+              Login
+            </Button>
+          </TMView>
         </TMView>
-      </TMView>
+      </ScrollView>
     </Layout>
   );
 };
