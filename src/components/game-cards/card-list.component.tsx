@@ -3,6 +3,7 @@ import {View, TouchableOpacity, Image} from 'react-native';
 import {
   widthPercentageToDP,
   heightPercentageToDP,
+  SCREEN_WIDTH,
 } from '../../shared/methods/normalize';
 import {Text, Button, StyleService, useStyleSheet} from '@ui-kitten/components';
 import {trimString} from '../../shared/methods/trimString';
@@ -21,6 +22,7 @@ const CardInList = ({
   organizer,
   tags,
   index,
+  detailedCard,
 }: {
   entryPrice: number;
   title: string;
@@ -29,69 +31,103 @@ const CardInList = ({
   organizer: string;
   tags: string[];
   index: number;
+  detailedCard: boolean;
 }) => {
   const styles = useStyleSheet(themedStyles);
   return (
-    <View style={[styles.container, index === 0 && styles.ml20]}>
-      <TouchableOpacity activeOpacity={0.8}>
-        <Image
-          source={{
-            uri:
-              'https://2.bp.blogspot.com/-OVduoXsA4qM/XJRu-xgsy0I/AAAAAAAAm6k/oBSVkinse_o1KESQpzCC0UyoEBCkYEvtgCLcBGAs/s1600/PUBG-HD-Wallpapers-1.jpg',
-          }}
-          style={styles.image as any}
-        />
-        <View style={[styles.priceText, styles.flexRow]}>
-          <Text category="s2" style={styles.colorBlack}>
-            ₹{entryPrice}/entry
-          </Text>
-          <PriceTagLineIcon
-            style={styles.icon}
-            fill={styles.iconBlack.backgroundColor}
-          />
+    <View
+      style={[
+        styles.container,
+        index === 0 && !detailedCard && styles.ml20,
+        detailedCard && {width: SCREEN_WIDTH, marginHorizontal: 20},
+      ]}>
+      <View style={[detailedCard && {flexDirection: 'row'}]}>
+        <View style={[detailedCard && {marginRight: 15}]}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={[detailedCard && {flexDirection: 'row'}]}>
+            <Image
+              source={{
+                uri:
+                  'https://2.bp.blogspot.com/-OVduoXsA4qM/XJRu-xgsy0I/AAAAAAAAm6k/oBSVkinse_o1KESQpzCC0UyoEBCkYEvtgCLcBGAs/s1600/PUBG-HD-Wallpapers-1.jpg',
+              }}
+              style={[
+                styles.image as any,
+                detailedCard && styles.detailedImage,
+              ]}
+            />
+            {detailedCard ? null : (
+              <View style={[styles.priceText, styles.flexRow]}>
+                <Text category="s2" style={styles.colorBlack}>
+                  ₹{entryPrice}/entry
+                </Text>
+                <PriceTagLineIcon
+                  style={styles.icon}
+                  fill={styles.iconBlack.backgroundColor}
+                />
+              </View>
+            )}
+          </TouchableOpacity>
         </View>
-
-        <Text style={styles.cardTitle} category="p1">
-          {trimString(title, 30)}
-        </Text>
-      </TouchableOpacity>
-      <View style={styles.flexRow}>
-        <ClockLineIcon
-          style={styles.icon}
-          fill={styles.iconColor.backgroundColor}
-        />
-        <Text category="label" style={styles.ml12}>
-          Today 12PM
-        </Text>
-      </View>
-      <View style={styles.flexRow}>
-        <PeopleLineIcon
-          style={styles.icon}
-          fill={styles.iconColor.backgroundColor}
-        />
-        <Text category="label" style={styles.ml12}>
-          {participants.joined}/{participants.total}
-        </Text>
-      </View>
-      <View style={[styles.flexRow, styles.aiCenter]}>
-        <PersonLineIcon
-          style={styles.icon}
-          fill={styles.iconColor.backgroundColor}
-        />
-        <Button appearance="ghost" size="tiny" status="basic">
-          {organizer}
-        </Button>
-      </View>
-      <View style={styles.tagWrap}>
-        {tags.map((tag) => (
-          <Button
-            size="tiny"
-            style={styles.tagBtn}
-            appearance="outline"
-            status="success">
-            {tag}
-          </Button>
-        ))}
+        <View>
+          <View style={{flexDirection: 'row'}}>
+            <Text
+              style={[
+                styles.cardTitle,
+                detailedCard && {width: widthPercentageToDP(45)},
+              ]}
+              category="p1">
+              {detailedCard ? title : trimString(title, 30)}
+            </Text>
+            {detailedCard && (
+              <Button
+                size="tiny"
+                style={styles.tagBtn}
+                // appearance="outline"
+                status="danger">
+                {`₹${entryPrice}/entry`}
+              </Button>
+            )}
+          </View>
+          <View style={styles.flexRow}>
+            <ClockLineIcon
+              style={styles.icon}
+              fill={styles.iconColor.backgroundColor}
+            />
+            <Text category="label" style={styles.ml12}>
+              Today 12PM
+            </Text>
+          </View>
+          <View style={styles.flexRow}>
+            <PeopleLineIcon
+              style={styles.icon}
+              fill={styles.iconColor.backgroundColor}
+            />
+            <Text category="label" style={styles.ml12}>
+              {participants.joined}/{participants.total}
+            </Text>
+          </View>
+          <View style={[styles.flexRow, styles.aiCenter]}>
+            <PersonLineIcon
+              style={styles.icon}
+              fill={styles.iconColor.backgroundColor}
+            />
+            <Button appearance="ghost" size="tiny" status="basic">
+              {organizer}
+            </Button>
+          </View>
+          <View style={styles.tagWrap}>
+            {tags.map((tag) => (
+              <Button
+                size="tiny"
+                style={styles.tagBtn}
+                appearance="outline"
+                status="success">
+                {tag}
+              </Button>
+            ))}
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -105,6 +141,12 @@ const themedStyles = StyleService.create({
     width: widthPercentageToDP(35),
     height: heightPercentageToDP(17),
     borderRadius: 25,
+    marginBottom: 5,
+  },
+  detailedImage: {
+    width: widthPercentageToDP(30),
+    height: heightPercentageToDP(20),
+    borderRadius: 15,
     marginBottom: 5,
   },
   priceText: {
