@@ -31,7 +31,7 @@ const CardInList = ({
   organizer: string;
   tags: string[];
   index: number;
-  detailedCard: boolean;
+  detailedCard?: boolean;
 }) => {
   const styles = useStyleSheet(themedStyles);
   return (
@@ -39,10 +39,24 @@ const CardInList = ({
       style={[
         styles.container,
         index === 0 && !detailedCard && styles.ml20,
-        detailedCard && {width: SCREEN_WIDTH, marginHorizontal: 20},
+        detailedCard && {
+          marginBottom: 15,
+        },
       ]}>
-      <View style={[detailedCard && {flexDirection: 'row'}]}>
-        <View style={[detailedCard && {marginRight: 15}]}>
+      <View
+        style={[
+          detailedCard && {
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            width: widthPercentageToDP(100),
+            justifyContent: 'center',
+            alignContent: 'center',
+          },
+        ]}>
+        <View
+          style={[
+            detailedCard && {marginRight: 15, width: widthPercentageToDP(32)},
+          ]}>
           <TouchableOpacity
             activeOpacity={0.8}
             style={[detailedCard && {flexDirection: 'row'}]}>
@@ -54,6 +68,7 @@ const CardInList = ({
               style={[
                 styles.image as any,
                 detailedCard && styles.detailedImage,
+                {width: '100%'},
               ]}
             />
             {detailedCard ? null : (
@@ -69,52 +84,71 @@ const CardInList = ({
             )}
           </TouchableOpacity>
         </View>
-        <View>
-          <View style={{flexDirection: 'row'}}>
+        <View style={detailedCard && {width: widthPercentageToDP(60)}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+              marginBottom: 10,
+            }}>
             <Text
               style={[
-                styles.cardTitle,
-                detailedCard && {width: widthPercentageToDP(45)},
+                !detailedCard && styles.cardTitle,
+                // detailedCard && {width: '63%'},
               ]}
-              category="p1">
-              {detailedCard ? title : trimString(title, 30)}
+              category={detailedCard ? 'h6' : 'p1'}>
+              {detailedCard ? trimString(title, 50) : trimString(title, 30)}
             </Text>
-            {detailedCard && (
-              <Button
-                size="tiny"
-                style={styles.tagBtn}
-                // appearance="outline"
-                status="danger">
-                {`₹${entryPrice}/entry`}
+          </View>
+          <View style={[styles.flexRow, {flexWrap: 'wrap'}]}>
+            <View style={[styles.flexRow, {marginRight: 10}]}>
+              <ClockLineIcon
+                style={styles.icon}
+                fill={styles.iconColor.backgroundColor}
+              />
+              <Text category="label" style={styles.ml12}>
+                Today 12PM
+              </Text>
+            </View>
+            <View style={styles.flexRow}>
+              <PeopleLineIcon
+                style={styles.icon}
+                fill={styles.iconColor.backgroundColor}
+              />
+              <Text category="label" style={styles.ml12}>
+                {participants.joined}/{participants.total}
+              </Text>
+            </View>
+            <View style={[styles.flexRow, styles.aiCenter, {marginBottom: 5}]}>
+              <PersonLineIcon
+                style={styles.icon}
+                fill={styles.iconColor.backgroundColor}
+              />
+              <Button appearance="ghost" size="small" status="basic">
+                {organizer}
               </Button>
+            </View>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            {detailedCard && (
+              <>
+                <Button
+                  size="tiny"
+                  style={styles.tagBtn}
+                  // appearance="outline"
+                  status="warning">
+                  {`₹${entryPrice}/entry`}
+                </Button>
+                <Button
+                  size="tiny"
+                  style={styles.tagBtn}
+                  // appearance="outline"
+                  status="danger">
+                  Hot 🔥
+                </Button>
+              </>
             )}
-          </View>
-          <View style={styles.flexRow}>
-            <ClockLineIcon
-              style={styles.icon}
-              fill={styles.iconColor.backgroundColor}
-            />
-            <Text category="label" style={styles.ml12}>
-              Today 12PM
-            </Text>
-          </View>
-          <View style={styles.flexRow}>
-            <PeopleLineIcon
-              style={styles.icon}
-              fill={styles.iconColor.backgroundColor}
-            />
-            <Text category="label" style={styles.ml12}>
-              {participants.joined}/{participants.total}
-            </Text>
-          </View>
-          <View style={[styles.flexRow, styles.aiCenter]}>
-            <PersonLineIcon
-              style={styles.icon}
-              fill={styles.iconColor.backgroundColor}
-            />
-            <Button appearance="ghost" size="tiny" status="basic">
-              {organizer}
-            </Button>
           </View>
           <View style={styles.tagWrap}>
             {tags.map((tag) => (
@@ -145,7 +179,7 @@ const themedStyles = StyleService.create({
   },
   detailedImage: {
     width: widthPercentageToDP(30),
-    height: heightPercentageToDP(20),
+    height: heightPercentageToDP(25),
     borderRadius: 15,
     marginBottom: 5,
   },

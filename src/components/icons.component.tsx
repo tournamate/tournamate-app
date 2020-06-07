@@ -73,3 +73,6 @@ export const FlipIcon = (style: any): IconElement => (
 export const FunnelLineIcon = (style: any): IconElement => (
   <Icon {...style} name="funnel-outline" />
 );
+export const ArrowIOSForward = (style: any): IconElement => (
+  <Icon {...style} name="arrow-ios-forward-outline" />
+);

@@ -13,6 +13,7 @@ import {GlobalStyles} from '../../constants/global-styles';
 import CardInList from '../../components/game-cards/card-list.component';
 import {isCloseToRight} from '../../shared/methods/useful';
 import {RouterConstants} from '../../constants/router.constants';
+import {IconList} from '../../components/game-cards/icon-list.component';
 
 const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
   const {authData} = props;
@@ -106,153 +107,142 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
   const actionSheetRef = useRef<any>();
   const styles = useStyleSheet(themedstyles);
   return (
-    <ScrollView>
-      <Layout style={styles.container} level="3">
-        <DashboardTopNav
-          name={authData.fullName}
-          photoUrl={authData.photo}
-          onPressPhoto={handleOnPhotoPress}
-          navigation={props.navigation}
-        />
-        <ImageCarousel
-          innerContainerStyle={{
-            width: SCREEN_WIDTH,
-            height: SCREEN_HEIGHT * 0.2,
-          }}
-          data={sliderData}
-        />
-        <View style={styles.section1}>
-          <View style={[styles.sectionInner, styles.gutter]}>
-            <Text category="h5">Your upcoming games</Text>
-            <TouchableWithoutFeedback
-              onPress={() =>
-                props.navigation.navigate(RouterConstants.DetailedCards)
-              }>
-              <ArrowForwardIcon
-                style={GlobalStyles.icon1}
-                fill={styles.iconColor.backgroundColor}
-              />
-            </TouchableWithoutFeedback>
-          </View>
-          <ScrollView horizontal style={styles.flexRow}>
+    <>
+      <DashboardTopNav
+        name={authData.fullName}
+        photoUrl={authData.photo}
+        onPressPhoto={handleOnPhotoPress}
+        navigation={props.navigation}
+      />
+      <ScrollView>
+        <Layout style={styles.container} level="3">
+          <ImageCarousel
+            innerContainerStyle={{
+              width: SCREEN_WIDTH,
+              height: SCREEN_HEIGHT * 0.2,
+            }}
+            data={sliderData}
+          />
+          <ScrollView horizontal style={{flexDirection: 'row'}}>
             {[
               {
-                title:
-                  'Cards contain content and actions about a single subject',
-                entryPrice: 50,
-                organizer: 'Karthik',
-                participants: {joined: 30, total: 100},
-                tags: ['Pubg', 'Solo', 'Vekandi'],
-                timing: {},
+                icon: 'person-outline',
+                color: '#0377fc',
+                text: 'Update / Edit profile',
               },
+              {icon: 'pricetags-outline', color: '#4FA0FD', text: 'Add money'},
               {
-                title:
-                  'Cards contain content and actions about a single subject',
-                entryPrice: 50,
-                organizer: 'Ashok',
-                participants: {joined: 30, total: 100},
-                tags: ['Pubg', 'Solo', 'Vekandi'],
-                timing: {},
+                icon: 'pie-chart-outline',
+                color: '#036BE3',
+                text: 'Your Statistics',
               },
-              {
-                title:
-                  'Cards contain content and actions about a single subject',
-                entryPrice: 50,
-                organizer: 'Shankar',
-                participants: {joined: 30, total: 100},
-                tags: ['Pubg', 'Solo', 'Vekandi'],
-                timing: {},
-              },
-              {
-                title:
-                  'Cards contain content and actions about a single subject',
-                entryPrice: 50,
-                organizer: 'Newton',
-                participants: {joined: 30, total: 100},
-                tags: ['Pubg', 'Solo', 'Vekandi'],
-                timing: {},
-              },
-            ].map((detail, index) => (
-              <CardInList
-                key={detail.organizer}
-                index={index}
-                title={detail.title}
-                entryPrice={detail.entryPrice}
-                organizer={detail.organizer}
-                participants={detail.participants}
-                tags={detail.tags}
-                timing={detail.timing}
-              />
+            ].map((data) => (
+              <IconList icon={data.icon} color={data.color} text={data.text} />
             ))}
           </ScrollView>
-        </View>
-        <View style={styles.section1}>
-          <View style={[styles.sectionInner, styles.gutter]}>
-            <Text category="h5">Pubg Contests</Text>
-            <TouchableWithoutFeedback
-              onPress={() => actionSheetRef.current.snapTo(0)}>
-              <ArrowForwardIcon
-                style={GlobalStyles.icon1}
-                fill={styles.iconColor.backgroundColor}
-              />
-            </TouchableWithoutFeedback>
+
+          <View style={styles.section1}>
+            <View style={[styles.sectionInner, styles.gutter]}>
+              <Text category="h5">Your upcoming games</Text>
+              <TouchableWithoutFeedback
+                onPress={() =>
+                  props.navigation.navigate(RouterConstants.DetailedCards)
+                }>
+                <ArrowForwardIcon
+                  style={GlobalStyles.icon1}
+                  fill={styles.iconColor.backgroundColor}
+                />
+              </TouchableWithoutFeedback>
+            </View>
+            <ScrollView horizontal style={styles.flexRow}>
+              {[
+                {
+                  title:
+                    'Cards contain content and actions about a single subject',
+                  entryPrice: 50,
+                  organizer: 'Karthik',
+                  participants: {joined: 30, total: 100},
+                  tags: ['Pubg', 'Solo', 'Vekandi'],
+                  timing: {},
+                },
+                {
+                  title:
+                    'Cards contain content and actions about a single subject',
+                  entryPrice: 50,
+                  organizer: 'Ashok',
+                  participants: {joined: 30, total: 100},
+                  tags: ['Pubg', 'Solo', 'Vekandi'],
+                  timing: {},
+                },
+                {
+                  title:
+                    'Cards contain content and actions about a single subject',
+                  entryPrice: 50,
+                  organizer: 'Shankar',
+                  participants: {joined: 30, total: 100},
+                  tags: ['Pubg', 'Solo', 'Vekandi'],
+                  timing: {},
+                },
+                {
+                  title:
+                    'Cards contain content and actions about a single subject',
+                  entryPrice: 50,
+                  organizer: 'Newton',
+                  participants: {joined: 30, total: 100},
+                  tags: ['Pubg', 'Solo', 'Vekandi'],
+                  timing: {},
+                },
+              ].map((detail, index) => (
+                <CardInList
+                  key={detail.organizer}
+                  index={index}
+                  title={detail.title}
+                  entryPrice={detail.entryPrice}
+                  organizer={detail.organizer}
+                  participants={detail.participants}
+                  tags={detail.tags}
+                  timing={detail.timing}
+                />
+              ))}
+            </ScrollView>
           </View>
-          <ScrollView
-            horizontal
-            style={{flexDirection: 'row'}}
-            snapToEnd
-            onScroll={({nativeEvent}) => {
-              if (isCloseToRight(nativeEvent)) {
-                const localContests = [...contestsData];
-                localContests.push({
-                  title:
-                    'Cards contain content and actions about a single subject',
-                  entryPrice: 50,
-                  organizer: 'Karthik',
-                  participants: {joined: 30, total: 100},
-                  tags: ['Pubg', 'Solo', 'Vekandi'],
-                  timing: {},
-                });
-                localContests.push({
-                  title:
-                    'Cards contain content and actions about a single subject',
-                  entryPrice: 50,
-                  organizer: 'Karthik',
-                  participants: {joined: 30, total: 100},
-                  tags: ['Pubg', 'Solo', 'Vekandi'],
-                  timing: {},
-                });
-                localContests.push({
-                  title:
-                    'Cards contain content and actions about a single subject',
-                  entryPrice: 50,
-                  organizer: 'Karthik',
-                  participants: {joined: 30, total: 100},
-                  tags: ['Pubg', 'Solo', 'Vekandi'],
-                  timing: {},
-                });
-                setContestsData(localContests);
+          <View style={styles.section1}>
+            <View style={[styles.sectionInner, styles.gutter]}>
+              <Text category="h5">Pubg Contests</Text>
+              <TouchableWithoutFeedback
+                onPress={() => actionSheetRef.current.snapTo(0)}>
+                <ArrowForwardIcon
+                  style={GlobalStyles.icon1}
+                  fill={styles.iconColor.backgroundColor}
+                />
+              </TouchableWithoutFeedback>
+            </View>
+            <ScrollView
+              horizontal
+              style={{flexDirection: 'row'}}
+              snapToEnd
+              onScroll={({nativeEvent}) => {
                 console.log('close to right');
-              }
-            }}
-            scrollEventThrottle={400}>
-            {contestsData.map((detail, index) => (
-              <CardInList
-                key={detail.organizer}
-                index={index}
-                title={detail.title}
-                entryPrice={detail.entryPrice}
-                organizer={detail.organizer}
-                participants={detail.participants}
-                tags={detail.tags}
-                timing={detail.timing}
-              />
-            ))}
-          </ScrollView>
-        </View>
-        {/* <ProfileDetails actionSheetRef={actionSheetRef} /> */}
-      </Layout>
-    </ScrollView>
+              }}
+              scrollEventThrottle={400}>
+              {contestsData.map((detail, index) => (
+                <CardInList
+                  key={detail.organizer}
+                  index={index}
+                  title={detail.title}
+                  entryPrice={detail.entryPrice}
+                  organizer={detail.organizer}
+                  participants={detail.participants}
+                  tags={detail.tags}
+                  timing={detail.timing}
+                />
+              ))}
+            </ScrollView>
+          </View>
+          {/* <ProfileDetails actionSheetRef={actionSheetRef} /> */}
+        </Layout>
+      </ScrollView>
+    </>
   );
 };
 

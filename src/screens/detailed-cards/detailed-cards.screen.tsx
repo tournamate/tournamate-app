@@ -7,7 +7,8 @@ import CardInList from '../../components/game-cards/card-list.component';
 const DetailedCards = ({navigation}) => {
   const [contestsData, setContestsData] = useState([
     {
-      title: 'Cards contain content and actions about a single subject',
+      title:
+        'Cards contain content and actions about a single subject single subject single subject single subject',
       entryPrice: 50,
       organizer: 'Karthik',
       participants: {joined: 30, total: 100},
