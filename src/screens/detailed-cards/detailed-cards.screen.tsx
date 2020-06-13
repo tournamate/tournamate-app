@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
-import {Layout, Text, StyleService, useStyleSheet} from '@ui-kitten/components';
+import {StyleSheet, ScrollView} from 'react-native';
+import {Layout} from '@ui-kitten/components';
 import {DetailedCardsNav} from '../../components/top-navigations/detailed-cards.component';
 import CardInList from '../../components/game-cards/card-list.component';
 
@@ -89,9 +89,9 @@ const DetailedCards = ({navigation}) => {
     },
   ]);
   return (
-    <ScrollView style={{flex: 1, height: '100%'}}>
-      <Layout style={{flex: 1, height: '100%'}}>
-        <DetailedCardsNav name="Detailed Cards" navigation={navigation} />
+    <ScrollView style={styles.container}>
+      <Layout>
+        <DetailedCardsNav navName="Detailed Cards" navigation={navigation} />
         {contestsData.map((detail, index) => (
           <CardInList
             key={detail.organizer}
@@ -113,7 +113,5 @@ const DetailedCards = ({navigation}) => {
 export default DetailedCards;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: {flex: 1, height: '100%'},
 });

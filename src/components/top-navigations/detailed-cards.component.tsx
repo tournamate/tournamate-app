@@ -16,7 +16,13 @@ import {
   FunnelLineIcon,
 } from '../icons.component';
 
-export const DetailedCardsNav = ({navigation}) => {
+export const DetailedCardsNav = ({
+  navigation,
+  navName,
+}: {
+  navigation: object | any;
+  navName: string;
+}) => {
   const [menuVisible, setMenuVisible] = React.useState(false);
 
   const toggleMenu = () => {
@@ -47,8 +53,6 @@ export const DetailedCardsNav = ({navigation}) => {
           <MenuItem title="Entry Fee" accessoryLeft={PriceTagLineIcon} />
           <MenuItem title="Participants" accessoryLeft={PeopleLineIcon} />
         </MenuGroup>
-        {/* <MenuItem accessoryLeft={InfoIcon} title="About" />
-        <MenuItem accessoryLeft={LogoutIcon} title="Logout" /> */}
       </OverflowMenu>
     </React.Fragment>
   );
@@ -60,7 +64,7 @@ export const DetailedCardsNav = ({navigation}) => {
   return (
     <TopNavigation
       alignment="center"
-      title="Eva Application"
+      title={navName}
       //   subtitle="Subtitle"
       accessoryLeft={renderBackAction}
       accessoryRight={renderRightActions}

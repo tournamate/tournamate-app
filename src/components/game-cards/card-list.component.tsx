@@ -3,7 +3,6 @@ import {View, TouchableOpacity, Image} from 'react-native';
 import {
   widthPercentageToDP,
   heightPercentageToDP,
-  SCREEN_WIDTH,
 } from '../../shared/methods/normalize';
 import {Text, Button, StyleService, useStyleSheet} from '@ui-kitten/components';
 import {trimString} from '../../shared/methods/trimString';
@@ -13,6 +12,7 @@ import {
   PeopleLineIcon,
   PriceTagLineIcon,
 } from '../icons.component';
+import {GlobalStyles as gStyles} from '../../constants/global-styles';
 
 const CardInList = ({
   entryPrice,
@@ -38,28 +38,17 @@ const CardInList = ({
     <View
       style={[
         styles.container,
-        index === 0 && !detailedCard && styles.ml20,
-        detailedCard && {
-          marginBottom: 15,
-        },
+        index === 0 && !detailedCard && gStyles.ml20,
+        detailedCard && gStyles.mb15,
       ]}>
-      <View
-        style={[
-          detailedCard && {
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            width: widthPercentageToDP(100),
-            justifyContent: 'center',
-            alignContent: 'center',
-          },
-        ]}>
+      <View style={[detailedCard && styles.detailedCardWrapper]}>
         <View
           style={[
-            detailedCard && {marginRight: 15, width: widthPercentageToDP(32)},
+            detailedCard && [gStyles.mr15, styles.detailedCardLeftWidth],
           ]}>
           <TouchableOpacity
             activeOpacity={0.8}
-            style={[detailedCard && {flexDirection: 'row'}]}>
+            style={[detailedCard && gStyles.flexRow]}>
             <Image
               source={{
                 uri:
@@ -68,11 +57,11 @@ const CardInList = ({
               style={[
                 styles.image as any,
                 detailedCard && styles.detailedImage,
-                {width: '100%'},
+                gStyles.w100,
               ]}
             />
             {detailedCard ? null : (
-              <View style={[styles.priceText, styles.flexRow]}>
+              <View style={[styles.priceText, gStyles.flexRow]}>
                 <Text category="s2" style={styles.colorBlack}>
                   ₹{entryPrice}/entry
                 </Text>
@@ -84,43 +73,34 @@ const CardInList = ({
             )}
           </TouchableOpacity>
         </View>
-        <View style={detailedCard && {width: widthPercentageToDP(60)}}>
-          <View
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              marginBottom: 10,
-            }}>
+        <View style={detailedCard && styles.detailedCardRightWidth}>
+          <View style={[gStyles.flexRowWrap1, gStyles.mb10]}>
             <Text
-              style={[
-                !detailedCard && styles.cardTitle,
-                // detailedCard && {width: '63%'},
-              ]}
+              style={[!detailedCard && styles.cardTitle]}
               category={detailedCard ? 'h6' : 'p1'}>
               {detailedCard ? trimString(title, 50) : trimString(title, 30)}
             </Text>
           </View>
-          <View style={[styles.flexRow, {flexWrap: 'wrap'}]}>
-            <View style={[styles.flexRow, {marginRight: 10}]}>
+          <View style={[gStyles.flexRow, gStyles.flexWrap]}>
+            <View style={[gStyles.flexRow, gStyles.mr10]}>
               <ClockLineIcon
                 style={styles.icon}
                 fill={styles.iconColor.backgroundColor}
               />
-              <Text category="label" style={styles.ml12}>
+              <Text category="label" style={gStyles.ml12}>
                 Today 12PM
               </Text>
             </View>
-            <View style={styles.flexRow}>
+            <View style={gStyles.flexRow}>
               <PeopleLineIcon
                 style={styles.icon}
                 fill={styles.iconColor.backgroundColor}
               />
-              <Text category="label" style={styles.ml12}>
+              <Text category="label" style={gStyles.ml12}>
                 {participants.joined}/{participants.total}
               </Text>
             </View>
-            <View style={[styles.flexRow, styles.aiCenter, {marginBottom: 5}]}>
+            <View style={[gStyles.flexRow, gStyles.aiCenter]}>
               <PersonLineIcon
                 style={styles.icon}
                 fill={styles.iconColor.backgroundColor}
@@ -130,21 +110,13 @@ const CardInList = ({
               </Button>
             </View>
           </View>
-          <View style={{flexDirection: 'row'}}>
+          <View style={gStyles.flexRow}>
             {detailedCard && (
               <>
-                <Button
-                  size="tiny"
-                  style={styles.tagBtn}
-                  // appearance="outline"
-                  status="warning">
+                <Button size="tiny" style={styles.tagBtn} status="warning">
                   {`₹${entryPrice}/entry`}
                 </Button>
-                <Button
-                  size="tiny"
-                  style={styles.tagBtn}
-                  // appearance="outline"
-                  status="danger">
+                <Button size="tiny" style={styles.tagBtn} status="danger">
                   Hot 🔥
                 </Button>
               </>
@@ -171,6 +143,13 @@ export default CardInList;
 
 const themedStyles = StyleService.create({
   container: {width: widthPercentageToDP(35), marginRight: 15},
+  detailedCardWrapper: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: widthPercentageToDP(100),
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
   image: {
     width: widthPercentageToDP(35),
     height: heightPercentageToDP(17),
@@ -197,7 +176,8 @@ const themedStyles = StyleService.create({
   cardTitle: {width: widthPercentageToDP(35), marginBottom: 5},
   tagWrap: {flexDirection: 'row', flexWrap: 'wrap'},
   tagBtn: {marginRight: 5, marginBottom: 5, height: 10},
-  orgText: {marginBottom: 10},
+  detailedCardRightWidth: {width: widthPercentageToDP(60)},
+  detailedCardLeftWidth: {width: widthPercentageToDP(32)},
   icon: {
     width: 15,
     height: 15,
@@ -206,20 +186,10 @@ const themedStyles = StyleService.create({
   iconColor: {
     backgroundColor: 'text-basic-color',
   },
-  flexRow: {
-    flexDirection: 'row',
-  },
-  ml12: {
-    marginLeft: 12,
-  },
   colorBlack: {
     color: '#000',
   },
   iconBlack: {
     backgroundColor: '#000',
-  },
-  aiCenter: {alignItems: 'center'},
-  ml20: {
-    marginLeft: 20,
   },
 });
