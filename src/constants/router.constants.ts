@@ -11,4 +11,5 @@ export const RouterConstants = {
   Notifications: 'Notifications',
   SocialSignin: 'SocialSignin',
   DetailedCards: 'DetailedCards',
+  OrganizeContest: 'OrganizeContest',
 };

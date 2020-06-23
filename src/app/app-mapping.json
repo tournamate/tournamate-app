@@ -2,7 +2,7 @@
   "strict": {
     "text-font-family": "Roboto-Regular",
     "text-heading-1-font-family": "Roboto-Bold",
-    "border-radius": 25
+    "border-radius": 5
   },
   "components": {
     "Button": {

@@ -19,9 +19,11 @@ import {
 export const DetailedCardsNav = ({
   navigation,
   navName,
+  onPressFilter,
 }: {
   navigation: object | any;
   navName: string;
+  onPressFilter: () => void;
 }) => {
   const [menuVisible, setMenuVisible] = React.useState(false);
 
@@ -39,7 +41,7 @@ export const DetailedCardsNav = ({
 
   const renderRightActions = () => (
     <React.Fragment>
-      <TopNavigationAction icon={FunnelLineIcon} />
+      <TopNavigationAction icon={FunnelLineIcon} onPress={onPressFilter} />
       <OverflowMenu
         anchor={renderMenuAction}
         visible={menuVisible}

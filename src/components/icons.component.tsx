@@ -25,6 +25,9 @@ export const PersonLineIcon = (style: any): IconElement => (
 export const CloseFilledIcon = (style: any): IconElement => (
   <Icon {...style} name="close-circle" />
 );
+export const CloseIcon = (style: any): IconElement => (
+  <Icon {...style} name="close" />
+);
 export const FlashLineIcon = (style: any): IconElement => (
   <Icon {...style} name="flash-outline" />
 );
@@ -75,4 +78,23 @@ export const FunnelLineIcon = (style: any): IconElement => (
 );
 export const ArrowIOSForward = (style: any): IconElement => (
   <Icon {...style} name="arrow-ios-forward-outline" />
+);
+
+export const SwapIcon = (style: any): IconElement => (
+  <Icon {...style} name="swap-outline" />
+);
+export const TrendingIcon = (style: any): IconElement => (
+  <Icon {...style} name="trending-up-outline" />
+);
+export const PhoneCallIcon = (style: any): IconElement => (
+  <Icon {...style} name="phone-call-outline" />
+);
+export const SettingsLineIcon2 = (style: any): IconElement => (
+  <Icon {...style} name="settings-2-outline" />
+);
+export const BriefCaseLineIcon = (style: any): IconElement => (
+  <Icon {...style} name="briefcase-outline" />
+);
+export const DoneAllIcon = (style: any): IconElement => (
+  <Icon {...style} name="done-all" />
 );

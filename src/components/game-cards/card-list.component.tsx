@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity, Image} from 'react-native';
+import {View, TouchableOpacity, ImageBackground} from 'react-native';
 import {
   widthPercentageToDP,
   heightPercentageToDP,
@@ -12,7 +12,10 @@ import {
   PeopleLineIcon,
   PriceTagLineIcon,
 } from '../icons.component';
-import {GlobalStyles as gStyles} from '../../constants/global-styles';
+import {
+  GlobalStyles as gStyles,
+  GlobalStyles,
+} from '../../constants/global-styles';
 
 const CardInList = ({
   entryPrice,
@@ -49,7 +52,7 @@ const CardInList = ({
           <TouchableOpacity
             activeOpacity={0.8}
             style={[detailedCard && gStyles.flexRow]}>
-            <Image
+            <ImageBackground
               source={{
                 uri:
                   'https://2.bp.blogspot.com/-OVduoXsA4qM/XJRu-xgsy0I/AAAAAAAAm6k/oBSVkinse_o1KESQpzCC0UyoEBCkYEvtgCLcBGAs/s1600/PUBG-HD-Wallpapers-1.jpg',
@@ -59,10 +62,18 @@ const CardInList = ({
                 detailedCard && styles.detailedImage,
                 gStyles.w100,
               ]}
-            />
-            {detailedCard ? null : (
-              <View style={[styles.priceText, gStyles.flexRow]}>
-                <Text category="s2" style={styles.colorBlack}>
+              imageStyle={
+                detailedCard ? (styles.br15 as any) : (styles.br25 as any)
+              }>
+              <View
+                style={[
+                  styles.priceText,
+                  detailedCard && styles.detailedCardPrice,
+                  gStyles.flexRow,
+                ]}>
+                <Text
+                  category="s2"
+                  style={[styles.colorBlack, GlobalStyles.tAlignCenter]}>
                   ₹{entryPrice}/entry
                 </Text>
                 <PriceTagLineIcon
@@ -70,7 +81,7 @@ const CardInList = ({
                   fill={styles.iconBlack.backgroundColor}
                 />
               </View>
-            )}
+            </ImageBackground>
           </TouchableOpacity>
         </View>
         <View style={detailedCard && styles.detailedCardRightWidth}>
@@ -109,18 +120,6 @@ const CardInList = ({
                 {organizer}
               </Button>
             </View>
-          </View>
-          <View style={gStyles.flexRow}>
-            {detailedCard && (
-              <>
-                <Button size="tiny" style={styles.tagBtn} status="warning">
-                  {`₹${entryPrice}/entry`}
-                </Button>
-                <Button size="tiny" style={styles.tagBtn} status="danger">
-                  Hot 🔥
-                </Button>
-              </>
-            )}
           </View>
           <View style={styles.tagWrap}>
             {tags.map((tag) => (
@@ -162,6 +161,12 @@ const themedStyles = StyleService.create({
     borderRadius: 15,
     marginBottom: 5,
   },
+  br15: {
+    borderRadius: 15,
+  },
+  br25: {
+    borderRadius: 25,
+  },
   priceText: {
     position: 'absolute',
     right: 0,
@@ -172,6 +177,14 @@ const themedStyles = StyleService.create({
     borderBottomLeftRadius: 20,
     paddingLeft: 10,
     alignItems: 'center',
+  },
+  detailedCardPrice: {
+    borderBottomLeftRadius: 0,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    position: 'relative',
+    justifyContent: 'center',
+    top: 0,
   },
   cardTitle: {width: widthPercentageToDP(35), marginBottom: 5},
   tagWrap: {flexDirection: 'row', flexWrap: 'wrap'},

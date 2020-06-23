@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native';
 export const GlobalStyles = StyleSheet.create({
   icon1: {width: 30, height: 30},
+  cGutter: {paddingHorizontal: 10},
   mr5: {marginRight: 5},
   mr15: {marginRight: 15},
   ml12: {marginLeft: 12},
@@ -19,4 +20,6 @@ export const GlobalStyles = StyleSheet.create({
   flexRow: {flexDirection: 'row'},
   flexWrap: {flexWrap: 'wrap'},
   aiCenter: {alignItems: 'center'},
+  tAlignCenter: {textAlign: 'center'},
+  pv10: {paddingVertical: 10},
 });

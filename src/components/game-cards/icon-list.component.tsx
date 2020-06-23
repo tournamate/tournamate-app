@@ -1,41 +1,52 @@
 import React from 'react';
-import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
-import {PriceTagLineIcon} from '../icons.component';
-import {Text, Icon} from '@ui-kitten/components';
+import {View, TouchableOpacity} from 'react-native';
+import {Text, Icon, StyleService, useStyleSheet} from '@ui-kitten/components';
 import {widthPercentageToDP} from '../../shared/methods/normalize';
+import {GlobalStyles} from '../../constants/global-styles';
 
-export const IconList = ({icon, color, text}) => {
+export const IconList = ({
+  icon,
+  text,
+  onPress,
+}: {
+  icon: string;
+  text: string;
+  onPress: () => void;
+}) => {
+  const styles = useStyleSheet(themedStyle);
   return (
     <TouchableOpacity
       activeOpacity={1}
-      style={{
-        paddingTop: 40,
-        width: widthPercentageToDP(30),
-        alignItems: 'center',
-      }}>
-      <View
-        style={{
-          backgroundColor: color,
-          width: 50,
-          height: 50,
-          borderRadius: 30,
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: 10,
-        }}>
+      style={styles.wrapper}
+      onPress={onPress}>
+      <View style={styles.iconWrapper}>
         <Icon style={styles.icon} fill="#fff" name={icon} />
       </View>
-      <Text style={{textAlign: 'center'}}>{text}</Text>
+      <Text style={GlobalStyles.tAlignCenter}>{text}</Text>
     </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
+const themedStyle = StyleService.create({
   icon: {
     width: 35,
     height: 35,
   },
   iconBlack: {
     backgroundColor: '#fff',
+  },
+  wrapper: {
+    paddingTop: 40,
+    width: widthPercentageToDP(30),
+    alignItems: 'center',
+  },
+  iconWrapper: {
+    backgroundColor: 'color-primary-500',
+    width: 50,
+    height: 50,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
   },
 });

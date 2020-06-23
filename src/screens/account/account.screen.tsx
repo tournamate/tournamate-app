@@ -1,21 +1,82 @@
 import React from 'react';
-import {StyleSheet, Text, View, ScrollView, ImageProps} from 'react-native';
-import {Layout, ListItem, Avatar, Divider, List} from '@ui-kitten/components';
+import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {
+  Layout,
+  ListItem,
+  Avatar,
+  Divider,
+  List,
+  Text,
+  StyleService,
+  useStyleSheet,
+} from '@ui-kitten/components';
 import {connect} from 'react-redux';
 import {AuthSchema} from '../../models/user.models';
 import {
   PersonLineIcon,
-  HomeLineIcon,
-  ArrowForwardIcon,
   ArrowIOSForward,
+  SwapIcon,
+  TrendingIcon,
+  PriceTagLineIcon,
+  BellLineIcon,
+  PhoneCallIcon,
+  SettingsLineIcon2,
+  BriefCaseLineIcon,
 } from '../../components/icons.component';
+import {GlobalStyles} from '../../constants/global-styles';
+import {ThemeContext} from '../../services/theme.service';
 import {widthPercentageToDP} from '../../shared/methods/normalize';
 
-const data = new Array(8).fill({
-  title: 'Title for Item',
-  description: 'Description for Item',
-  id: Math.random(),
-});
+const data = [
+  {
+    title: 'Edit profile',
+    description: 'Change username, mobile number, etc',
+    id: 'edit-profile',
+    icon: PersonLineIcon,
+  },
+  {
+    title: 'Transactions',
+    description: 'Check all the transactions',
+    id: 'transactions',
+    icon: SwapIcon,
+  },
+  {
+    title: 'Add money',
+    description: 'Add money to the wallet to start playing',
+    id: 'add-money',
+    icon: PriceTagLineIcon,
+  },
+  {
+    title: 'Notifications',
+    description: 'Check notifications',
+    id: 'notifications',
+    icon: BellLineIcon,
+  },
+  {
+    title: 'Contact support',
+    description: 'Contact our respresentatives',
+    id: 'contact-support',
+    icon: PhoneCallIcon,
+  },
+  {
+    title: 'Settings',
+    description: 'customize the settings',
+    id: 'settings',
+    icon: SettingsLineIcon2,
+  },
+  {
+    title: 'My statistics',
+    description: 'Check your previous matches data',
+    id: 'my-statistics',
+    icon: TrendingIcon,
+  },
+  {
+    title: 'Withdraw money',
+    description: 'Withdraw your earnings to the bank account',
+    id: 'withdraw-money',
+    icon: BriefCaseLineIcon,
+  },
+];
 
 const Account = ({
   authData,
@@ -25,76 +86,58 @@ const Account = ({
   navigation: any;
 }) => {
   const ItemImage = () => <Avatar source={{uri: authData.photo}} />;
-
+  const themeService = React.useContext(ThemeContext);
+  const handleChangeTheme = (type) => themeService.setCurrentTheme(type);
   const renderItem = ({item, index}) => (
     <ListItem
-      title={`${item.title} ${index + 1}`}
+      title={item.title}
       key={index}
-      description={`${item.description} ${index + 1}`}
-      accessoryLeft={PersonLineIcon}
+      description={item.description}
+      accessoryLeft={item.icon}
       accessoryRight={ArrowIOSForward}
       onPress={() => console.log('pressed')}
     />
   );
-
+  const styles = useStyleSheet(themedStyle);
   return (
-    <ScrollView>
-      <Layout style={{flex: 1}}>
-        <ListItem
-          title={authData.fullName}
-          description={authData.mobileNumber || authData.email}
-          accessoryLeft={ItemImage}
-          style={{marginBottom: 10}}
+    <Layout style={styles.container}>
+      <ListItem
+        title={authData.fullName}
+        description={authData.mobileNumber || authData.email}
+        accessoryLeft={ItemImage}
+        style={GlobalStyles.mb10}
+      />
+      <Divider />
+      <View style={styles.cardContainer}>
+        {[
+          {title: 'Matches won', subText: '20'},
+          {title: 'Money Earned', subText: '₹1,000‎'},
+          {title: 'Matches Organized', subText: '20'},
+        ].map((item) => (
+          <View style={styles.cardItem}>
+            <Text status="basic">{item.subText}</Text>
+            <Text status="basic" style={GlobalStyles.tAlignCenter}>
+              {item.title}
+            </Text>
+          </View>
+        ))}
+      </View>
+      <Divider />
+      <View style={styles.themeWrapper}>
+        <Text style={GlobalStyles.mr10}>Change theme</Text>
+        <TouchableOpacity
+          style={styles.lightTheme}
+          onPress={handleChangeTheme.bind(this, 'light')}
         />
-        <Divider />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginHorizontal: 10,
-            marginVertical: 10,
-          }}>
-          <View
-            style={{
-              // width: widthPercentageToDP(33),
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#f2f2f2',
-              paddingHorizontal: 5,
-              paddingVertical: 10,
-            }}>
-            <Text>Matches Won</Text>
-            <Text>20</Text>
-          </View>
-          <View
-            style={{
-              // width: widthPercentageToDP(33),
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#f2f2f2',
-              paddingHorizontal: 20,
-              paddingVertical: 10,
-            }}>
-            <Text>Matches Won</Text>
-            <Text>20</Text>
-          </View>
-          <View
-            style={{
-              // width: widthPercentageToDP(33),
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#f2f2f2',
-              paddingHorizontal: 20,
-              paddingVertical: 10,
-            }}>
-            <Text>Matches Won</Text>
-            <Text>20</Text>
-          </View>
-        </View>
-        <Divider />
-        <List style={styles.container} data={data} renderItem={renderItem} />
-      </Layout>
-    </ScrollView>
+        <TouchableOpacity
+          style={styles.darkTheme}
+          onPress={handleChangeTheme.bind(this, 'dark')}
+        />
+      </View>
+      <Divider />
+
+      <List data={data} renderItem={renderItem} />
+    </Layout>
   );
 };
 
@@ -110,8 +153,40 @@ const mapDispatchToProps = {
 
 export default connect(mapStateToProps, mapDispatchToProps)(Account);
 
-const styles = StyleSheet.create({
+const themedStyle = StyleService.create({
   container: {
     flex: 1,
+  },
+  cardContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+    marginVertical: 10,
+  },
+  cardItem: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'color-basic-transparent-300',
+    width: widthPercentageToDP(30),
+    paddingVertical: 10,
+  },
+  themeWrapper: {
+    flexDirection: 'row',
+    marginHorizontal: 10,
+    marginVertical: 10,
+    alignItems: 'center',
+  },
+  lightTheme: {
+    width: 50,
+    height: 50,
+    borderRadius: 20,
+    backgroundColor: '#f2f2f2',
+    marginRight: 20,
+  },
+  darkTheme: {
+    width: 50,
+    height: 50,
+    borderRadius: 20,
+    backgroundColor: '#000',
   },
 });

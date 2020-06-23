@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useState} from 'react';
 import {connect} from 'react-redux';
-import {View, BackHandler, ScrollView} from 'react-native';
+import {View, ScrollView, VirtualizedList} from 'react-native';
 import {Layout, Text, StyleService, useStyleSheet} from '@ui-kitten/components';
 
 import {DashboardTopNav} from '../../components/top-navigations/dashboard-top.component';
@@ -11,13 +11,21 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {SCREEN_WIDTH, SCREEN_HEIGHT} from '../../shared/methods/normalize';
 import {GlobalStyles} from '../../constants/global-styles';
 import CardInList from '../../components/game-cards/card-list.component';
-import {isCloseToRight} from '../../shared/methods/useful';
 import {RouterConstants} from '../../constants/router.constants';
 import {IconList} from '../../components/game-cards/icon-list.component';
 
 const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
   const {authData} = props;
-  const [contestsData, setContestsData] = useState([
+
+  const handleOnPhotoPress = () => {
+    setTimeout(() => {
+      actionSheetRef.current.snapTo(3);
+    }, 10);
+  };
+  const actionSheetRef = useRef<any>();
+  const styles = useStyleSheet(themedstyles);
+  const getItem = (data, index) => data[index];
+  const tempData = [
     {
       title: 'Cards contain content and actions about a single subject',
       entryPrice: 50,
@@ -50,62 +58,7 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
       tags: ['Pubg', 'Solo', 'Vekandi'],
       timing: {},
     },
-    {
-      title: 'Cards contain content and actions about a single subject',
-      entryPrice: 50,
-      organizer: 'Shankar',
-      participants: {joined: 30, total: 100},
-      tags: ['Pubg', 'Solo', 'Vekandi'],
-      timing: {},
-    },
-    {
-      title: 'Cards contain content and actions about a single subject',
-      entryPrice: 50,
-      organizer: 'Newton',
-      participants: {joined: 30, total: 100},
-      tags: ['Pubg', 'Solo', 'Vekandi'],
-      timing: {},
-    },
-    {
-      title: 'Cards contain content and actions about a single subject',
-      entryPrice: 50,
-      organizer: 'Shankar',
-      participants: {joined: 30, total: 100},
-      tags: ['Pubg', 'Solo', 'Vekandi'],
-      timing: {},
-    },
-    {
-      title: 'Cards contain content and actions about a single subject',
-      entryPrice: 50,
-      organizer: 'Newton',
-      participants: {joined: 30, total: 100},
-      tags: ['Pubg', 'Solo', 'Vekandi'],
-      timing: {},
-    },
-    {
-      title: 'Cards contain content and actions about a single subject',
-      entryPrice: 50,
-      organizer: 'Shankar',
-      participants: {joined: 30, total: 100},
-      tags: ['Pubg', 'Solo', 'Vekandi'],
-      timing: {},
-    },
-    {
-      title: 'Cards contain content and actions about a single subject',
-      entryPrice: 50,
-      organizer: 'Newton',
-      participants: {joined: 30, total: 100},
-      tags: ['Pubg', 'Solo', 'Vekandi'],
-      timing: {},
-    },
-  ]);
-  const handleOnPhotoPress = () => {
-    setTimeout(() => {
-      actionSheetRef.current.snapTo(3);
-    }, 10);
-  };
-  const actionSheetRef = useRef<any>();
-  const styles = useStyleSheet(themedstyles);
+  ];
   return (
     <>
       <DashboardTopNav
@@ -123,27 +76,44 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
             }}
             data={sliderData}
           />
-          <ScrollView horizontal style={{flexDirection: 'row'}}>
+
+          <ScrollView horizontal style={GlobalStyles.flexRow}>
             {[
               {
                 icon: 'person-outline',
-                color: '#0377fc',
-                text: 'Update / Edit profile',
+                text: 'Update profile',
+                onPress: () => null,
               },
-              {icon: 'pricetags-outline', color: '#4FA0FD', text: 'Add money'},
+              {
+                icon: 'pricetags-outline',
+                text: 'Add money',
+                onPress: () => null,
+              },
+              {
+                icon: 'plus-square-outline',
+                text: 'Organize contest',
+                onPress: () =>
+                  props.navigation.navigate(RouterConstants.OrganizeContest),
+              },
               {
                 icon: 'pie-chart-outline',
-                color: '#036BE3',
-                text: 'Your Statistics',
+                text: 'Your statistics',
+                onPress: () =>
+                  props.navigation.navigate(RouterConstants.OrganizeContest),
               },
             ].map((data) => (
-              <IconList icon={data.icon} color={data.color} text={data.text} />
+              <IconList
+                key={data.text}
+                icon={data.icon}
+                text={data.text}
+                onPress={data.onPress}
+              />
             ))}
           </ScrollView>
 
           <View style={styles.section1}>
             <View style={[styles.sectionInner, styles.gutter]}>
-              <Text category="h5">Your upcoming games</Text>
+              <Text category="h5">Your upcoming contests</Text>
               <TouchableWithoutFeedback
                 onPress={() =>
                   props.navigation.navigate(RouterConstants.DetailedCards)
@@ -154,92 +124,65 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
                 />
               </TouchableWithoutFeedback>
             </View>
-            <ScrollView horizontal style={styles.flexRow}>
-              {[
-                {
-                  title:
-                    'Cards contain content and actions about a single subject',
-                  entryPrice: 50,
-                  organizer: 'Karthik',
-                  participants: {joined: 30, total: 100},
-                  tags: ['Pubg', 'Solo', 'Vekandi'],
-                  timing: {},
-                },
-                {
-                  title:
-                    'Cards contain content and actions about a single subject',
-                  entryPrice: 50,
-                  organizer: 'Ashok',
-                  participants: {joined: 30, total: 100},
-                  tags: ['Pubg', 'Solo', 'Vekandi'],
-                  timing: {},
-                },
-                {
-                  title:
-                    'Cards contain content and actions about a single subject',
-                  entryPrice: 50,
-                  organizer: 'Shankar',
-                  participants: {joined: 30, total: 100},
-                  tags: ['Pubg', 'Solo', 'Vekandi'],
-                  timing: {},
-                },
-                {
-                  title:
-                    'Cards contain content and actions about a single subject',
-                  entryPrice: 50,
-                  organizer: 'Newton',
-                  participants: {joined: 30, total: 100},
-                  tags: ['Pubg', 'Solo', 'Vekandi'],
-                  timing: {},
-                },
-              ].map((detail, index) => (
-                <CardInList
-                  key={detail.organizer}
-                  index={index}
-                  title={detail.title}
-                  entryPrice={detail.entryPrice}
-                  organizer={detail.organizer}
-                  participants={detail.participants}
-                  tags={detail.tags}
-                  timing={detail.timing}
-                />
-              ))}
-            </ScrollView>
+            <VirtualizedList
+              data={tempData}
+              horizontal
+              initialNumToRender={4}
+              getItem={getItem}
+              keyExtractor={(item) => item.organizer}
+              getItemCount={() => 4}
+              renderItem={({item, index}: {item: any; index: number}) => {
+                return (
+                  <CardInList
+                    key={item.organizer}
+                    index={index}
+                    title={item.title}
+                    entryPrice={item.entryPrice}
+                    organizer={item.organizer}
+                    participants={item.participants}
+                    tags={item.tags}
+                    timing={item.timing}
+                  />
+                );
+              }}
+            />
           </View>
           <View style={styles.section1}>
             <View style={[styles.sectionInner, styles.gutter]}>
-              <Text category="h5">Pubg Contests</Text>
+              <Text category="h5">Ongoing pubg contests</Text>
               <TouchableWithoutFeedback
-                onPress={() => actionSheetRef.current.snapTo(0)}>
+                onPress={() =>
+                  props.navigation.navigate(RouterConstants.DetailedCards)
+                }>
                 <ArrowForwardIcon
                   style={GlobalStyles.icon1}
                   fill={styles.iconColor.backgroundColor}
                 />
               </TouchableWithoutFeedback>
             </View>
-            <ScrollView
+            <VirtualizedList
+              data={tempData}
               horizontal
-              style={{flexDirection: 'row'}}
-              snapToEnd
-              onScroll={({nativeEvent}) => {
-                console.log('close to right');
+              initialNumToRender={4}
+              getItem={getItem}
+              keyExtractor={(item) => item.organizer}
+              getItemCount={() => 4}
+              renderItem={({item, index}: {item: any; index: number}) => {
+                return (
+                  <CardInList
+                    key={item.organizer}
+                    index={index}
+                    title={item.title}
+                    entryPrice={item.entryPrice}
+                    organizer={item.organizer}
+                    participants={item.participants}
+                    tags={item.tags}
+                    timing={item.timing}
+                  />
+                );
               }}
-              scrollEventThrottle={400}>
-              {contestsData.map((detail, index) => (
-                <CardInList
-                  key={detail.organizer}
-                  index={index}
-                  title={detail.title}
-                  entryPrice={detail.entryPrice}
-                  organizer={detail.organizer}
-                  participants={detail.participants}
-                  tags={detail.tags}
-                  timing={detail.timing}
-                />
-              ))}
-            </ScrollView>
+            />
           </View>
-          {/* <ProfileDetails actionSheetRef={actionSheetRef} /> */}
         </Layout>
       </ScrollView>
     </>
