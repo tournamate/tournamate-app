@@ -14,6 +14,7 @@ import Matches from '../screens/matches/matches.screen';
 import Notifications from '../screens/notifications/notifications.screen';
 import DetailedCards from '../screens/detailed-cards/detailed-cards.screen';
 import OrganizeContest from '../screens/organize-contest/organize-contest.screen';
+import ContestDetails from '../screens/contest-details/contest-details.screen';
 
 const BottomTab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -68,6 +69,10 @@ export const HomeNavigator = (): React.ReactElement => (
     <Drawer.Screen
       name={RouterConstants.DetailedCards}
       component={DetailedCards}
+    />
+    <Drawer.Screen
+      name={RouterConstants.ContestDetails}
+      component={ContestDetails}
     />
   </Drawer.Navigator>
 );

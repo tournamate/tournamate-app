@@ -11,7 +11,7 @@ export const CommonTopNav = ({
 }: {
   title: string;
   onPress: () => void;
-  rightAction: () => any;
+  rightAction?: () => any;
 }) => {
   const BackAction = () => (
     <TopNavigationAction icon={ArrowBackIcon} onPress={onPress} />

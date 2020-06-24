@@ -135,6 +135,9 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
                 return (
                   <CardInList
                     key={item.organizer}
+                    onPress={() =>
+                      props.navigation.navigate(RouterConstants.ContestDetails)
+                    }
                     index={index}
                     title={item.title}
                     entryPrice={item.entryPrice}

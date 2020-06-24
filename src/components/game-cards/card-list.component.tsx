@@ -26,6 +26,7 @@ const CardInList = ({
   tags,
   index,
   detailedCard,
+  onPress,
 }: {
   entryPrice: number;
   title: string;
@@ -35,6 +36,7 @@ const CardInList = ({
   tags: string[];
   index: number;
   detailedCard?: boolean;
+  onPress: () => void;
 }) => {
   const styles = useStyleSheet(themedStyles);
   return (
@@ -51,7 +53,8 @@ const CardInList = ({
           ]}>
           <TouchableOpacity
             activeOpacity={0.8}
-            style={[detailedCard && gStyles.flexRow]}>
+            style={[detailedCard && gStyles.flexRow]}
+            onPress={onPress}>
             <ImageBackground
               source={{
                 uri:
