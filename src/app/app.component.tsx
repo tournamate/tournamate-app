@@ -9,6 +9,7 @@ import {GoogleSignin} from '@react-native-community/google-signin';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import Toast from 'react-native-simple-toast';
+import SplashScreen from 'react-native-splash-screen';
 
 import {
   ThemeContext,
@@ -35,6 +36,7 @@ const App = () => {
   };
 
   React.useEffect(() => {
+    SplashScreen.hide();
     GoogleSignin.configure({
       webClientId: AppConfig.webClientId,
     });
