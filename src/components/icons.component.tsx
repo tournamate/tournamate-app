@@ -98,3 +98,12 @@ export const BriefCaseLineIcon = (style: any): IconElement => (
 export const DoneAllIcon = (style: any): IconElement => (
   <Icon {...style} name="done-all" />
 );
+export const ArrowDownIOSIcon = (style: any): IconElement => (
+  <Icon {...style} name="arrow-ios-downward" />
+);
+export const CopyLineIcon = (style: any): IconElement => (
+  <Icon {...style} name="copy-outline" />
+);
+export const AwardLineIcon = (style: any): IconElement => (
+  <Icon {...style} name="award-outline" />
+);

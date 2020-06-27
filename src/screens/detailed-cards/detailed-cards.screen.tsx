@@ -137,6 +137,7 @@ const DetailedCards = ({navigation}) => {
           getItem={getItem}
           keyExtractor={(item) => item.organizer}
           getItemCount={() => contestsData.length}
+          scrollEventThrottle={0.5}
           renderItem={({item, index}: {item: any; index: number}) => {
             return (
               <CardInList
