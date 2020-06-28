@@ -9,6 +9,7 @@ interface FBResultType {
 abstract class OAuthType {
   static getFBAccessToken: () => Promise<FBResultType>;
   static getGoogleOAuthCodes: {};
+  
 }
 
 class OAuthService implements OAuthType {

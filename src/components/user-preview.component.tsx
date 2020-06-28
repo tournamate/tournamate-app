@@ -39,7 +39,7 @@ const UserPreview = () => {
           />
         </View>
       </View>
-      <View style={styles.cardContainer}>
+      {/* <View style={styles.cardContainer}>
         {[
           {title: 'Matches organized', subText: '20'},
           {title: 'Money Earned', subText: '₹1,000‎'},
@@ -54,7 +54,7 @@ const UserPreview = () => {
             </Text>
           </View>
         ))}
-      </View>
+      </View> */}
     </>
   );
 };

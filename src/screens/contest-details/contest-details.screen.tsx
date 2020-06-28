@@ -6,6 +6,7 @@ import {
   useStyleSheet,
   Button,
   Input,
+  Divider,
 } from '@ui-kitten/components';
 import {View, Image, TouchableOpacity, ScrollView} from 'react-native';
 import Collapsible from 'react-native-collapsible';
@@ -77,7 +78,7 @@ const ContestDetails = ({navigation}: {navigation: any}) => {
                 </View>
               </View>
             </View>
-            <View style={[GlobalStyles.flexRowWrap1, GlobalStyles.mb15]}>
+            <View style={[GlobalStyles.flexRowWrap1, GlobalStyles.mb30]}>
               <View style={styles.textShow}>
                 <Text> ₹49</Text>
                 <Text>per entry</Text>
@@ -124,9 +125,7 @@ const ContestDetails = ({navigation}: {navigation: any}) => {
             <View style={[GlobalStyles.mb15, GlobalStyles.flexRowWrap2]}>
               <View
                 style={[{width: widthPercentageToDP(50)}, GlobalStyles.mr10]}>
-                <Text
-                  category="h6"
-                  style={[GlobalStyles.mb10, GlobalStyles.fontBold]}>
+                <Text category="h6" style={[GlobalStyles.mb10]}>
                   Game Details
                 </Text>
                 <View style={GlobalStyles.flexRowWrap1}>
@@ -229,7 +228,10 @@ const ContestDetails = ({navigation}: {navigation: any}) => {
               </Collapsible>
             </View>
 
-            <TouchableOpacity activeOpacity={0.8} style={GlobalStyles.mb15}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={GlobalStyles.mb15}
+              onPress={() => navigation.navigate(RouterConstants.UserProfile)}>
               <Text category="h6" style={[GlobalStyles.mb10]}>
                 About organizer
               </Text>

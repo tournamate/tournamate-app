@@ -16,6 +16,7 @@ import DetailedCards from '../screens/detailed-cards/detailed-cards.screen';
 import OrganizeContest from '../screens/organize-contest/organize-contest.screen';
 import ContestDetails from '../screens/contest-details/contest-details.screen';
 import PrizeLeaderBoard from '../screens/prize-leaderboard/prize-leaderboard.screen';
+import UserProfile from '../screens/user-profile/user-profile.screen';
 
 const BottomTab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -79,5 +80,7 @@ export const HomeNavigator = (): React.ReactElement => (
       name={RouterConstants.PrizeLeaderboard}
       component={PrizeLeaderBoard}
     />
+
+    <Drawer.Screen name={RouterConstants.UserProfile} component={UserProfile} />
   </Drawer.Navigator>
 );

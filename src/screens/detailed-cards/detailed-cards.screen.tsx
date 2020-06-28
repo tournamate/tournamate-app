@@ -6,13 +6,17 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
-import {Layout, Text, Divider} from '@ui-kitten/components';
+import {Layout, Text, Divider, Datepicker} from '@ui-kitten/components';
 import {DetailedCardsNav} from '../../components/top-navigations/detailed-cards.component';
 import CardInList from '../../components/game-cards/card-list.component';
 import {GlobalStyles} from '../../constants/global-styles';
 import ContestFilter from '../../components/action-sheets/contest-filter.component';
 import {heightPercentageToDP} from '../../shared/methods/normalize';
-import {CloseIcon, DoneAllIcon} from '../../components/icons.component';
+import {
+  CloseIcon,
+  DoneAllIcon,
+  CalendarIcon,
+} from '../../components/icons.component';
 
 const actionSheetRef = createRef();
 
@@ -125,6 +129,7 @@ const DetailedCards = ({navigation}) => {
             <Text style={{color: '#000'}} category="h6">
               Filters
             </Text>
+
             <DoneAllIcon fill={'#000'} style={{width: 25, height: 25}} />
           </View>
           <Divider />

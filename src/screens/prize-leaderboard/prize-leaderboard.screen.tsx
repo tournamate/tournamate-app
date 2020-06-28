@@ -7,6 +7,7 @@ import {
   TabView,
   StyleService,
   useStyleSheet,
+  Avatar,
 } from '@ui-kitten/components';
 import {CommonTopNav} from '../../components/top-navigations/common-top.component';
 import {GlobalStyles} from '../../constants/global-styles';
@@ -23,7 +24,9 @@ const PrizeLeaderBoard = (props) => {
       />
       <Layout style={[GlobalStyles.flex1, GlobalStyles.cGutter]}>
         <ScrollView>
-          <Text>Prize Leaderboard</Text>
+          <Text category="c1" status="danger" style={GlobalStyles.mb10}>
+            *Leaderboard will be updated once the match ends
+          </Text>
           <TabView
             selectedIndex={selectedIndex}
             onSelect={(index) => setSelectedIndex(index)}>
@@ -48,7 +51,7 @@ const PrizeLeaderBoard = (props) => {
                       style={GlobalStyles.icon}
                       fill={styles.iconColor.backgroundColor}
                     />
-                    <Text category="p2">₹ 400 Prize pool*</Text>
+                    <Text category="p2">₹400 Prize pool*</Text>
                   </View>
                 </View>
                 <View
@@ -63,7 +66,7 @@ const PrizeLeaderBoard = (props) => {
                     },
                   ]}>
                   <Text>Rank: 1</Text>
-                  <Text style={GlobalStyles.fontBold}>₹ 4000* </Text>
+                  <Text style={GlobalStyles.fontBold}>₹4000* </Text>
                 </View>
                 <View
                   style={[
@@ -77,7 +80,7 @@ const PrizeLeaderBoard = (props) => {
                     },
                   ]}>
                   <Text>Rank: 1</Text>
-                  <Text style={GlobalStyles.fontBold}>₹ 400 </Text>
+                  <Text style={GlobalStyles.fontBold}>₹400 </Text>
                 </View>
                 <View
                   style={[
@@ -91,7 +94,7 @@ const PrizeLeaderBoard = (props) => {
                     },
                   ]}>
                   <Text>Rank: 1</Text>
-                  <Text style={GlobalStyles.fontBold}>₹ 400 </Text>
+                  <Text style={GlobalStyles.fontBold}>₹400 </Text>
                 </View>
                 <View
                   style={[
@@ -105,13 +108,106 @@ const PrizeLeaderBoard = (props) => {
                     },
                   ]}>
                   <Text>Rank: 1</Text>
-                  <Text style={GlobalStyles.fontBold}>₹ 400 </Text>
+                  <Text style={GlobalStyles.fontBold}>₹400 </Text>
                 </View>
               </Layout>
             </Tab>
             <Tab title="LEADERBOARD">
-              <Layout style={styles.tabContainer}>
-                <Text category="h5">Leaderboard</Text>
+              <Layout level="2" style={{borderRadius: 4}}>
+                <View
+                  style={[
+                    GlobalStyles.flexRowWrap1,
+                    GlobalStyles.mh10,
+                    GlobalStyles.mb10,
+                    GlobalStyles.pv10,
+                  ]}>
+                  <View style={GlobalStyles.flexRowWrap1}>
+                    <PeopleLineIcon
+                      style={GlobalStyles.icon}
+                      fill={styles.iconColor.backgroundColor}
+                    />
+                    <Text category="p2">Players</Text>
+                  </View>
+                  <View style={GlobalStyles.flexRowWrap1}>
+                    <AwardLineIcon
+                      style={GlobalStyles.icon}
+                      fill={styles.iconColor.backgroundColor}
+                    />
+                    <Text category="p2">Rank</Text>
+                  </View>
+                </View>
+                <View
+                  style={[
+                    GlobalStyles.flexRowWrap1,
+                    GlobalStyles.aiCenter,
+                    {
+                      padding: 5,
+                      marginHorizontal: 5,
+                      marginBottom: 10,
+                      borderRadius: 4,
+                    },
+                  ]}>
+                  <View style={GlobalStyles.flexRowWrap4}>
+                    <Avatar
+                      source={{
+                        uri:
+                          'https://2.bp.blogspot.com/-OVduoXsA4qM/XJRu-xgsy0I/AAAAAAAAm6k/oBSVkinse_o1KESQpzCC0UyoEBCkYEvtgCLcBGAs/s1600/PUBG-HD-Wallpapers-1.jpg',
+                      }}
+                      size="small"
+                      style={GlobalStyles.mr5}
+                    />
+                    <Text>Karthik</Text>
+                  </View>
+                  <Text style={GlobalStyles.fontBold}>- </Text>
+                </View>
+                <View
+                  style={[
+                    GlobalStyles.flexRowWrap1,
+                    GlobalStyles.aiCenter,
+                    {
+                      padding: 5,
+                      marginHorizontal: 5,
+                      marginBottom: 10,
+                      borderRadius: 4,
+                    },
+                  ]}>
+                  <View style={GlobalStyles.flexRowWrap4}>
+                    <Avatar
+                      source={{
+                        uri:
+                          'https://2.bp.blogspot.com/-OVduoXsA4qM/XJRu-xgsy0I/AAAAAAAAm6k/oBSVkinse_o1KESQpzCC0UyoEBCkYEvtgCLcBGAs/s1600/PUBG-HD-Wallpapers-1.jpg',
+                      }}
+                      size="small"
+                      style={GlobalStyles.mr5}
+                    />
+                    <Text>Shiva</Text>
+                  </View>
+                  <Text style={GlobalStyles.fontBold}>- </Text>
+                </View>
+                <View
+                  style={[
+                    GlobalStyles.flexRowWrap1,
+                    GlobalStyles.aiCenter,
+                    {
+                      padding: 5,
+                      marginHorizontal: 5,
+                      marginBottom: 10,
+                      borderRadius: 4,
+                    },
+                  ]}>
+                  <View style={GlobalStyles.flexRowWrap4}>
+                    <Avatar
+                      source={{
+                        uri:
+                          'https://2.bp.blogspot.com/-OVduoXsA4qM/XJRu-xgsy0I/AAAAAAAAm6k/oBSVkinse_o1KESQpzCC0UyoEBCkYEvtgCLcBGAs/s1600/PUBG-HD-Wallpapers-1.jpg',
+                      }}
+                      size="small"
+                      style={GlobalStyles.mr5}
+                    />
+                    <Text>John</Text>
+                  </View>
+                  <Text style={GlobalStyles.fontBold}>- </Text>
+                </View>
               </Layout>
             </Tab>
           </TabView>

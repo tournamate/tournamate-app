@@ -14,4 +14,5 @@ export const RouterConstants = {
   OrganizeContest: 'OrganizeContest',
   ContestDetails: 'ContestDetails',
   PrizeLeaderboard: 'PrizeLeaderboard',
+  UserProfile: 'UserProfile',
 };
