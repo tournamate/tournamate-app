@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
-import {Layout, Text, Divider, Datepicker} from '@ui-kitten/components';
+import {Text, Divider, Datepicker, Layout} from '@ui-kitten/components';
 import {DetailedCardsNav} from '../../components/top-navigations/detailed-cards.component';
 import CardInList from '../../components/game-cards/card-list.component';
 import {GlobalStyles} from '../../constants/global-styles';
@@ -116,24 +116,26 @@ const DetailedCards = ({navigation}) => {
         navigation={navigation}
         onPressFilter={() => actionSheetRef?.current?.setModalVisible()}
       />
-      <ActionSheet ref={actionSheetRef}>
-        <View
-          style={{backgroundColor: '#fff', height: heightPercentageToDP(75)}}>
-          <View
+      <ActionSheet
+        ref={actionSheetRef}
+        gestureEnabled
+        CustomHeaderComponent={<View></View>}>
+        <Layout style={{height: heightPercentageToDP(75)}}>
+          <Layout
+            level="2"
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              margin: 10,
+              padding: 10,
             }}>
             <CloseIcon fill={'#000'} style={{width: 25, height: 25}} />
-            <Text style={{color: '#000'}} category="h6">
-              Filters
-            </Text>
+            <Text category="h6">Filters</Text>
 
             <DoneAllIcon fill={'#000'} style={{width: 25, height: 25}} />
-          </View>
+          </Layout>
+
           <Divider />
-        </View>
+        </Layout>
       </ActionSheet>
       <View style={(GlobalStyles.cGutter, {paddingBottom: 50})}>
         <VirtualizedList

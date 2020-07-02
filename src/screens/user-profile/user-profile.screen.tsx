@@ -49,18 +49,20 @@ const UserProfile = (props) => {
       <Divider />
       <Layout style={[GlobalStyles.flex1, GlobalStyles.cGutter]}>
         <ScrollView>
-          <Avatar
-            source={{
-              uri:
-                'https://2.bp.blogspot.com/-OVduoXsA4qM/XJRu-xgsy0I/AAAAAAAAm6k/oBSVkinse_o1KESQpzCC0UyoEBCkYEvtgCLcBGAs/s1600/PUBG-HD-Wallpapers-1.jpg',
-            }}
-            size="giant"
-            style={[{width: 75, height: 75}, GlobalStyles.mb10]}
-          />
-          <Text category="h4">Karan Johar</Text>
-          <Text appearance="hint" style={GlobalStyles.mb20}>
-            @karan897
-          </Text>
+          <View style={GlobalStyles.aiCenter}>
+            <Avatar
+              source={{
+                uri:
+                  'https://2.bp.blogspot.com/-OVduoXsA4qM/XJRu-xgsy0I/AAAAAAAAm6k/oBSVkinse_o1KESQpzCC0UyoEBCkYEvtgCLcBGAs/s1600/PUBG-HD-Wallpapers-1.jpg',
+              }}
+              size="giant"
+              style={[{width: 75, height: 75}, GlobalStyles.mb10]}
+            />
+            <Text category="h4">Karan Johar</Text>
+            <Text appearance="hint" style={GlobalStyles.mb20}>
+              @karan897
+            </Text>
+          </View>
           <Divider style={GlobalStyles.mb10} />
           <View style={[GlobalStyles.flexRowWrap1, GlobalStyles.mb10]}>
             <View style={[GlobalStyles.aiCenter]}>
@@ -97,7 +99,7 @@ const UserProfile = (props) => {
             <View style={GlobalStyles.flexRowWrap2}>
               {['Pubg', 'Freefire', 'Ludo'].map((obj) => (
                 <Card
-                  status="success"
+                  status="danger"
                   onPress={() => console.log('pressed')}
                   style={GlobalStyles.mr15}>
                   <Text>{obj}</Text>

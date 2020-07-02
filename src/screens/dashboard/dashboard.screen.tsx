@@ -13,6 +13,7 @@ import {GlobalStyles} from '../../constants/global-styles';
 import CardInList from '../../components/game-cards/card-list.component';
 import {RouterConstants} from '../../constants/router.constants';
 import {IconList} from '../../components/game-cards/icon-list.component';
+import TMStatusBar from '../../components/status-bar.component';
 
 const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
   const {authData} = props;
@@ -64,9 +65,9 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
       <DashboardTopNav
         name={authData.fullName}
         photoUrl={authData.photo}
-        onPressPhoto={handleOnPhotoPress}
         navigation={props.navigation}
       />
+      <TMStatusBar />
       <ScrollView>
         <Layout style={styles.container} level="3">
           <ImageCarousel

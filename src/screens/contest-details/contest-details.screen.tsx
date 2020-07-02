@@ -6,7 +6,7 @@ import {
   useStyleSheet,
   Button,
   Input,
-  Divider,
+  Card,
 } from '@ui-kitten/components';
 import {View, Image, TouchableOpacity, ScrollView} from 'react-native';
 import Collapsible from 'react-native-collapsible';
@@ -196,36 +196,40 @@ const ContestDetails = ({navigation}: {navigation: any}) => {
               </TouchableOpacity>
             </View>
             <View style={GlobalStyles.mb15}>
-              <TouchableOpacity
-                style={[GlobalStyles.flexRowWrap1, GlobalStyles.aiCenter]}
-                onPress={() => setIsShowMoreNotes(!isShowMoreNotes)}>
-                <Text category="h6" style={[GlobalStyles.mb10]}>
-                  Notes from organizer
-                </Text>
-                <ArrowDownIOSIcon
-                  style={GlobalStyles.icon1}
-                  fill={styles.iconColor.backgroundColor}
-                />
-              </TouchableOpacity>
-              <Collapsible collapsed={!isShowMoreNotes}>
-                <Text category="p1">{tempStr}</Text>
-              </Collapsible>
+              <Card>
+                <TouchableOpacity
+                  style={[GlobalStyles.flexRowWrap1, GlobalStyles.aiCenter]}
+                  onPress={() => setIsShowMoreNotes(!isShowMoreNotes)}>
+                  <Text category="h6" style={[GlobalStyles.mb10]}>
+                    Notes from organizer
+                  </Text>
+                  <ArrowDownIOSIcon
+                    style={GlobalStyles.icon1}
+                    fill={styles.iconColor.backgroundColor}
+                  />
+                </TouchableOpacity>
+                <Collapsible collapsed={!isShowMoreNotes}>
+                  <Text category="p1">{tempStr}</Text>
+                </Collapsible>
+              </Card>
             </View>
             <View style={GlobalStyles.mb15}>
-              <TouchableOpacity
-                style={[GlobalStyles.flexRowWrap1, GlobalStyles.aiCenter]}
-                onPress={() => setIsShowMoreRules(!isShowMoreRules)}>
-                <Text category="h6" style={[GlobalStyles.mb10]}>
-                  Rules and regulations
-                </Text>
-                <ArrowDownIOSIcon
-                  style={GlobalStyles.icon1}
-                  fill={styles.iconColor.backgroundColor}
-                />
-              </TouchableOpacity>
-              <Collapsible collapsed={!isShowMoreRules}>
-                <Text category="p1">{tempStr}</Text>
-              </Collapsible>
+              <Card>
+                <TouchableOpacity
+                  style={[GlobalStyles.flexRowWrap1, GlobalStyles.aiCenter]}
+                  onPress={() => setIsShowMoreRules(!isShowMoreRules)}>
+                  <Text category="h6" style={[GlobalStyles.mb10]}>
+                    Rules and regulations
+                  </Text>
+                  <ArrowDownIOSIcon
+                    style={GlobalStyles.icon1}
+                    fill={styles.iconColor.backgroundColor}
+                  />
+                </TouchableOpacity>
+                <Collapsible collapsed={!isShowMoreRules}>
+                  <Text category="p1">{tempStr}</Text>
+                </Collapsible>
+              </Card>
             </View>
 
             <TouchableOpacity

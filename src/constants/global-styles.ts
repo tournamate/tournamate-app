@@ -20,6 +20,7 @@ export const GlobalStyles = StyleSheet.create({
   },
   mr10: {marginRight: 10},
   mh10: {marginHorizontal: 10},
+  m10: {margin: 10},
   w100: {width: '100%'},
   flexRowWrap1: {
     flexDirection: 'row',
