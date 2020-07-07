@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 import {View, ScrollView, VirtualizedList} from 'react-native';
 import {Layout, Text, StyleService, useStyleSheet} from '@ui-kitten/components';
@@ -11,21 +11,18 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {SCREEN_WIDTH, SCREEN_HEIGHT} from '../../shared/methods/normalize';
 import {GlobalStyles} from '../../constants/global-styles';
 import CardInList from '../../components/game-cards/card-list.component';
-import {RouterConstants} from '../../constants/router.constants';
 import {IconList} from '../../components/game-cards/icon-list.component';
 import TMStatusBar from '../../components/status-bar.component';
+import {HomeDrawerNavProps} from '../../navigation/navigation.types';
 
-const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
-  const {authData} = props;
+interface DashboardProps extends HomeDrawerNavProps<'Dashboard'> {
+  authData: AuthSchema;
+}
 
-  const handleOnPhotoPress = () => {
-    setTimeout(() => {
-      actionSheetRef.current.snapTo(3);
-    }, 10);
-  };
-  const actionSheetRef = useRef<any>();
+const Dashboard = ({navigation, authData}: DashboardProps) => {
+  console.log(JSON.stringify(navigation), 'nav');
   const styles = useStyleSheet(themedstyles);
-  const getItem = (data, index) => data[index];
+  const getItem = (data: any, index: number) => data[index];
   const tempData = [
     {
       title: 'Cards contain content and actions about a single subject',
@@ -65,7 +62,7 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
       <DashboardTopNav
         name={authData.fullName}
         photoUrl={authData.photo}
-        navigation={props.navigation}
+        navigation={navigation}
       />
       <TMStatusBar />
       <ScrollView>
@@ -93,14 +90,12 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
               {
                 icon: 'plus-square-outline',
                 text: 'Organize contest',
-                onPress: () =>
-                  props.navigation.navigate(RouterConstants.OrganizeContest),
+                onPress: () => navigation.navigate('OrganizeContest'),
               },
               {
                 icon: 'pie-chart-outline',
                 text: 'Your statistics',
-                onPress: () =>
-                  props.navigation.navigate(RouterConstants.OrganizeContest),
+                onPress: () => navigation.navigate('OrganizeContest'),
               },
             ].map((data) => (
               <IconList
@@ -116,9 +111,7 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
             <View style={[styles.sectionInner, styles.gutter]}>
               <Text category="h5">Your upcoming contests</Text>
               <TouchableWithoutFeedback
-                onPress={() =>
-                  props.navigation.navigate(RouterConstants.DetailedCards)
-                }>
+                onPress={() => navigation.navigate('DetailedCards')}>
                 <ArrowForwardIcon
                   style={GlobalStyles.icon1}
                   fill={styles.iconColor.backgroundColor}
@@ -136,9 +129,7 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
                 return (
                   <CardInList
                     key={item.organizer}
-                    onPress={() =>
-                      props.navigation.navigate(RouterConstants.ContestDetails)
-                    }
+                    onPress={() => navigation.navigate('ContestDetails')}
                     index={index}
                     title={item.title}
                     entryPrice={item.entryPrice}
@@ -155,9 +146,7 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
             <View style={[styles.sectionInner, styles.gutter]}>
               <Text category="h5">Ongoing pubg contests</Text>
               <TouchableWithoutFeedback
-                onPress={() =>
-                  props.navigation.navigate(RouterConstants.DetailedCards)
-                }>
+                onPress={() => navigation.navigate('DetailedCards')}>
                 <ArrowForwardIcon
                   style={GlobalStyles.icon1}
                   fill={styles.iconColor.backgroundColor}
@@ -182,6 +171,7 @@ const Dashboard = (props: {authData: AuthSchema; navigation: any}) => {
                     participants={item.participants}
                     tags={item.tags}
                     timing={item.timing}
+                    onPress={() => null}
                   />
                 );
               }}

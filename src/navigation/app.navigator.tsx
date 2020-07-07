@@ -17,7 +17,9 @@ const navigatorTheme = {
   },
 };
 
-export const AppNavigator = (): React.ReactElement => {
+interface RouteProps {}
+
+export const AppNavigator = (): React.ReactElement<RouteProps> => {
   const authData = useSelector((state: {auth: AuthSchema}) => state.auth);
   return (
     <NavigationContainer theme={navigatorTheme}>

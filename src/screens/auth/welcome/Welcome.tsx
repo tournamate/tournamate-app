@@ -6,12 +6,11 @@ import normalize, {
   heightPercentageToDP,
 } from '../../../shared/methods/normalize';
 import TMView from '../../../components/view.component';
-import {RouterConstants} from '../../../constants/router.constants';
 import {LockIcon} from '../../../components/icons.component';
 import ImageCarousel from '../../../components/carousels/type-1.carousel.component';
+import {AuthNavProps} from '../../../navigation/navigation.types';
 
-// TODO: define types for navigation
-const Welcome = ({navigation}: any) => {
+const Welcome = ({navigation}: AuthNavProps<'WelcomeScreen'>) => {
   const [headText, setHeadText] = useState<string>('Create your own match');
   const [subtext1, setSubtext1] = useState<string>("It's very easy to create");
   const [subText2, setSubText2] = useState('your own matches');
@@ -93,7 +92,7 @@ const Welcome = ({navigation}: any) => {
             <Button
               appearance="filled"
               size="large"
-              onPress={() => navigation.navigate(RouterConstants.SocialSignin)}
+              onPress={() => navigation.navigate('SocialSignin')}
               accessoryLeft={LockIcon}>
               Login
             </Button>

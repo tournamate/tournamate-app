@@ -16,14 +16,13 @@ import {GlobalStyles} from '../../constants/global-styles';
 import {KeyboardAvoidingView} from '../../components/kb-avoiding-view.component';
 import {CalendarIcon, DoneAllIcon} from '../../components/icons.component';
 import {widthPercentageToDP} from '../../shared/methods/normalize';
+import {HomeDrawerNavProps} from '../../navigation/navigation.types';
 
-const OrganizeContest = ({
-  authData,
-  navigation,
-}: {
+interface Props extends HomeDrawerNavProps<'Dashboard'> {
   authData: AuthSchema;
-  navigation: any;
-}) => {
+}
+
+const OrganizeContest = ({navigation}: Props) => {
   const NavRightAction = () => (
     <TopNavigationAction
       icon={DoneAllIcon}

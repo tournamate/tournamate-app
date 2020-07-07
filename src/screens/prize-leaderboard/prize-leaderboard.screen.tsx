@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {
   Layout,
   Text,
@@ -12,15 +12,21 @@ import {
 import {CommonTopNav} from '../../components/top-navigations/common-top.component';
 import {GlobalStyles} from '../../constants/global-styles';
 import {PeopleLineIcon, AwardLineIcon} from '../../components/icons.component';
+import {HomeDrawerNavProps} from '../../navigation/navigation.types';
+import {AuthSchema} from '../../models/user.models';
 
-const PrizeLeaderBoard = (props) => {
+interface Props extends HomeDrawerNavProps<'PrizeLeaderboard'> {
+  authData: AuthSchema;
+}
+
+const PrizeLeaderBoard = ({navigation}: Props) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const styles = useStyleSheet(themedStyles);
   return (
     <React.Fragment>
       <CommonTopNav
         title="Prizes and Leaderboard"
-        onPress={() => props.navigation.goBack()}
+        onPress={() => navigation.goBack()}
       />
       <Layout style={[GlobalStyles.flex1, GlobalStyles.cGutter]}>
         <ScrollView>
@@ -31,7 +37,7 @@ const PrizeLeaderBoard = (props) => {
             selectedIndex={selectedIndex}
             onSelect={(index) => setSelectedIndex(index)}>
             <Tab title="PRIZES">
-              <Layout level="3" style={{borderRadius: 4}}>
+              <Layout level="3" style={GlobalStyles.br4}>
                 <View
                   style={[
                     GlobalStyles.flexRowWrap1,
@@ -54,66 +60,26 @@ const PrizeLeaderBoard = (props) => {
                     <Text category="p2">₹400 Prize pool*</Text>
                   </View>
                 </View>
-                <View
-                  style={[
-                    GlobalStyles.flexRowWrap1,
-                    {
-                      backgroundColor: '#505251',
-                      padding: 5,
-                      marginHorizontal: 5,
-                      marginBottom: 10,
-                      borderRadius: 4,
-                    },
-                  ]}>
+                <View style={[GlobalStyles.flexRowWrap1, styles.row1]}>
                   <Text>Rank: 1</Text>
                   <Text style={GlobalStyles.fontBold}>₹4000* </Text>
                 </View>
-                <View
-                  style={[
-                    GlobalStyles.flexRowWrap1,
-                    {
-                      //   backgroundColor: '#505251',
-                      padding: 5,
-                      marginHorizontal: 5,
-                      marginBottom: 10,
-                      borderRadius: 4,
-                    },
-                  ]}>
+                <View style={[GlobalStyles.flexRowWrap1, styles.row1]}>
                   <Text>Rank: 1</Text>
                   <Text style={GlobalStyles.fontBold}>₹400 </Text>
                 </View>
-                <View
-                  style={[
-                    GlobalStyles.flexRowWrap1,
-                    {
-                      backgroundColor: '#505251',
-                      padding: 5,
-                      marginHorizontal: 5,
-                      marginBottom: 10,
-                      borderRadius: 4,
-                    },
-                  ]}>
+                <View style={[GlobalStyles.flexRowWrap1, styles.row1]}>
                   <Text>Rank: 1</Text>
                   <Text style={GlobalStyles.fontBold}>₹400 </Text>
                 </View>
-                <View
-                  style={[
-                    GlobalStyles.flexRowWrap1,
-                    {
-                      //   backgroundColor: '#505251',
-                      padding: 5,
-                      marginHorizontal: 5,
-                      marginBottom: 10,
-                      borderRadius: 4,
-                    },
-                  ]}>
+                <View style={[GlobalStyles.flexRowWrap1, styles.row1]}>
                   <Text>Rank: 1</Text>
                   <Text style={GlobalStyles.fontBold}>₹400 </Text>
                 </View>
               </Layout>
             </Tab>
             <Tab title="LEADERBOARD">
-              <Layout level="2" style={{borderRadius: 4}}>
+              <Layout level="2" style={GlobalStyles.br4}>
                 <View
                   style={[
                     GlobalStyles.flexRowWrap1,
@@ -140,12 +106,7 @@ const PrizeLeaderBoard = (props) => {
                   style={[
                     GlobalStyles.flexRowWrap1,
                     GlobalStyles.aiCenter,
-                    {
-                      padding: 5,
-                      marginHorizontal: 5,
-                      marginBottom: 10,
-                      borderRadius: 4,
-                    },
+                    styles.row1,
                   ]}>
                   <View style={GlobalStyles.flexRowWrap4}>
                     <Avatar
@@ -164,12 +125,7 @@ const PrizeLeaderBoard = (props) => {
                   style={[
                     GlobalStyles.flexRowWrap1,
                     GlobalStyles.aiCenter,
-                    {
-                      padding: 5,
-                      marginHorizontal: 5,
-                      marginBottom: 10,
-                      borderRadius: 4,
-                    },
+                    styles.row1,
                   ]}>
                   <View style={GlobalStyles.flexRowWrap4}>
                     <Avatar
@@ -188,12 +144,7 @@ const PrizeLeaderBoard = (props) => {
                   style={[
                     GlobalStyles.flexRowWrap1,
                     GlobalStyles.aiCenter,
-                    {
-                      padding: 5,
-                      marginHorizontal: 5,
-                      marginBottom: 10,
-                      borderRadius: 4,
-                    },
+                    styles.row1,
                   ]}>
                   <View style={GlobalStyles.flexRowWrap4}>
                     <Avatar
@@ -224,6 +175,12 @@ const themedStyles = StyleService.create({
   },
   iconColor: {
     backgroundColor: 'text-basic-color',
+  },
+  row1: {
+    padding: 5,
+    marginHorizontal: 5,
+    marginBottom: 10,
+    borderRadius: 4,
   },
 });
 export default PrizeLeaderBoard;

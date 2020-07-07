@@ -16,8 +16,8 @@ export const DashboardTopNav = ({
 }: {
   name: string;
   photoUrl: string;
-  onPressPhoto: () => void;
-  navigation: {toggleDrawer: () => any};
+  onPressPhoto?: () => void;
+  navigation: object;
 }) => {
   const renderTitle = (props: any) => (
     <TouchableOpacity
@@ -35,7 +35,7 @@ export const DashboardTopNav = ({
   );
 
   const renderLeftIcon = () => (
-    <TopNavigationAction icon={MenuIcon} onPress={navigation.toggleDrawer} />
+    <TopNavigationAction icon={MenuIcon} onPress={navigation?.toggleDrawer} />
   );
 
   return (

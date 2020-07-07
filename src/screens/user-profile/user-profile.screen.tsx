@@ -4,9 +4,14 @@ import {Layout, Text, Divider, Avatar, Card} from '@ui-kitten/components';
 import {GlobalStyles} from '../../constants/global-styles';
 import {CommonTopNav} from '../../components/top-navigations/common-top.component';
 import CardInList from '../../components/game-cards/card-list.component';
-import {RouterConstants} from '../../constants/router.constants';
+import {HomeDrawerNavProps} from '../../navigation/navigation.types';
+import {AuthSchema} from '../../models/user.models';
 
-const UserProfile = (props) => {
+interface Props extends HomeDrawerNavProps<'UserProfile'> {
+  authData: AuthSchema;
+}
+
+const UserProfile = ({navigation}: Props) => {
   const tempData = [
     {
       title: 'Cards contain content and actions about a single subject',
@@ -41,11 +46,11 @@ const UserProfile = (props) => {
       timing: {},
     },
   ];
-  const getItem = (data, index) => data[index];
+  const getItem = (data: [], index: number) => data[index];
 
   return (
     <React.Fragment>
-      <CommonTopNav title="Profile" onPress={() => props.navigation.goBack()} />
+      <CommonTopNav title="Profile" onPress={() => navigation.goBack()} />
       <Divider />
       <Layout style={[GlobalStyles.flex1, GlobalStyles.cGutter]}>
         <ScrollView>
@@ -122,9 +127,7 @@ const UserProfile = (props) => {
               return (
                 <CardInList
                   key={item.organizer}
-                  onPress={() =>
-                    props.navigation.navigate(RouterConstants.ContestDetails)
-                  }
+                  onPress={() => navigation.navigate('ContestDetails')}
                   index={index}
                   title={item.title}
                   entryPrice={item.entryPrice}
@@ -151,9 +154,7 @@ const UserProfile = (props) => {
               return (
                 <CardInList
                   key={item.organizer}
-                  onPress={() =>
-                    props.navigation.navigate(RouterConstants.ContestDetails)
-                  }
+                  onPress={() => navigation.navigate('ContestDetails')}
                   index={index}
                   title={item.title}
                   entryPrice={item.entryPrice}

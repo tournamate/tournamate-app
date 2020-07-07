@@ -19,7 +19,7 @@ export const HomeBottomNavigation = (props: any): React.ReactElement => {
   React.useEffect(() => {
     flashIconRef?.current?.startAnimation();
   }, []);
-  const flashIconRef = React.useRef<any>();
+  const flashIconRef = React.useRef<{startAnimation: Function}>();
   const FlashLineIcon = (style: any) => (
     <Icon
       {...style}

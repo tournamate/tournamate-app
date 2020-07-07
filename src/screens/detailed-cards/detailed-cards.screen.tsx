@@ -1,27 +1,23 @@
 import React, {useState, useEffect, createRef} from 'react';
-import {
-  StyleSheet,
-  VirtualizedList,
-  View,
-  ActivityIndicator,
-} from 'react-native';
+import {StyleSheet, VirtualizedList, View} from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
-import {Text, Divider, Datepicker, Layout} from '@ui-kitten/components';
+import {Text, Divider, Layout} from '@ui-kitten/components';
 import {DetailedCardsNav} from '../../components/top-navigations/detailed-cards.component';
 import CardInList from '../../components/game-cards/card-list.component';
 import {GlobalStyles} from '../../constants/global-styles';
-import ContestFilter from '../../components/action-sheets/contest-filter.component';
 import {heightPercentageToDP} from '../../shared/methods/normalize';
-import {
-  CloseIcon,
-  DoneAllIcon,
-  CalendarIcon,
-} from '../../components/icons.component';
+import {CloseIcon, DoneAllIcon} from '../../components/icons.component';
+import {HomeDrawerNavProps} from '../../navigation/navigation.types';
+import {AuthSchema} from '../../models/user.models';
 
-const actionSheetRef = createRef();
+interface DetaiedCardProps extends HomeDrawerNavProps<'DetailedCards'> {
+  autData: AuthSchema;
+}
 
-const DetailedCards = ({navigation}) => {
-  const [contestsData, setContestsData] = useState([]);
+const actionSheetRef = createRef<{setModalVisible: Function}>();
+
+const DetailedCards = ({navigation}: DetaiedCardProps) => {
+  const [contestsData, setContestsData] = useState<Array<{}>>([]);
   useEffect(function fetchData() {
     setContestsData([
       {
@@ -107,7 +103,7 @@ const DetailedCards = ({navigation}) => {
       },
     ]);
   }, []);
-  const getItem = (data, index) => data[index];
+  const getItem = (data: [], index: number) => data[index];
 
   return (
     <Layout style={styles.container}>
@@ -117,21 +113,17 @@ const DetailedCards = ({navigation}) => {
         onPressFilter={() => actionSheetRef?.current?.setModalVisible()}
       />
       <ActionSheet
-        ref={actionSheetRef}
+        ref={actionSheetRef as any}
         gestureEnabled
-        CustomHeaderComponent={<View></View>}>
+        CustomHeaderComponent={<View />}>
         <Layout style={{height: heightPercentageToDP(75)}}>
           <Layout
             level="2"
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              padding: 10,
-            }}>
-            <CloseIcon fill={'#000'} style={{width: 25, height: 25}} />
+            style={[GlobalStyles.flexRowWrap2, GlobalStyles.p10]}>
+            <CloseIcon fill={'#000'} style={GlobalStyles.icon3} />
             <Text category="h6">Filters</Text>
 
-            <DoneAllIcon fill={'#000'} style={{width: 25, height: 25}} />
+            <DoneAllIcon fill={'#000'} style={GlobalStyles.icon3} />
           </Layout>
 
           <Divider />
@@ -157,6 +149,7 @@ const DetailedCards = ({navigation}) => {
                 tags={item.tags}
                 timing={item.timing}
                 detailedCard
+                onPress={() => null}
               />
             );
           }}

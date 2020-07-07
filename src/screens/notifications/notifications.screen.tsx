@@ -1,14 +1,23 @@
 import React from 'react';
-import {StyleSheet, View, ScrollView, TouchableOpacity} from 'react-native';
+import {View, ScrollView, TouchableOpacity} from 'react-native';
 import {Layout, Text, Avatar, List} from '@ui-kitten/components';
 import {GlobalStyles} from '../../constants/global-styles';
 import {widthPercentageToDP} from '../../shared/methods/normalize';
+import {HomeDrawerNavProps} from '../../navigation/navigation.types';
+import {AuthSchema} from '../../models/user.models';
 
-const Notifications = () => {
+interface NotificationProps extends HomeDrawerNavProps<'Notifications'> {
+  authData: AuthSchema;
+}
+
+const Notifications = ({navigation}: NotificationProps) => {
   return (
     <Layout style={GlobalStyles.flex1}>
       <ScrollView>
-        <Text category="h4" style={GlobalStyles.mb10}>
+        <Text
+          category="h4"
+          style={GlobalStyles.mb10}
+          onPress={() => navigation.navigate('Notifications')}>
           Notifications
         </Text>
         <List
@@ -44,5 +53,3 @@ const Notifications = () => {
 };
 
 export default Notifications;
-
-const styles = StyleSheet.create({});

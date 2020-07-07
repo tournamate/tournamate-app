@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import {
   Layout,
   ListItem,
@@ -24,8 +24,9 @@ import {
   BriefCaseLineIcon,
 } from '../../components/icons.component';
 import {GlobalStyles} from '../../constants/global-styles';
-import {ThemeContext} from '../../services/theme.service';
+import {ThemeContext, Theme} from '../../services/theme.service';
 import {widthPercentageToDP} from '../../shared/methods/normalize';
+import {HomeDrawerNavProps} from '../../navigation/navigation.types';
 
 const data = [
   {
@@ -78,17 +79,15 @@ const data = [
   },
 ];
 
-const Account = ({
-  authData,
-  navigation,
-}: {
+interface Props extends HomeDrawerNavProps<'Account'> {
   authData: AuthSchema;
-  navigation: any;
-}) => {
+}
+
+const Account = ({authData}: Props) => {
   const ItemImage = () => <Avatar source={{uri: authData.photo}} />;
   const themeService = React.useContext(ThemeContext);
-  const handleChangeTheme = (type) => themeService.setCurrentTheme(type);
-  const renderItem = ({item, index}) => (
+  const handleChangeTheme = (type: Theme) => themeService.setCurrentTheme(type);
+  const renderItem = ({item, index}: {item: any; index: number}) => (
     <ListItem
       title={item.title}
       key={index}

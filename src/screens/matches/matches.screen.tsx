@@ -7,7 +7,8 @@ import {
   heightPercentageToDP,
 } from '../../shared/methods/normalize';
 import ImageCarousel from '../../components/carousels/type-1.carousel.component';
-import TMStatusBar from '../../components/status-bar.component';
+import {HomeDrawerNavProps} from '../../navigation/navigation.types';
+import {AuthSchema} from '../../models/user.models';
 
 const sliderData = [
   {
@@ -22,7 +23,11 @@ const sliderData = [
   },
 ];
 
-const Matches = () => {
+interface MatchesProps extends HomeDrawerNavProps<'Matches'> {
+  authData: AuthSchema;
+}
+
+const Matches = ({navigation}: MatchesProps) => {
   return (
     <Layout style={[GlobalStyles.flex1]} level="2">
       <ScrollView>
@@ -33,7 +38,10 @@ const Matches = () => {
           }}
           data={sliderData}
         />
-        <Text category="h3" style={[GlobalStyles.mb10, GlobalStyles.cGutter]}>
+        <Text
+          category="h3"
+          style={[GlobalStyles.mb10, GlobalStyles.cGutter]}
+          onPress={() => navigation.navigate('Home')}>
           All games
         </Text>
         <View style={[GlobalStyles.flexRowWrap1]}>

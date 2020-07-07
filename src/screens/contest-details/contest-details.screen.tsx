@@ -27,9 +27,9 @@ import {
 import {KeyboardAvoidingView} from '../../components/kb-avoiding-view.component';
 import UserPreview from '../../components/user-preview.component';
 import {setToClipboard} from '../../shared/methods/clipboard';
-import {RouterConstants} from '../../constants/router.constants';
+import {HomeDrawerNavProps} from '../../navigation/navigation.types';
 
-const ContestDetails = ({navigation}: {navigation: any}) => {
+const ContestDetails = ({navigation}: HomeDrawerNavProps<'ContestDetails'>) => {
   const [isShowMoreNotes, setIsShowMoreNotes] = useState(false);
   const [isShowMoreRules, setIsShowMoreRules] = useState(false);
   const styles = useStyleSheet(themedStyles);
@@ -181,9 +181,7 @@ const ContestDetails = ({navigation}: {navigation: any}) => {
             <View style={GlobalStyles.mb15}>
               <TouchableOpacity
                 style={[GlobalStyles.flexRowWrap1, GlobalStyles.aiCenter]}
-                onPress={() =>
-                  navigation.navigate(RouterConstants.PrizeLeaderboard)
-                }>
+                onPress={() => navigation.navigate('PrizeLeaderboard')}>
                 <Text
                   category="h6"
                   style={[GlobalStyles.mb10, GlobalStyles.fontBold]}>
@@ -235,7 +233,7 @@ const ContestDetails = ({navigation}: {navigation: any}) => {
             <TouchableOpacity
               activeOpacity={0.8}
               style={GlobalStyles.mb15}
-              onPress={() => navigation.navigate(RouterConstants.UserProfile)}>
+              onPress={() => navigation.navigate('UserProfile')}>
               <Text category="h6" style={[GlobalStyles.mb10]}>
                 About organizer
               </Text>

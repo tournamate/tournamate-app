@@ -8,6 +8,10 @@ export const GlobalStyles = StyleSheet.create({
     width: 15,
     height: 15,
   },
+  icon3: {
+    width: 25,
+    height: 25,
+  },
   cGutter: {padding: 10},
   mr5: {marginRight: 5},
   mr15: {marginRight: 15},
@@ -15,6 +19,7 @@ export const GlobalStyles = StyleSheet.create({
   mb5: {marginBottom: 5},
   ml12: {marginLeft: 12},
   ml20: {marginLeft: 20},
+  p10: {padding: 10},
   mb15: {
     marginBottom: 15,
   },
@@ -53,5 +58,8 @@ export const GlobalStyles = StyleSheet.create({
     width: 15,
     height: 15,
     marginRight: 5,
+  },
+  br4: {
+    borderRadius: 4,
   },
 });
