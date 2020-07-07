@@ -7,7 +7,6 @@ import {RouteProp} from '@react-navigation/core';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {HomeDrawer} from '../screens/home/home-drawer.component';
 import {HomeBottomNavigation} from '../screens/home/home-bottom-navigation.component';
-import {RouterConstants} from '../constants/router.constants';
 import Dashboard from '../screens/dashboard/dashboard.screen';
 import Account from '../screens/account/account.screen';
 import Matches from '../screens/matches/matches.screen';
@@ -17,11 +16,12 @@ import OrganizeContest from '../screens/organize-contest/organize-contest.screen
 import ContestDetails from '../screens/contest-details/contest-details.screen';
 import PrizeLeaderBoard from '../screens/prize-leaderboard/prize-leaderboard.screen';
 import UserProfile from '../screens/user-profile/user-profile.screen';
+import {HomeTabsParamList, HomeDrawerParamList} from './navigation.types';
+import Signup from '../screens/auth/signup/Signup';
+import EditProfile from '../screens/edit-profile/edit-profile.screen';
 
-const BottomTab = createBottomTabNavigator();
-const Drawer = createDrawerNavigator();
-
-// const BackAction = () => <TopNavigationAction icon={FacebookIcon} />;
+const BottomTab = createBottomTabNavigator<HomeTabsParamList>();
+const Drawer = createDrawerNavigator<HomeDrawerParamList>();
 
 const ROOT_ROUTES: string[] = [
   'Dashboard',
@@ -41,46 +41,30 @@ const TabBarVisibleOnRootScreenOptions = ({
   return {tabBarVisible: currentRoute && isOneOfRootRoutes(currentRoute)};
 };
 
-export const HomeTabsNavigator = () => (
+export const HomeTabsNavigator: React.FC = () => (
   <BottomTab.Navigator
     screenOptions={TabBarVisibleOnRootScreenOptions}
     tabBar={(props) => <HomeBottomNavigation {...props} />}>
-    <BottomTab.Screen name={RouterConstants.Dashboard} component={Dashboard} />
-    <BottomTab.Screen name={RouterConstants.Matches} component={Matches} />
-    <BottomTab.Screen
-      name={RouterConstants.Notifications}
-      component={Notifications}
-    />
-    <BottomTab.Screen name={RouterConstants.Account} component={Account} />
+    <BottomTab.Screen name={'Dashboard'} component={Dashboard} />
+    <BottomTab.Screen name={'Matches'} component={Matches} />
+    <BottomTab.Screen name={'Notifications'} component={Notifications} />
+    <BottomTab.Screen name={'Account'} component={Account} />
   </BottomTab.Navigator>
 );
 
 export const HomeNavigator = (): React.ReactElement => (
   <Drawer.Navigator drawerContent={(props) => <HomeDrawer {...props} />}>
-    <Drawer.Screen name={RouterConstants.Home} component={HomeTabsNavigator} />
-    <Drawer.Screen
-      name={RouterConstants.OrganizeContest}
-      component={OrganizeContest}
-    />
-    <Drawer.Screen name={RouterConstants.Account} component={Account} />
-    <Drawer.Screen name={RouterConstants.Matches} component={Matches} />
-    <Drawer.Screen
-      name={RouterConstants.Notifications}
-      component={Notifications}
-    />
-    <Drawer.Screen
-      name={RouterConstants.DetailedCards}
-      component={DetailedCards}
-    />
-    <Drawer.Screen
-      name={RouterConstants.ContestDetails}
-      component={ContestDetails}
-    />
-    <Drawer.Screen
-      name={RouterConstants.PrizeLeaderboard}
-      component={PrizeLeaderBoard}
-    />
+    <Drawer.Screen name={'Home'} component={HomeTabsNavigator} />
+    <Drawer.Screen name={'OrganizeContest'} component={OrganizeContest} />
+    <Drawer.Screen name={'Dashboard'} component={Dashboard} />
+    <Drawer.Screen name={'Account'} component={Account} />
+    <Drawer.Screen name={'Matches'} component={Matches} />
+    <Drawer.Screen name={'Notifications'} component={Notifications} />
+    <Drawer.Screen name={'DetailedCards'} component={DetailedCards} />
+    <Drawer.Screen name={'ContestDetails'} component={ContestDetails} />
+    <Drawer.Screen name={'PrizeLeaderboard'} component={PrizeLeaderBoard} />
 
-    <Drawer.Screen name={RouterConstants.UserProfile} component={UserProfile} />
+    <Drawer.Screen name={'UserProfile'} component={UserProfile} />
+    <Drawer.Screen name={'EditProfile'} component={EditProfile} />
   </Drawer.Navigator>
 );

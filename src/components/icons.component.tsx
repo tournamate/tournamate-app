@@ -107,3 +107,6 @@ export const CopyLineIcon = (style: any): IconElement => (
 export const AwardLineIcon = (style: any): IconElement => (
   <Icon {...style} name="award-outline" />
 );
+export const CameraIcon = (style: any): IconElement => (
+  <Icon {...style} name="camera" />
+);

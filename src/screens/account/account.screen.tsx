@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity, ImageProps} from 'react-native';
 import {
   Layout,
   ListItem,
@@ -9,6 +9,7 @@ import {
   Text,
   StyleService,
   useStyleSheet,
+  IconProps,
 } from '@ui-kitten/components';
 import {connect} from 'react-redux';
 import {AuthSchema} from '../../models/user.models';
@@ -28,73 +29,81 @@ import {ThemeContext, Theme} from '../../services/theme.service';
 import {widthPercentageToDP} from '../../shared/methods/normalize';
 import {HomeDrawerNavProps} from '../../navigation/navigation.types';
 
-const data = [
-  {
-    title: 'Edit profile',
-    description: 'Change username, mobile number, etc',
-    id: 'edit-profile',
-    icon: PersonLineIcon,
-  },
-  {
-    title: 'Transactions',
-    description: 'Check all the transactions',
-    id: 'transactions',
-    icon: SwapIcon,
-  },
-  {
-    title: 'Add money',
-    description: 'Add money to the wallet to start playing',
-    id: 'add-money',
-    icon: PriceTagLineIcon,
-  },
-  {
-    title: 'Notifications',
-    description: 'Check notifications',
-    id: 'notifications',
-    icon: BellLineIcon,
-  },
-  {
-    title: 'Contact support',
-    description: 'Contact our respresentatives',
-    id: 'contact-support',
-    icon: PhoneCallIcon,
-  },
-  {
-    title: 'Settings',
-    description: 'customize the settings',
-    id: 'settings',
-    icon: SettingsLineIcon2,
-  },
-  {
-    title: 'My statistics',
-    description: 'Check your previous matches data',
-    id: 'my-statistics',
-    icon: TrendingIcon,
-  },
-  {
-    title: 'Withdraw money',
-    description: 'Withdraw your earnings to the bank account',
-    id: 'withdraw-money',
-    icon: BriefCaseLineIcon,
-  },
-];
-
 interface Props extends HomeDrawerNavProps<'Account'> {
   authData: AuthSchema;
 }
 
-const Account = ({authData}: Props) => {
+interface MenuProps {
+  title: string;
+  description: string;
+  id: string;
+  icon: IconProps;
+  onPress: () => null;
+}
+
+const Account = ({authData, navigation}: Props) => {
+  const data = [
+    {
+      title: 'Edit profile',
+      description: 'Change username, mobile number, etc',
+      id: 'edit-profile',
+      icon: PersonLineIcon,
+      onPress: () => navigation.navigate('EditProfile'),
+    },
+    {
+      title: 'Transactions',
+      description: 'Check all the transactions',
+      id: 'transactions',
+      icon: SwapIcon,
+    },
+    {
+      title: 'Add money',
+      description: 'Add money to the wallet to start playing',
+      id: 'add-money',
+      icon: PriceTagLineIcon,
+    },
+    {
+      title: 'Notifications',
+      description: 'Check notifications',
+      id: 'notifications',
+      icon: BellLineIcon,
+    },
+    {
+      title: 'Contact support',
+      description: 'Contact our respresentatives',
+      id: 'contact-support',
+      icon: PhoneCallIcon,
+    },
+    {
+      title: 'Settings',
+      description: 'customize the settings',
+      id: 'settings',
+      icon: SettingsLineIcon2,
+    },
+    {
+      title: 'My statistics',
+      description: 'Check your previous matches data',
+      id: 'my-statistics',
+      icon: TrendingIcon,
+    },
+    {
+      title: 'Withdraw money',
+      description: 'Withdraw your earnings to the bank account',
+      id: 'withdraw-money',
+      icon: BriefCaseLineIcon,
+    },
+  ];
   const ItemImage = () => <Avatar source={{uri: authData.photo}} />;
   const themeService = React.useContext(ThemeContext);
   const handleChangeTheme = (type: Theme) => themeService.setCurrentTheme(type);
-  const renderItem = ({item, index}: {item: any; index: number}) => (
+  const renderItem = ({item, index}: {item: MenuProps; index: number}) => (
     <ListItem
       title={item.title}
       key={index}
       description={item.description}
       accessoryLeft={item.icon}
       accessoryRight={ArrowIOSForward}
-      onPress={() => console.log('pressed')}
+      onPress={item.onPress}
     />
   );
   const styles = useStyleSheet(themedStyle);
@@ -135,7 +144,7 @@ const Account = ({authData}: Props) => {
       </View>
       <Divider />
 
-      <List data={data} renderItem={renderItem} />
+      <List data={data as Array<MenuProps>} renderItem={renderItem} />
     </Layout>
   );
 };

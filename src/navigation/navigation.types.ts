@@ -25,6 +25,7 @@ export type HomeDrawerParamList = {
   PrizeLeaderboard: undefined;
   UserProfile: undefined;
   Dashboard: undefined;
+  EditProfile: undefined;
 };
 
 export type AuthNavProps<T extends keyof AuthParamList> = {

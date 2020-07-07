@@ -36,7 +36,7 @@ class User {
   static async set(
     userId: string,
     userDetails: object,
-  ): Promise<{data: object | undefined; exists: boolean} | undefined> {
+  ): Promise<{data: object | undefined | any; exists: boolean} | undefined> {
     try {
       await firestore()
         .collection(User.collectionName)

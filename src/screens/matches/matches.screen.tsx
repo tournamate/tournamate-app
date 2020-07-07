@@ -1,6 +1,8 @@
 import React from 'react';
 import {StyleSheet, View, ScrollView, Image} from 'react-native';
 import {Layout, Text, List} from '@ui-kitten/components';
+import {useIsFocused} from '@react-navigation/native';
+
 import {GlobalStyles} from '../../constants/global-styles';
 import {
   widthPercentageToDP,
@@ -9,6 +11,7 @@ import {
 import ImageCarousel from '../../components/carousels/type-1.carousel.component';
 import {HomeDrawerNavProps} from '../../navigation/navigation.types';
 import {AuthSchema} from '../../models/user.models';
+import TMStatusBar from '../../components/status-bar.component';
 
 const sliderData = [
   {
@@ -26,10 +29,14 @@ const sliderData = [
 interface MatchesProps extends HomeDrawerNavProps<'Matches'> {
   authData: AuthSchema;
 }
-
 const Matches = ({navigation}: MatchesProps) => {
+  console.log(useIsFocused(), 'focuesd');
+  const isScreenFocused = useIsFocused();
   return (
     <Layout style={[GlobalStyles.flex1]} level="2">
+      {isScreenFocused && (
+        <TMStatusBar translucent backgroundColor="transparent" />
+      )}
       <ScrollView>
         <ImageCarousel
           innerContainerStyle={{

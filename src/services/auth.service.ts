@@ -2,7 +2,6 @@ import auth from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/app';
 import {SignupWithEmail, UserDataType} from './../models/user.models';
 import User from './user.service';
-import AsyncStorage from '@react-native-community/async-storage';
 import {AppStorage} from './app-storage.service';
 import {AppReloadService} from './app-reload.service';
 

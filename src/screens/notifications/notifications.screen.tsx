@@ -16,7 +16,7 @@ const Notifications = ({navigation}: NotificationProps) => {
       <ScrollView>
         <Text
           category="h4"
-          style={GlobalStyles.mb10}
+          style={[GlobalStyles.p10]}
           onPress={() => navigation.navigate('Notifications')}>
           Notifications
         </Text>

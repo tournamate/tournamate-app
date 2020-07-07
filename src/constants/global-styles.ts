@@ -19,6 +19,7 @@ export const GlobalStyles = StyleSheet.create({
   mb5: {marginBottom: 5},
   ml12: {marginLeft: 12},
   ml20: {marginLeft: 20},
+  mt30: {marginTop: 30},
   p10: {padding: 10},
   mb15: {
     marginBottom: 15,
