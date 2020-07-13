@@ -27,4 +27,8 @@ export interface AuthSchema {
     iss: string | null;
     provier: string | null;
   };
+  userName: string;
+  pubgMobileUsername?: string;
+  pubgUsername?: string;
+  freeFireUsername?: string;
 }

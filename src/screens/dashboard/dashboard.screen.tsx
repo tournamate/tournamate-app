@@ -14,14 +14,15 @@ import CardInList from '../../components/game-cards/card-list.component';
 import {IconList} from '../../components/game-cards/icon-list.component';
 import TMStatusBar from '../../components/status-bar.component';
 import {HomeDrawerNavProps} from '../../navigation/navigation.types';
+import Contests from '../../services/contest.service';
 
 interface DashboardProps extends HomeDrawerNavProps<'Dashboard'> {
   authData: AuthSchema;
 }
 
 const Dashboard = ({navigation, authData}: DashboardProps) => {
-  console.log(JSON.stringify(navigation), 'nav');
   const styles = useStyleSheet(themedstyles);
+  const [constestsData, setContestsData] = React.useState([]);
   const getItem = (data: any, index: number) => data[index];
   const tempData = [
     {
@@ -57,6 +58,12 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
       timing: {},
     },
   ];
+  React.useEffect(() => {
+    Contests.getContests().then((data) => {
+      const contestData = data?.docs.map((item) => item.data());
+      setContestsData(contestData as any);
+    });
+  }, []);
   return (
     <>
       <DashboardTopNav
@@ -65,7 +72,7 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
         navigation={navigation}
       />
       <TMStatusBar />
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Layout style={styles.container} level="3">
           <ImageCarousel
             innerContainerStyle={{
@@ -75,7 +82,10 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
             data={sliderData}
           />
 
-          <ScrollView horizontal style={GlobalStyles.flexRow}>
+          <ScrollView
+            horizontal
+            style={GlobalStyles.flexRow}
+            showsHorizontalScrollIndicator={false}>
             {[
               {
                 icon: 'person-outline',
@@ -118,29 +128,37 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
                 />
               </TouchableWithoutFeedback>
             </View>
-            <VirtualizedList
-              data={tempData}
-              horizontal
-              initialNumToRender={4}
-              getItem={getItem}
-              keyExtractor={(item) => item.organizer}
-              getItemCount={() => 4}
-              renderItem={({item, index}: {item: any; index: number}) => {
-                return (
-                  <CardInList
-                    key={item.organizer}
-                    onPress={() => navigation.navigate('ContestDetails')}
-                    index={index}
-                    title={item.title}
-                    entryPrice={item.entryPrice}
-                    organizer={item.organizer}
-                    participants={item.participants}
-                    tags={item.tags}
-                    timing={item.timing}
-                  />
-                );
-              }}
-            />
+            {constestsData.length ? (
+              <VirtualizedList
+                data={constestsData}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                initialNumToRender={constestsData.length}
+                getItem={getItem}
+                keyExtractor={(item) => item?.organizerInformation.userId}
+                getItemCount={() => constestsData.length}
+                renderItem={({item, index}: {item: any; index: number}) => {
+                  return (
+                    <CardInList
+                      key={item?.organizerInformation.userId}
+                      onPress={() => navigation.navigate('ContestDetails')}
+                      index={index}
+                      title={item?.contestTitle}
+                      entryPrice={item?.entryFee}
+                      organizer={item?.organizerInformation.userName}
+                      participants={{joined: 30, total: 100}}
+                      tags={[
+                        item.platform,
+                        item.map,
+                        item.matchType,
+                        item.server,
+                      ]}
+                      timing={new Date()}
+                    />
+                  );
+                }}
+              />
+            ) : null}
           </View>
           <View style={styles.section1}>
             <View style={[styles.sectionInner, styles.gutter]}>

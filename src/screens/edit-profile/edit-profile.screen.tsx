@@ -27,7 +27,6 @@ import {
 } from '../../components/icons.component';
 import {KeyboardAvoidingView} from '../../components/kb-avoiding-view.component';
 
-import AuthService from '../../services/auth.service';
 import TMStatusBar from '../../components/status-bar.component';
 import ScreenLoader from '../../components/screen-loader.component';
 import {signupUser} from '../../store/actions/authActions';
@@ -54,8 +53,10 @@ const SignupSchema = Yup.object().shape({
   freeFireUsername: Yup.string(),
   dob: Yup.date().required('* required'),
 });
+
 interface Props extends HomeDrawerNavProps<'Dashboard'> {
   authData: AuthSchema;
+  signupUserProp: () => void;
 }
 
 const EditProfile = ({navigation, authData, signupUserProp}: Props) => {
@@ -168,7 +169,7 @@ const EditProfile = ({navigation, authData, signupUserProp}: Props) => {
               email: authData.email,
               mobileNumber: authData.mobileNumber || '',
               fullName: authData.fullName,
-              userName: '',
+              userName: authData.userName,
               dob: undefined,
               pubgUsername: '',
               freeFireUsername: '',

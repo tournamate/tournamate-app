@@ -174,7 +174,7 @@ const themedStyles = StyleService.create({
     position: 'absolute',
     right: 0,
     top: 20,
-    backgroundColor: 'color-warning-300',
+    backgroundColor: 'color-success-300',
     color: 'black',
     borderTopLeftRadius: 20,
     borderBottomLeftRadius: 20,
