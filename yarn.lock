@@ -1074,6 +1074,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-7.1.0.tgz#e15e452f68e449dc0f52d1156bbf7ce3000de8b0"
   integrity sha512-Ur5OPbPe+fg/U1Xd+kGmtV4kSprvcGiFBuetMfBe6iPvlXjE1eY7T3+l7P655kpn+1ps5nlnVPEihXaMoVkeOg==
 
+"@react-native-firebase/messaging@^7.4.2":
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-7.4.2.tgz#736476df3b88b129172dd090df5190f71bcba83a"
+  integrity sha512-PuMRvWFFgElFXDp71TmEs+eype8GrrUEibLFpqlzVLheUTtzRG4+ofZiWr8yAO0nXmuPSPgkroQzAMbeEf2J3A==
+
 "@react-navigation/bottom-tabs@^5.5.1":
   version "5.5.1"
   resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-5.5.1.tgz#f1f15ea70e4b397de6f8acafe70a694de08c87b6"

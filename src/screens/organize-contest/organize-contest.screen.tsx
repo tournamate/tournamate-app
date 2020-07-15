@@ -82,6 +82,7 @@ const OrganizeContest = ({navigation, authData}: Props) => {
             onSubmit={async (values) => {
               const payload = {
                 ...values,
+                notes: JSON.stringify(values.notes),
                 organizerInformation: {
                   userId: authData.userId,
                   userName: authData.userName,

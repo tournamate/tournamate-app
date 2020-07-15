@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {View, ScrollView, VirtualizedList} from 'react-native';
 import {Layout, Text, StyleService, useStyleSheet} from '@ui-kitten/components';
+import firestore from '@react-native-firebase/firestore';
 
 import {DashboardTopNav} from '../../components/top-navigations/dashboard-top.component';
 import {AuthSchema} from '../../models/user.models';
@@ -22,7 +23,7 @@ interface DashboardProps extends HomeDrawerNavProps<'Dashboard'> {
 
 const Dashboard = ({navigation, authData}: DashboardProps) => {
   const styles = useStyleSheet(themedstyles);
-  const [constestsData, setContestsData] = React.useState([]);
+  const [constestsData, setContestsData] = React.useState([] as any);
   const getItem = (data: any, index: number) => data[index];
   const tempData = [
     {
@@ -59,10 +60,37 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
     },
   ];
   React.useEffect(() => {
-    Contests.getContests().then((data) => {
-      const contestData = data?.docs.map((item) => item.data());
-      setContestsData(contestData as any);
-    });
+    // const contestData = data?.docs.map((item) => item.data());
+    // setContestsData(contestData as any);
+    firestore()
+      .collection('contests')
+      .where('contestTitle', '<=', 'Ghjjjg')
+      // .where('organizerInformation.userId', '==', authData.userId)
+      .orderBy('contestTitle', 'desc')
+      .get()
+      .then((data) =>
+        console.log(
+          data.docs.map((obj) => obj.data()),
+          'firestore',
+        ),
+      )
+      .catch((err) => console.log(err, 'err firebase'));
+
+    // const subscriber = firestore()
+    //   .collection('contests')
+    //   .where('entryFee', '>=', 10)
+    //   .where('entryFee', '<=', 30)
+    //   .onSnapshot((documentSnapshot) => {
+    //     setContestsData(
+    //       documentSnapshot.docs.map((obj) => ({
+    //         id: obj.id,
+    //         ...obj.data(),
+    //       })),
+    //     );
+    //   });
+
+    // // Stop listening for updates when no longer required
+    // return () => subscriber();
   }, []);
   return (
     <>

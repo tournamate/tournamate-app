@@ -9,6 +9,7 @@ import {GoogleSignin} from '@react-native-community/google-signin';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import Toast from 'react-native-simple-toast';
+import messaging from '@react-native-firebase/messaging';
 
 import {
   ThemeContext,
@@ -38,6 +39,21 @@ const App = () => {
     GoogleSignin.configure({
       webClientId: AppConfig.webClientId,
     });
+    messaging()
+      .requestPermission()
+      .then((authStatus) => {
+        const enabled =
+          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+        if (enabled) {
+          console.log('Messaging authorization status:', authStatus);
+        }
+      });
+    messaging()
+      .getToken()
+      .then((token) => {
+        console.log(token, 'device token to store');
+      });
     const unsubscribe = NetInfo.addEventListener((state) => {
       if (state.isConnected) {
         Toast.show('You are online!');

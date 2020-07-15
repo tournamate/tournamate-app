@@ -17,7 +17,6 @@ import ContestDetails from '../screens/contest-details/contest-details.screen';
 import PrizeLeaderBoard from '../screens/prize-leaderboard/prize-leaderboard.screen';
 import UserProfile from '../screens/user-profile/user-profile.screen';
 import {HomeTabsParamList, HomeDrawerParamList} from './navigation.types';
-import Signup from '../screens/auth/signup/Signup';
 import EditProfile from '../screens/edit-profile/edit-profile.screen';
 
 const BottomTab = createBottomTabNavigator<HomeTabsParamList>();
