@@ -32,7 +32,7 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
       .where('organizerInformation.userId', '==', authData.userId)
       .onSnapshot((documentSnapshot) => {
         setContestsData(
-          documentSnapshot.docs.map((obj) => {
+          documentSnapshot?.docs.map((obj) => {
             const data = obj.data();
             return {
               id: obj.id,
@@ -44,7 +44,6 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
       });
     return () => subscriber();
   }, [authData]);
-
   return (
     <>
       <DashboardTopNav
@@ -109,7 +108,7 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
                 />
               </TouchableWithoutFeedback>
             </View>
-            {constestsData.length ? (
+            {constestsData?.length ? (
               <VirtualizedList
                 data={constestsData}
                 showsHorizontalScrollIndicator={false}

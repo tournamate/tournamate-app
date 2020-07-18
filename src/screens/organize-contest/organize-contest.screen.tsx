@@ -111,6 +111,7 @@ const OrganizeContest = ({navigation, authData}: Props) => {
                   email: authData.email,
                 },
                 contestDate: values.contestTime,
+                isContestFinished: false,
               };
               const result = await Contests.createContests(payload);
               if (result.success) {
