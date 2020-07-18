@@ -1,6 +1,6 @@
 export type CreateContestsProps = {
   contestTitle: string;
-  entryFee: string;
+  entryFee: number;
   platform: string;
   matchType: string;
   map: string;

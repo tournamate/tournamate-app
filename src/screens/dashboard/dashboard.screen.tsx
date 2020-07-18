@@ -15,7 +15,6 @@ import CardInList from '../../components/game-cards/card-list.component';
 import {IconList} from '../../components/game-cards/icon-list.component';
 import TMStatusBar from '../../components/status-bar.component';
 import {HomeDrawerNavProps} from '../../navigation/navigation.types';
-import Contests from '../../services/contest.service';
 
 interface DashboardProps extends HomeDrawerNavProps<'Dashboard'> {
   authData: AuthSchema;
@@ -25,73 +24,27 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
   const styles = useStyleSheet(themedstyles);
   const [constestsData, setContestsData] = React.useState([] as any);
   const getItem = (data: any, index: number) => data[index];
-  const tempData = [
-    {
-      title: 'Cards contain content and actions about a single subject',
-      entryPrice: 50,
-      organizer: 'Karthik',
-      participants: {joined: 30, total: 100},
-      tags: ['Pubg', 'Solo', 'Vekandi'],
-      timing: {},
-    },
-    {
-      title: 'Cards contain content and actions about a single subject',
-      entryPrice: 50,
-      organizer: 'Ashok',
-      participants: {joined: 30, total: 100},
-      tags: ['Pubg', 'Solo', 'Vekandi'],
-      timing: {},
-    },
-    {
-      title: 'Cards contain content and actions about a single subject',
-      entryPrice: 50,
-      organizer: 'Shankar',
-      participants: {joined: 30, total: 100},
-      tags: ['Pubg', 'Solo', 'Vekandi'],
-      timing: {},
-    },
-    {
-      title: 'Cards contain content and actions about a single subject',
-      entryPrice: 50,
-      organizer: 'Newton',
-      participants: {joined: 30, total: 100},
-      tags: ['Pubg', 'Solo', 'Vekandi'],
-      timing: {},
-    },
-  ];
+
   React.useEffect(() => {
-    // const contestData = data?.docs.map((item) => item.data());
-    // setContestsData(contestData as any);
-    firestore()
+    const subscriber = firestore()
       .collection('contests')
-      .where('contestTitle', '<=', 'Ghjjjg')
-      // .where('organizerInformation.userId', '==', authData.userId)
-      .orderBy('contestTitle', 'desc')
-      .get()
-      .then((data) =>
-        console.log(
-          data.docs.map((obj) => obj.data()),
-          'firestore',
-        ),
-      )
-      .catch((err) => console.log(err, 'err firebase'));
+      .where('isContestFinished', '==', false)
+      .where('organizerInformation.userId', '==', authData.userId)
+      .onSnapshot((documentSnapshot) => {
+        setContestsData(
+          documentSnapshot.docs.map((obj) => {
+            const data = obj.data();
+            return {
+              id: obj.id,
+              ...data,
+              contestDate: data.contestDate?.toDate(),
+            };
+          }),
+        );
+      });
+    return () => subscriber();
+  }, [authData]);
 
-    // const subscriber = firestore()
-    //   .collection('contests')
-    //   .where('entryFee', '>=', 10)
-    //   .where('entryFee', '<=', 30)
-    //   .onSnapshot((documentSnapshot) => {
-    //     setContestsData(
-    //       documentSnapshot.docs.map((obj) => ({
-    //         id: obj.id,
-    //         ...obj.data(),
-    //       })),
-    //     );
-    //   });
-
-    // // Stop listening for updates when no longer required
-    // return () => subscriber();
-  }, []);
   return (
     <>
       <DashboardTopNav
@@ -137,7 +90,7 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
               },
             ].map((data) => (
               <IconList
-                key={data.text}
+                key={data.icon}
                 icon={data.icon}
                 text={data.text}
                 onPress={data.onPress}
@@ -147,7 +100,50 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
 
           <View style={styles.section1}>
             <View style={[styles.sectionInner, styles.gutter]}>
-              <Text category="h5">Your upcoming contests</Text>
+              <Text category="h5">Upcoming Organized Contests</Text>
+              <TouchableWithoutFeedback
+                onPress={() => navigation.navigate('DetailedCards')}>
+                <ArrowForwardIcon
+                  style={GlobalStyles.icon1}
+                  fill={styles.iconColor.backgroundColor}
+                />
+              </TouchableWithoutFeedback>
+            </View>
+            {constestsData.length ? (
+              <VirtualizedList
+                data={constestsData}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                initialNumToRender={constestsData.length}
+                getItem={getItem}
+                keyExtractor={(item) => item?.id}
+                getItemCount={() => constestsData.length}
+                renderItem={({item, index}: {item: any; index: number}) => {
+                  return (
+                    <CardInList
+                      key={item?.id}
+                      onPress={() => navigation.navigate('ContestDetails')}
+                      index={index}
+                      title={item?.contestTitle}
+                      entryPrice={item?.entryFee}
+                      organizer={item?.organizerInformation.userName}
+                      participants={{joined: 30, total: 100}}
+                      tags={[
+                        'platform',
+                        'map',
+                        'matchType',
+                        'server',
+                      ].map((tag) => ({label: item[tag], type: tag}))}
+                      timing={{contestDate: item.contestDate}}
+                    />
+                  );
+                }}
+              />
+            ) : null}
+          </View>
+          {/* <View style={styles.section1}>
+            <View style={[styles.sectionInner, styles.gutter]}>
+              <Text category="h5">Upcoming Participated Contests</Text>
               <TouchableWithoutFeedback
                 onPress={() => navigation.navigate('DetailedCards')}>
                 <ArrowForwardIcon
@@ -222,7 +218,7 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
                 );
               }}
             />
-          </View>
+          </View> */}
         </Layout>
       </ScrollView>
     </>

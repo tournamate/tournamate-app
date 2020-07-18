@@ -15,20 +15,36 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import Toast from 'react-native-simple-toast';
 import {useIsFocused} from '@react-navigation/native';
+import addFns from 'date-fns/add';
 
 import {AuthSchema} from '../../models/user.models';
 import {CommonTopNav} from '../../components/top-navigations/common-top.component';
 import {GlobalStyles} from '../../constants/global-styles';
 import {KeyboardAvoidingView} from '../../components/kb-avoiding-view.component';
-import {CalendarIcon} from '../../components/icons.component';
+import {
+  CalendarIcon,
+  ClockIcon,
+  PriceTagLineIcon,
+} from '../../components/icons.component';
 import {widthPercentageToDP} from '../../shared/methods/normalize';
 import {HomeDrawerNavProps} from '../../navigation/navigation.types';
 import Contests from '../../services/contest.service';
+import SelectDateTime from '../../components/select-date-time.component';
 
 interface Props extends HomeDrawerNavProps<'Dashboard'> {
   authData: AuthSchema;
 }
-
+interface ContestValues {
+  contestTitle: string;
+  entryFee: number;
+  platform: string;
+  matchType: string;
+  map: string;
+  server: string;
+  contestDate: Date | undefined;
+  contestTime: Date | undefined;
+  notes: string;
+}
 const ContestSchema = Yup.object().shape({
   contestTitle: Yup.string()
     .min(3, 'Too short!')
@@ -40,12 +56,13 @@ const ContestSchema = Yup.object().shape({
   map: Yup.string().required('* required'),
   server: Yup.string().required('* required'),
   contestDate: Yup.date().required('* required'),
-  contestTime: Yup.string().required('* required'),
+  contestTime: Yup.date().required('* required'),
   notes: Yup.string().min(10, 'Too short!').required('* required'),
 });
 
 const OrganizeContest = ({navigation, authData}: Props) => {
   const isScreenFocused = useIsFocused();
+
   React.useEffect(() => {
     if (isScreenFocused && !authData.userName) {
       Toast.showWithGravity(
@@ -57,6 +74,19 @@ const OrganizeContest = ({navigation, authData}: Props) => {
       navigation.navigate('EditProfile');
     }
   }, [authData, navigation, isScreenFocused]);
+
+  const initialValues: ContestValues = {
+    contestTitle: '',
+    entryFee: 10,
+    platform: '',
+    matchType: '',
+    map: '',
+    server: '',
+    contestDate: undefined,
+    contestTime: undefined,
+    notes: '',
+  };
+
   return (
     <Layout style={styles.container}>
       <CommonTopNav
@@ -67,17 +97,7 @@ const OrganizeContest = ({navigation, authData}: Props) => {
       <ScrollView style={[GlobalStyles.cGutter, styles.scrollContainer]}>
         <KeyboardAvoidingView>
           <Formik
-            initialValues={{
-              contestTitle: '',
-              entryFee: '',
-              platform: '',
-              matchType: '',
-              map: '',
-              server: '',
-              contestDate: undefined,
-              contestTime: undefined,
-              notes: '',
-            }}
+            initialValues={initialValues}
             validationSchema={ContestSchema}
             onSubmit={async (values) => {
               const payload = {
@@ -90,6 +110,7 @@ const OrganizeContest = ({navigation, authData}: Props) => {
                   fullName: authData.fullName,
                   email: authData.email,
                 },
+                contestDate: values.contestTime,
               };
               const result = await Contests.createContests(payload);
               if (result.success) {
@@ -105,35 +126,39 @@ const OrganizeContest = ({navigation, authData}: Props) => {
               values,
               errors,
               setFieldValue,
+              setFieldError,
             }: any) => (
               <>
-                <Input
-                  size="medium"
-                  placeholder="Erangel saturday"
-                  label="Contest title"
-                  value={values.contestTitle}
-                  caption={errors.contestTitle}
-                  status={errors.contestTitle ? 'danger' : ''}
-                  onChangeText={handleChange('contestTitle')}
-                  style={GlobalStyles.mb10}
-                />
-                <Input
-                  size="medium"
-                  placeholder="ex: 50"
-                  keyboardType={'phone-pad'}
-                  value={String(values.entryFee)}
-                  caption={errors.entryFee}
-                  status={errors.entryFee ? 'danger' : ''}
-                  // onChangeText={handleChange('entryFee')}
-                  onChangeText={(text) =>
-                    setFieldValue(
-                      'entryFee',
-                      Number(text.replace(/[^0-9]/g, '')),
-                    )
-                  }
-                  label="Entry fee (₹‎)"
-                  style={GlobalStyles.mb10}
-                />
+                <View style={GlobalStyles.flexRowWrap1}>
+                  <Input
+                    size="medium"
+                    placeholder="Erangel saturday"
+                    label="Contest title"
+                    value={values.contestTitle}
+                    caption={errors.contestTitle}
+                    status={errors.contestTitle ? 'danger' : ''}
+                    onChangeText={handleChange('contestTitle')}
+                    style={[GlobalStyles.mb10, styles.fieldWidth]}
+                  />
+                  <Input
+                    size="medium"
+                    placeholder="ex: 50"
+                    keyboardType={'phone-pad'}
+                    accessoryRight={PriceTagLineIcon}
+                    value={String(values.entryFee)}
+                    caption={errors.entryFee}
+                    status={errors.entryFee ? 'danger' : ''}
+                    // onChangeText={handleChange('entryFee')}
+                    onChangeText={(text) =>
+                      setFieldValue(
+                        'entryFee',
+                        Number(text.replace(/[^0-9]/g, '')),
+                      )
+                    }
+                    label="Entry fee (₹‎)"
+                    style={[GlobalStyles.mb10, styles.fieldWidth]}
+                  />
+                </View>
                 <View style={GlobalStyles.flexRowWrap1}>
                   {[
                     {
@@ -158,6 +183,7 @@ const OrganizeContest = ({navigation, authData}: Props) => {
                     },
                   ].map((data) => (
                     <Select
+                      key={data.name}
                       style={[GlobalStyles.mb10, styles.fieldWidth]}
                       onSelect={({row}) =>
                         setFieldValue(data.name, data.items[row])
@@ -175,6 +201,7 @@ const OrganizeContest = ({navigation, authData}: Props) => {
                 <View style={GlobalStyles.flexRowWrap1}>
                   <Datepicker
                     style={[GlobalStyles.mb10, styles.fieldWidth]}
+                    min={addFns(new Date(), {days: 1})}
                     label="Contest date"
                     placeholder="Pick date"
                     date={values.contestDate}
@@ -183,16 +210,47 @@ const OrganizeContest = ({navigation, authData}: Props) => {
                     onSelect={(date) => setFieldValue('contestDate', date)}
                     accessoryRight={CalendarIcon}
                   />
-                  <Datepicker
-                    style={[GlobalStyles.mb10, styles.fieldWidth]}
-                    label="Contest time"
-                    date={values.contestTime}
-                    caption={errors.contestTime}
-                    status={errors.contestTime ? 'danger' : ''}
-                    onSelect={(date) => setFieldValue('contestTime', date)}
-                    placeholder="Pick date"
-                    accessoryRight={CalendarIcon}
-                  />
+                  <SelectDateTime
+                    onChangeOfDateTime={(value) => {
+                      if (values.contestDate) {
+                        setFieldValue('contestTime', value);
+                      } else {
+                        setFieldError(
+                          'contestTime',
+                          'Choose contest date first',
+                        );
+                      }
+                    }}
+                    mode="time"
+                    value={
+                      values.contestTime
+                        ? new Date(values.contestTime)
+                        : values.contestDate
+                        ? new Date(values.contestDate)
+                        : new Date()
+                    }>
+                    <Input
+                      size="medium"
+                      placeholder="Pick Time"
+                      style={[GlobalStyles.mb10, styles.fieldWidth]}
+                      disabled
+                      value={
+                        values.contestTime
+                          ? new Date(values.contestTime).toLocaleTimeString(
+                              'en-us',
+                              {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              },
+                            )
+                          : 'Choose time'
+                      }
+                      caption={errors.contestTime}
+                      status={true ? 'danger' : ''}
+                      label="Contest time"
+                      accessoryRight={ClockIcon}
+                    />
+                  </SelectDateTime>
                 </View>
                 <Input
                   multiline={true}

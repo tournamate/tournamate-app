@@ -1,10 +1,12 @@
 import React from 'react';
 import {View, TouchableOpacity, ImageBackground} from 'react-native';
+import {Text, Button, StyleService, useStyleSheet} from '@ui-kitten/components';
+import formatDistanceToNow from 'date-fns/formatDistance';
+
 import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from '../../shared/methods/normalize';
-import {Text, Button, StyleService, useStyleSheet} from '@ui-kitten/components';
 import {trimString} from '../../shared/methods/trimString';
 import {
   ClockLineIcon,
@@ -20,7 +22,7 @@ import {
 const CardInList = ({
   entryPrice,
   title,
-  //   timing,
+  timing,
   participants,
   organizer,
   tags,
@@ -30,10 +32,10 @@ const CardInList = ({
 }: {
   entryPrice: number;
   title: string;
-  timing: object;
+  timing: {contestDate: Date};
   participants: {total: number; joined: number};
   organizer: string;
-  tags: string[];
+  tags: Array<{label: string; type: string}>;
   index: number;
   detailedCard?: boolean;
   onPress: () => void;
@@ -101,8 +103,17 @@ const CardInList = ({
                 style={styles.icon}
                 fill={styles.iconColor.backgroundColor}
               />
-              <Text category="label" style={gStyles.ml12}>
-                Today 12PM
+              <Text
+                category="label"
+                style={[gStyles.ml12, !detailedCard && gStyles.mb5]}>
+                {`Starts in ${formatDistanceToNow(
+                  new Date(),
+                  timing.contestDate,
+                  {
+                    includeSeconds: true,
+                    addSuffix: true,
+                  },
+                )}`}
               </Text>
             </View>
             <View style={gStyles.flexRow}>
@@ -114,7 +125,12 @@ const CardInList = ({
                 {participants.joined}/{participants.total}
               </Text>
             </View>
-            <View style={[gStyles.flexRow, gStyles.aiCenter]}>
+            <View
+              style={[
+                gStyles.flexRow,
+                gStyles.aiCenter,
+                !detailedCard && gStyles.mb5,
+              ]}>
               <PersonLineIcon
                 style={styles.icon}
                 fill={styles.iconColor.backgroundColor}
@@ -127,11 +143,12 @@ const CardInList = ({
           <View style={styles.tagWrap}>
             {tags.map((tag) => (
               <Button
+                key={tag.label}
                 size="tiny"
                 style={styles.tagBtn}
                 appearance="outline"
                 status="success">
-                {tag}
+                {tag.label}
               </Button>
             ))}
           </View>

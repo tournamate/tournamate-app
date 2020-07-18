@@ -64,6 +64,10 @@ export const ArrowBackIcon = (style: any): IconElement => (
 export const ClockLineIcon = (style: any): IconElement => (
   <Icon {...style} name="clock-outline" />
 );
+export const ClockIcon = (style: any): IconElement => (
+  <Icon {...style} name="clock" />
+);
+
 export const PeopleLineIcon = (style: any): IconElement => (
   <Icon {...style} name="people-outline" />
 );
