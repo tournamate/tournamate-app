@@ -1,20 +1,31 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {View, ScrollView, VirtualizedList} from 'react-native';
+import {
+  View,
+  ScrollView,
+  VirtualizedList,
+  ActivityIndicator,
+} from 'react-native';
 import {Layout, Text, StyleService, useStyleSheet} from '@ui-kitten/components';
 import firestore from '@react-native-firebase/firestore';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 import {DashboardTopNav} from '../../components/top-navigations/dashboard-top.component';
 import {AuthSchema} from '../../models/user.models';
 import ImageCarousel from '../../components/carousels/type-1.carousel.component';
 import {ArrowForwardIcon} from '../../components/icons.component';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
-import {SCREEN_WIDTH, SCREEN_HEIGHT} from '../../shared/methods/normalize';
+import {
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  widthPercentageToDP,
+} from '../../shared/methods/normalize';
 import {GlobalStyles} from '../../constants/global-styles';
 import CardInList from '../../components/game-cards/card-list.component';
 import {IconList} from '../../components/game-cards/icon-list.component';
 import TMStatusBar from '../../components/status-bar.component';
 import {HomeDrawerNavProps} from '../../navigation/navigation.types';
+import contestsStaticData from '../../shared/data/contests-data.json';
 
 interface DashboardProps extends HomeDrawerNavProps<'Dashboard'> {
   authData: AuthSchema;
@@ -22,7 +33,15 @@ interface DashboardProps extends HomeDrawerNavProps<'Dashboard'> {
 
 const Dashboard = ({navigation, authData}: DashboardProps) => {
   const styles = useStyleSheet(themedstyles);
-  const [constestsData, setContestsData] = React.useState([] as any);
+  const [
+    upcomingOrganizedContests,
+    setUpcomingOrganizedContests,
+  ] = React.useState([] as any);
+  const [
+    upcomingOrganizedContestsLimit,
+    setUpcomingOrganizedContestsLimit,
+  ] = React.useState(3);
+
   const getItem = (data: any, index: number) => data[index];
 
   React.useEffect(() => {
@@ -30,20 +49,22 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
       .collection('contests')
       .where('isContestFinished', '==', false)
       .where('organizerInformation.userId', '==', authData.userId)
+      .limit(upcomingOrganizedContestsLimit)
       .onSnapshot((documentSnapshot) => {
-        setContestsData(
-          documentSnapshot?.docs.map((obj) => {
-            const data = obj.data();
-            return {
-              id: obj.id,
-              ...data,
-              contestDate: data.contestDate?.toDate(),
-            };
-          }),
-        );
+        console.log(documentSnapshot.size, 'size');
+        const organizedContests = documentSnapshot?.docs.map((obj) => {
+          const data = obj.data();
+          return {
+            id: obj.id,
+            ...data,
+            contestDate: data.contestDate?.toDate(),
+          };
+        });
+        setUpcomingOrganizedContests(organizedContests);
       });
     return () => subscriber();
-  }, [authData]);
+  }, [authData, upcomingOrganizedContestsLimit]);
+  console.log(upcomingOrganizedContests, 'contest');
   return (
     <>
       <DashboardTopNav
@@ -52,8 +73,8 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
         navigation={navigation}
       />
       <TMStatusBar />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Layout style={styles.container} level="3">
+      <Layout style={styles.container} level="3">
+        <ScrollView showsVerticalScrollIndicator={false}>
           <ImageCarousel
             innerContainerStyle={{
               width: SCREEN_WIDTH,
@@ -108,15 +129,28 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
                 />
               </TouchableWithoutFeedback>
             </View>
-            {constestsData?.length ? (
+            {upcomingOrganizedContests?.length ? (
               <VirtualizedList
-                data={constestsData}
+                data={upcomingOrganizedContests}
                 showsHorizontalScrollIndicator={false}
+                onEndReachedThreshold={0.01}
+                onEndReached={() => {
+                  setUpcomingOrganizedContestsLimit(
+                    upcomingOrganizedContestsLimit + 3,
+                  );
+                }}
                 horizontal
-                initialNumToRender={constestsData.length}
+                initialNumToRender={upcomingOrganizedContests.length}
                 getItem={getItem}
                 keyExtractor={(item) => item?.id}
-                getItemCount={() => constestsData.length}
+                // ListFooterComponent={
+                //   isLoadingUpcomingOragnized ? (
+                //     <View style={styles.loadMore}>
+                //       <ActivityIndicator animating size="large" />
+                //     </View>
+                //   ) : null
+                // }
+                getItemCount={() => upcomingOrganizedContests.length}
                 renderItem={({item, index}: {item: any; index: number}) => {
                   return (
                     <CardInList
@@ -138,88 +172,48 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
                   );
                 }}
               />
-            ) : null}
+            ) : (
+              <View style={[GlobalStyles.flexRow, GlobalStyles.ml20]}>
+                {contestsStaticData.slice(0, 3).map((item, index) => (
+                  <SkeletonPlaceholder
+                    key={index}
+                    speed={800}
+                    highlightColor={styles.placeholderHighlight.backgroundColor}
+                    backgroundColor={styles.placeholderBG.backgroundColor}>
+                    <View style={GlobalStyles.mr15}>
+                      <View style={styles.skeletonImage} />
+                      <View
+                        style={[
+                          {
+                            width: widthPercentageToDP(30),
+                          },
+                          styles.skeletonText,
+                        ]}
+                      />
+                      <View
+                        style={[
+                          {
+                            width: widthPercentageToDP(28),
+                          },
+                          styles.skeletonText,
+                        ]}
+                      />
+                      <View
+                        style={[
+                          {
+                            width: widthPercentageToDP(25),
+                          },
+                          styles.skeletonText,
+                        ]}
+                      />
+                    </View>
+                  </SkeletonPlaceholder>
+                ))}
+              </View>
+            )}
           </View>
-          {/* <View style={styles.section1}>
-            <View style={[styles.sectionInner, styles.gutter]}>
-              <Text category="h5">Upcoming Participated Contests</Text>
-              <TouchableWithoutFeedback
-                onPress={() => navigation.navigate('DetailedCards')}>
-                <ArrowForwardIcon
-                  style={GlobalStyles.icon1}
-                  fill={styles.iconColor.backgroundColor}
-                />
-              </TouchableWithoutFeedback>
-            </View>
-            {constestsData.length ? (
-              <VirtualizedList
-                data={constestsData}
-                showsHorizontalScrollIndicator={false}
-                horizontal
-                initialNumToRender={constestsData.length}
-                getItem={getItem}
-                keyExtractor={(item) => item?.organizerInformation.userId}
-                getItemCount={() => constestsData.length}
-                renderItem={({item, index}: {item: any; index: number}) => {
-                  return (
-                    <CardInList
-                      key={item?.organizerInformation.userId}
-                      onPress={() => navigation.navigate('ContestDetails')}
-                      index={index}
-                      title={item?.contestTitle}
-                      entryPrice={item?.entryFee}
-                      organizer={item?.organizerInformation.userName}
-                      participants={{joined: 30, total: 100}}
-                      tags={[
-                        item.platform,
-                        item.map,
-                        item.matchType,
-                        item.server,
-                      ]}
-                      timing={new Date()}
-                    />
-                  );
-                }}
-              />
-            ) : null}
-          </View>
-          <View style={styles.section1}>
-            <View style={[styles.sectionInner, styles.gutter]}>
-              <Text category="h5">Ongoing pubg contests</Text>
-              <TouchableWithoutFeedback
-                onPress={() => navigation.navigate('DetailedCards')}>
-                <ArrowForwardIcon
-                  style={GlobalStyles.icon1}
-                  fill={styles.iconColor.backgroundColor}
-                />
-              </TouchableWithoutFeedback>
-            </View>
-            <VirtualizedList
-              data={tempData}
-              horizontal
-              initialNumToRender={4}
-              getItem={getItem}
-              keyExtractor={(item) => item.organizer}
-              getItemCount={() => 4}
-              renderItem={({item, index}: {item: any; index: number}) => {
-                return (
-                  <CardInList
-                    key={item.organizer}
-                    index={index}
-                    title={item.title}
-                    entryPrice={item.entryPrice}
-                    organizer={item.organizer}
-                    participants={item.participants}
-                    tags={item.tags}
-                    timing={item.timing}
-                    onPress={() => null}
-                  />
-                );
-              }}
-            />
-          </View> */}
-        </Layout>
-      </ScrollView>
+        </ScrollView>
+      </Layout>
     </>
   );
 };
@@ -239,6 +233,25 @@ const themedstyles = StyleService.create({
     backgroundColor: 'text-basic-color',
   },
   flexRow: {flexDirection: 'row'},
+  skeletonImage: {
+    width: 150,
+    height: 100,
+    borderRadius: 25,
+    marginBottom: 10,
+  },
+  skeletonText: {
+    height: 20,
+    borderRadius: 5,
+    marginLeft: 10,
+    marginBottom: 10,
+  },
+  placeholderBG: {
+    backgroundColor: 'background-basic-color-1',
+  },
+  placeholderHighlight: {
+    backgroundColor: 'color-basic-transparent-400',
+  },
+  loadMore: {width: 150, height: 150, justifyContent: 'center'},
 });
 
 const mapStateToProps = (state: any) => {

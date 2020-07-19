@@ -158,7 +158,7 @@ const CardInList = ({
   );
 };
 
-export default CardInList;
+export default React.memo(CardInList);
 
 const themedStyles = StyleService.create({
   container: {width: widthPercentageToDP(35), marginRight: 15},
