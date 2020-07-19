@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useRef, RefObject} from 'react';
 import {connect} from 'react-redux';
 import {
   View,
@@ -33,25 +33,32 @@ interface DashboardProps extends HomeDrawerNavProps<'Dashboard'> {
 
 const Dashboard = ({navigation, authData}: DashboardProps) => {
   const styles = useStyleSheet(themedstyles);
-  const [
-    upcomingOrganizedContests,
-    setUpcomingOrganizedContests,
-  ] = React.useState([] as any);
-  const [
-    upcomingOrganizedContestsLimit,
-    setUpcomingOrganizedContestsLimit,
-  ] = React.useState(3);
+
+  const upcomingOrganizedContestsRef = useRef();
+
+  const [dashboardData, setDashboardData] = useState({
+    upcomingOrganizedContests: [],
+  } as any);
+
+  const [dashboardLoaders, setDashboardLoaders] = useState({
+    upcomingOrganizedContests: false,
+  });
+  const [limiters, setLimiters] = useState({upcomingOrganizedContests: 3});
+
+  const [fullDataUpdated, setFullDataUpdated] = useState({
+    upcomingOrganizedContests: false,
+  });
 
   const getItem = (data: any, index: number) => data[index];
 
   React.useEffect(() => {
+    setDashboardLoaders((s) => ({...s, upcomingOrganizedContests: true}));
     const subscriber = firestore()
       .collection('contests')
       .where('isContestFinished', '==', false)
       .where('organizerInformation.userId', '==', authData.userId)
-      .limit(upcomingOrganizedContestsLimit)
+      .limit(limiters.upcomingOrganizedContests)
       .onSnapshot((documentSnapshot) => {
-        console.log(documentSnapshot.size, 'size');
         const organizedContests = documentSnapshot?.docs.map((obj) => {
           const data = obj.data();
           return {
@@ -60,11 +67,51 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
             contestDate: data.contestDate?.toDate(),
           };
         });
-        setUpcomingOrganizedContests(organizedContests);
+        setDashboardData((s: any) => ({
+          ...s,
+          upcomingOrganizedContests: organizedContests,
+        }));
+        setDashboardLoaders((s) => ({...s, upcomingOrganizedContests: false}));
+        if (organizedContests.length < limiters.upcomingOrganizedContests) {
+          setFullDataUpdated((s) => ({...s, upcomingOrganizedContests: true}));
+        }
       });
     return () => subscriber();
-  }, [authData, upcomingOrganizedContestsLimit]);
-  console.log(upcomingOrganizedContests, 'contest');
+  }, [authData, limiters.upcomingOrganizedContests]);
+  console.log(
+    dashboardData.upcomingOrganizedContests.length,
+    limiters.upcomingOrganizedContests,
+    fullDataUpdated.upcomingOrganizedContests,
+    'data',
+    'limiters',
+  );
+  const onContentSizeChange = (width: number, height: number) => {
+    console.log(width, height, 'on content size change');
+    // if (this.state.enabledAutoScrollToEnd) {
+    //     this.scrollToEnd();
+    // }
+
+    // // User-defined onContentSizeChange event
+    // const {onContentSizeChange} = this.props;
+    // if (onContentSizeChange) {
+    //     onContentSizeChange(width, height);
+    // }
+    scrollToEnd();
+  };
+
+  const scrollToOffset = (params: {offset: number; animated?: boolean}) => {
+    if (upcomingOrganizedContestsRef.current) {
+      upcomingOrganizedContestsRef?.current?.scrollToOffset(params);
+    }
+  };
+
+  const scrollToEnd = (params: {animated: boolean} = {animated: true}) => {
+    scrollToOffset({
+      offset: this.contentHeight - this.flatListHeight,
+      animated: params.animated,
+    });
+  };
+
   return (
     <>
       <DashboardTopNav
@@ -129,28 +176,38 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
                 />
               </TouchableWithoutFeedback>
             </View>
-            {upcomingOrganizedContests?.length ? (
+            {dashboardData?.upcomingOrganizedContests?.length ? (
               <VirtualizedList
-                data={upcomingOrganizedContests}
+                data={dashboardData.upcomingOrganizedContests}
+                ref={upcomingOrganizedContestsRef as any}
                 showsHorizontalScrollIndicator={false}
                 onEndReachedThreshold={0.01}
                 onEndReached={() => {
-                  setUpcomingOrganizedContestsLimit(
-                    upcomingOrganizedContestsLimit + 3,
-                  );
+                  if (!fullDataUpdated.upcomingOrganizedContests) {
+                    setLimiters((s) => ({
+                      ...s,
+                      upcomingOrganizedContests:
+                        s.upcomingOrganizedContests + 3,
+                    }));
+                  }
                 }}
                 horizontal
-                initialNumToRender={upcomingOrganizedContests.length}
+                initialNumToRender={
+                  dashboardData.upcomingOrganizedContests.length
+                }
                 getItem={getItem}
                 keyExtractor={(item) => item?.id}
-                // ListFooterComponent={
-                //   isLoadingUpcomingOragnized ? (
-                //     <View style={styles.loadMore}>
-                //       <ActivityIndicator animating size="large" />
-                //     </View>
-                //   ) : null
-                // }
-                getItemCount={() => upcomingOrganizedContests.length}
+                ListFooterComponent={
+                  dashboardLoaders.upcomingOrganizedContests ? (
+                    <View style={styles.loadMore}>
+                      <ActivityIndicator animating size="large" />
+                    </View>
+                  ) : null
+                }
+                getItemCount={() =>
+                  dashboardData.upcomingOrganizedContests.length
+                }
+                // onContentSizeChange={onContentSizeChange}
                 renderItem={({item, index}: {item: any; index: number}) => {
                   return (
                     <CardInList
