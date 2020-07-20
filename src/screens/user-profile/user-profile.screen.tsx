@@ -134,7 +134,7 @@ const UserProfile = ({navigation}: Props) => {
                   organizer={item.organizer}
                   participants={item.participants}
                   tags={item.tags}
-                  timing={item.timing}
+                  timing={{contestDate: new Date()}}
                 />
               );
             }}
@@ -161,7 +161,7 @@ const UserProfile = ({navigation}: Props) => {
                   organizer={item.organizer}
                   participants={item.participants}
                   tags={item.tags}
-                  timing={item.timing}
+                  timing={{contestDate: new Date()}}
                 />
               );
             }}

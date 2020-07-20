@@ -106,14 +106,10 @@ const CardInList = ({
               <Text
                 category="label"
                 style={[gStyles.ml12, !detailedCard && gStyles.mb5]}>
-                {`Starts in ${formatDistanceToNow(
-                  new Date(),
-                  timing.contestDate,
-                  {
-                    includeSeconds: true,
-                    addSuffix: true,
-                  },
-                )}`}
+                {`Starts ${formatDistanceToNow(new Date(), timing.contestDate, {
+                  includeSeconds: true,
+                  addSuffix: true,
+                })}`}
               </Text>
             </View>
             <View style={gStyles.flexRow}>

@@ -2,6 +2,8 @@ import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+import {ContestFieldTypes} from '../shared/types/contest.types';
+
 export type AuthParamList = {
   IntroScreenOne: undefined;
   WelcomeScreen: undefined;
@@ -21,7 +23,7 @@ export type HomeDrawerParamList = {
   Account: undefined;
   Notifications: undefined;
   DetailedCards: undefined;
-  ContestDetails: undefined;
+  ContestDetails: {contestDetails: ContestFieldTypes} | undefined;
   PrizeLeaderboard: undefined;
   UserProfile: undefined;
   Dashboard: undefined;

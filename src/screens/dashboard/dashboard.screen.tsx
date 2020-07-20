@@ -1,4 +1,4 @@
-import React, {useState, useRef, RefObject} from 'react';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {
   View,
@@ -26,6 +26,7 @@ import {IconList} from '../../components/game-cards/icon-list.component';
 import TMStatusBar from '../../components/status-bar.component';
 import {HomeDrawerNavProps} from '../../navigation/navigation.types';
 import contestsStaticData from '../../shared/data/contests-data.json';
+import {ContestFieldTypes} from '../../shared/types/contest.types';
 
 interface DashboardProps extends HomeDrawerNavProps<'Dashboard'> {
   authData: AuthSchema;
@@ -34,11 +35,11 @@ interface DashboardProps extends HomeDrawerNavProps<'Dashboard'> {
 const Dashboard = ({navigation, authData}: DashboardProps) => {
   const styles = useStyleSheet(themedstyles);
 
-  const upcomingOrganizedContestsRef = useRef();
-
-  const [dashboardData, setDashboardData] = useState({
+  const [dashboardData, setDashboardData] = useState<{
+    upcomingOrganizedContests: Array<ContestFieldTypes>;
+  }>({
     upcomingOrganizedContests: [],
-  } as any);
+  });
 
   const [dashboardLoaders, setDashboardLoaders] = useState({
     upcomingOrganizedContests: false,
@@ -78,39 +79,6 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
       });
     return () => subscriber();
   }, [authData, limiters.upcomingOrganizedContests]);
-  console.log(
-    dashboardData.upcomingOrganizedContests.length,
-    limiters.upcomingOrganizedContests,
-    fullDataUpdated.upcomingOrganizedContests,
-    'data',
-    'limiters',
-  );
-  const onContentSizeChange = (width: number, height: number) => {
-    console.log(width, height, 'on content size change');
-    // if (this.state.enabledAutoScrollToEnd) {
-    //     this.scrollToEnd();
-    // }
-
-    // // User-defined onContentSizeChange event
-    // const {onContentSizeChange} = this.props;
-    // if (onContentSizeChange) {
-    //     onContentSizeChange(width, height);
-    // }
-    scrollToEnd();
-  };
-
-  const scrollToOffset = (params: {offset: number; animated?: boolean}) => {
-    if (upcomingOrganizedContestsRef.current) {
-      upcomingOrganizedContestsRef?.current?.scrollToOffset(params);
-    }
-  };
-
-  const scrollToEnd = (params: {animated: boolean} = {animated: true}) => {
-    scrollToOffset({
-      offset: this.contentHeight - this.flatListHeight,
-      animated: params.animated,
-    });
-  };
 
   return (
     <>
@@ -179,7 +147,6 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
             {dashboardData?.upcomingOrganizedContests?.length ? (
               <VirtualizedList
                 data={dashboardData.upcomingOrganizedContests}
-                ref={upcomingOrganizedContestsRef as any}
                 showsHorizontalScrollIndicator={false}
                 onEndReachedThreshold={0.01}
                 onEndReached={() => {
@@ -196,7 +163,7 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
                   dashboardData.upcomingOrganizedContests.length
                 }
                 getItem={getItem}
-                keyExtractor={(item) => item?.id}
+                keyExtractor={(item) => item?.id || ''}
                 ListFooterComponent={
                   dashboardLoaders.upcomingOrganizedContests ? (
                     <View style={styles.loadMore}>
@@ -207,16 +174,25 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
                 getItemCount={() =>
                   dashboardData.upcomingOrganizedContests.length
                 }
-                // onContentSizeChange={onContentSizeChange}
-                renderItem={({item, index}: {item: any; index: number}) => {
+                renderItem={({
+                  item,
+                  index,
+                }: {
+                  item: ContestFieldTypes;
+                  index: number;
+                }) => {
                   return (
                     <CardInList
                       key={item?.id}
-                      onPress={() => navigation.navigate('ContestDetails')}
+                      onPress={() =>
+                        navigation.navigate('ContestDetails', {
+                          contestDetails: item,
+                        })
+                      }
                       index={index}
                       title={item?.contestTitle}
                       entryPrice={item?.entryFee}
-                      organizer={item?.organizerInformation.userName}
+                      organizer={item?.organizerInformation?.userName || ''}
                       participants={{joined: 30, total: 100}}
                       tags={[
                         'platform',
@@ -224,6 +200,7 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
                         'matchType',
                         'server',
                       ].map((tag) => ({label: item[tag], type: tag}))}
+                      // FIX ME : Fix above typing errror
                       timing={{contestDate: item.contestDate}}
                     />
                   );

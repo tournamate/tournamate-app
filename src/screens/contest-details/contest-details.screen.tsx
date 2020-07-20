@@ -10,6 +10,8 @@ import {
 } from '@ui-kitten/components';
 import {View, Image, TouchableOpacity, ScrollView} from 'react-native';
 import Collapsible from 'react-native-collapsible';
+import formatDistanceToNow from 'date-fns/formatDistance';
+import {connect} from 'react-redux';
 
 import {CommonTopNav} from '../../components/top-navigations/common-top.component';
 import {GlobalStyles} from '../../constants/global-styles';
@@ -28,14 +30,20 @@ import {KeyboardAvoidingView} from '../../components/kb-avoiding-view.component'
 import UserPreview from '../../components/user-preview.component';
 import {setToClipboard} from '../../shared/methods/clipboard';
 import {HomeDrawerNavProps} from '../../navigation/navigation.types';
+import {AuthSchema} from '../../models/user.models';
 
-const ContestDetails = ({navigation}: HomeDrawerNavProps<'ContestDetails'>) => {
+interface ContestDetailProps extends HomeDrawerNavProps<'ContestDetails'> {
+  authData: AuthSchema;
+}
+
+const ContestDetails = ({navigation, route, authData}: ContestDetailProps) => {
   const [isShowMoreNotes, setIsShowMoreNotes] = useState(false);
   const [isShowMoreRules, setIsShowMoreRules] = useState(false);
   const styles = useStyleSheet(themedStyles);
   const tempStr =
     'Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.';
-
+  console.log(route.params?.contestDetails, 'details');
+  const contestDetails = route.params?.contestDetails;
   return (
     <>
       <CommonTopNav
@@ -43,7 +51,7 @@ const ContestDetails = ({navigation}: HomeDrawerNavProps<'ContestDetails'>) => {
         onPress={() => navigation.goBack()}
       />
       <KeyboardAvoidingView>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Layout style={[GlobalStyles.flex1, GlobalStyles.cGutter]}>
             <View style={[GlobalStyles.flexRowWrap2, GlobalStyles.mb15]}>
               <Image
@@ -54,25 +62,34 @@ const ContestDetails = ({navigation}: HomeDrawerNavProps<'ContestDetails'>) => {
                 style={styles.gameImage as any}
               />
               <View style={GlobalStyles.mb15}>
-                <Text category="h5">Contest Details</Text>
+                <Text category="h5">{contestDetails?.contestTitle}</Text>
                 <Text category="p2" status="success" style={GlobalStyles.mb10}>
-                  Ashok
+                  {contestDetails?.organizerInformation?.userName}
                 </Text>
                 <View style={[GlobalStyles.flexRow, GlobalStyles.mb10]}>
                   <ClockLineIcon
                     style={styles.icon}
                     fill={styles.iconColor.backgroundColor}
                   />
-                  <Text category="label">Today 12PM</Text>
+                  <Text category="label">
+                    {`Starts ${formatDistanceToNow(
+                      new Date(),
+                      contestDetails?.contestDate || new Date(),
+                      {
+                        includeSeconds: true,
+                        addSuffix: true,
+                      },
+                    )}`}
+                  </Text>
                 </View>
                 <View style={styles.tagWrap}>
-                  {['Pubg', 'Solo', 'Vekandi'].map((tag) => (
+                  {['platform', 'map', 'matchType', 'server'].map((tag) => (
                     <Button
                       size="tiny"
                       style={styles.tagBtn}
                       appearance="outline"
                       status="warning">
-                      {tag}
+                      {contestDetails[tag]}
                     </Button>
                   ))}
                 </View>
@@ -80,7 +97,7 @@ const ContestDetails = ({navigation}: HomeDrawerNavProps<'ContestDetails'>) => {
             </View>
             <View style={[GlobalStyles.flexRowWrap1, GlobalStyles.mb30]}>
               <View style={styles.textShow}>
-                <Text> ₹49</Text>
+                <Text category="h6">{`₹${contestDetails?.entryFee}`}</Text>
                 <Text>per entry</Text>
               </View>
               <View style={styles.borderRight} />
@@ -97,30 +114,34 @@ const ContestDetails = ({navigation}: HomeDrawerNavProps<'ContestDetails'>) => {
               </View>
               <View style={styles.borderRight} />
               <View style={styles.textShow}>
-                <Text> 45</Text>
+                <Text category="h6"> 45</Text>
                 <Text style={GlobalStyles.tAlignCenter}>
                   Players joined out of 100
                 </Text>
               </View>
             </View>
             <View style={GlobalStyles.mb15}>
-              <Button size="medium" status="success">
-                Register & Participate
-              </Button>
-              {/* <View style={GlobalStyles.flexRowWrap1}>
-            <Button
-              size="medium"
-              status="danger"
-              style={{width: widthPercentageToDP(45)}}>
-              Cancel
-            </Button>
-            <Button
-              size="medium"
-              status="success"
-              style={{width: widthPercentageToDP(45)}}>
-              Done
-            </Button>
-          </View> */}
+              {authData.userId ===
+              contestDetails?.organizerInformation.userId ? (
+                <View style={GlobalStyles.flexRowWrap1}>
+                  <Button
+                    size="medium"
+                    status="danger"
+                    style={{width: widthPercentageToDP(45)}}>
+                    Cancel
+                  </Button>
+                  <Button
+                    size="medium"
+                    status="success"
+                    style={{width: widthPercentageToDP(45)}}>
+                    Done
+                  </Button>
+                </View>
+              ) : (
+                <Button size="medium" status="success">
+                  Register & Participate
+                </Button>
+              )}
             </View>
             <View style={[GlobalStyles.mb15, GlobalStyles.flexRowWrap2]}>
               <View
@@ -130,10 +151,10 @@ const ContestDetails = ({navigation}: HomeDrawerNavProps<'ContestDetails'>) => {
                 </Text>
                 <View style={GlobalStyles.flexRowWrap1}>
                   {[
-                    {title: 'Game', subTitle: 'Pubg'},
-                    {title: 'Game map', subTitle: 'All weapons'},
-                    {title: 'Team', subTitle: 'Solo'},
-                    {title: 'Server', subTitle: 'Asia'},
+                    {title: 'Game', subTitle: contestDetails?.platform},
+                    {title: 'Game map', subTitle: contestDetails?.map},
+                    {title: 'Game type', subTitle: contestDetails?.matchType},
+                    {title: 'Server', subTitle: contestDetails?.server},
                   ].map((obj) => (
                     <View
                       style={[
@@ -155,27 +176,36 @@ const ContestDetails = ({navigation}: HomeDrawerNavProps<'ContestDetails'>) => {
                   style={[GlobalStyles.mb10, GlobalStyles.fontBold]}>
                   Room Details
                 </Text>
-                <View>
-                  {[
-                    {title: 'Room ID', subTitle: '234234234'},
-                    {title: 'Password', subTitle: '34534545'},
-                  ].map((obj) => (
-                    <View style={[GlobalStyles.mr10, GlobalStyles.mb10]}>
-                      <Text category="label">{obj.title}</Text>
-                      <View style={GlobalStyles.flexRowWrap4}>
-                        <Text category="p1" status="basic">
-                          {obj.subTitle}
-                        </Text>
-                        <Button
-                          accessoryRight={CopyLineIcon}
-                          onPress={() => setToClipboard(obj.subTitle)}
-                          appearance="ghost"
-                          size="tiny"
-                        />
+                {contestDetails.roomId && contestDetails.roomPassword ? (
+                  <View>
+                    {[
+                      {title: 'Room ID', subTitle: '234234234'},
+                      {title: 'Password', subTitle: '34534545'},
+                    ].map((obj) => (
+                      <View style={[GlobalStyles.mr10, GlobalStyles.mb10]}>
+                        <Text category="label">{obj.title}</Text>
+                        <View style={GlobalStyles.flexRowWrap4}>
+                          <Text category="p1" status="basic">
+                            {obj.subTitle}
+                          </Text>
+                          <Button
+                            accessoryRight={CopyLineIcon}
+                            onPress={() => setToClipboard(obj.subTitle)}
+                            appearance="ghost"
+                            size="tiny"
+                          />
+                        </View>
                       </View>
-                    </View>
-                  ))}
-                </View>
+                    ))}
+                  </View>
+                ) : (
+                  <View style={{width: widthPercentageToDP(40)}}>
+                    <Text>
+                      We'll notify you when the ID and Password shared by
+                      organizer
+                    </Text>
+                  </View>
+                )}
               </View>
             </View>
             <View style={GlobalStyles.mb15}>
@@ -237,12 +267,16 @@ const ContestDetails = ({navigation}: HomeDrawerNavProps<'ContestDetails'>) => {
               <Text category="h6" style={[GlobalStyles.mb10]}>
                 About organizer
               </Text>
-              <UserPreview />
+              <UserPreview
+                userName={contestDetails?.organizerInformation.userName}
+                profileName={authData.fullName}
+                // profileUrl={contestDetails?.organizerInformation}
+              />
             </TouchableOpacity>
 
             <View style={GlobalStyles.mb30} />
           </Layout>
-          <Layout
+          {/* <Layout
             level="4"
             style={[
               {height: heightPercentageToDP(89.9)},
@@ -253,7 +287,7 @@ const ContestDetails = ({navigation}: HomeDrawerNavProps<'ContestDetails'>) => {
               Comments
             </Text>
             <Input accessoryRight={DoneAllIcon} />
-          </Layout>
+          </Layout> */}
         </ScrollView>
       </KeyboardAvoidingView>
     </>
@@ -314,4 +348,16 @@ const themedStyles = StyleService.create({
   },
 });
 
-export default ContestDetails;
+const mapStateToProps = (state: any) => {
+  return {
+    authData: state.auth,
+  };
+};
+
+const mapDispatchToProps = {
+  //   signupUserState: signupUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContestDetails);
+
+// export default ContestDetails;

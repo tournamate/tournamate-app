@@ -6,7 +6,15 @@ import {ArrowForwardIcon} from './icons.component';
 import {RateBar} from './rate-bar.component';
 import {widthPercentageToDP} from '../shared/methods/normalize';
 
-const UserPreview = () => {
+const UserPreview = ({
+  profileUrl,
+  profileName,
+  userName,
+}: {
+  profileUrl: string;
+  profileName: string;
+  userName: string;
+}) => {
   const styles = useStyleSheet(themedStyles);
 
   return (
@@ -16,14 +24,15 @@ const UserPreview = () => {
           <Image
             source={{
               uri:
+                profileUrl ||
                 'https://2.bp.blogspot.com/-OVduoXsA4qM/XJRu-xgsy0I/AAAAAAAAm6k/oBSVkinse_o1KESQpzCC0UyoEBCkYEvtgCLcBGAs/s1600/PUBG-HD-Wallpapers-1.jpg',
             }}
             style={styles.profileImage as any}
           />
           <View style={GlobalStyles.mb15}>
-            <Text category="h5">Karthikeyan</Text>
+            <Text category="h5">{profileName.substr(0, 25)}</Text>
             <Text category="p2" status="basic">
-              user1235
+              {userName}
             </Text>
             <RateBar
               value={4}

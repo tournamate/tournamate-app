@@ -1,11 +1,11 @@
 import firestore from '@react-native-firebase/firestore';
 import firebase from '@react-native-firebase/app';
-import {CreateContestsProps} from '../shared/types/contest.types';
+import {ContestFieldTypes} from '../shared/types/contest.types';
 
 class Contests {
   static collectionNameContests = 'contests';
 
-  static async createContests(payload: CreateContestsProps) {
+  static async createContests(payload: ContestFieldTypes) {
     const changePayload = {
       ...payload,
       createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
