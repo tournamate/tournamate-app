@@ -20,12 +20,14 @@ export const GlobalStyles = StyleSheet.create({
   ml12: {marginLeft: 12},
   ml20: {marginLeft: 20},
   mt30: {marginTop: 30},
+  mt20: {marginTop: 20},
   p10: {padding: 10},
   mb15: {
     marginBottom: 15,
   },
   mr10: {marginRight: 10},
   mh10: {marginHorizontal: 10},
+  mh20: {marginHorizontal: 20},
   m10: {margin: 10},
   w100: {width: '100%'},
   flexRowWrap1: {
@@ -54,6 +56,7 @@ export const GlobalStyles = StyleSheet.create({
   flexWrap: {flexWrap: 'wrap'},
   aiCenter: {alignItems: 'center'},
   tAlignCenter: {textAlign: 'center'},
+  tAlignRight: {textAlign: 'right'},
   pv10: {paddingVertical: 10},
   icon: {
     width: 15,
@@ -62,5 +65,8 @@ export const GlobalStyles = StyleSheet.create({
   },
   br4: {
     borderRadius: 4,
+  },
+  br20: {
+    borderRadius: 20,
   },
 });

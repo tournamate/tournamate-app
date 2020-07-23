@@ -28,6 +28,7 @@ export type HomeDrawerParamList = {
   UserProfile: undefined;
   Dashboard: undefined;
   EditProfile: undefined;
+  MoneyTransactions: undefined;
 };
 
 export type AuthNavProps<T extends keyof AuthParamList> = {

@@ -114,3 +114,12 @@ export const AwardLineIcon = (style: any): IconElement => (
 export const CameraIcon = (style: any): IconElement => (
   <Icon {...style} name="camera" />
 );
+export const CornerLeftDownIcon = (style: any): IconElement => (
+  <Icon {...style} name="corner-left-down" />
+);
+export const CornerRightUpIcon = (style: any): IconElement => (
+  <Icon {...style} name="corner-right-up" />
+);
+export const PaperPlaneIcon = (style: any): IconElement => (
+  <Icon {...style} name="paper-plane" />
+);

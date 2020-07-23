@@ -18,6 +18,7 @@ import PrizeLeaderBoard from '../screens/prize-leaderboard/prize-leaderboard.scr
 import UserProfile from '../screens/user-profile/user-profile.screen';
 import {HomeTabsParamList, HomeDrawerParamList} from './navigation.types';
 import EditProfile from '../screens/edit-profile/edit-profile.screen';
+import MoneyTransactions from '../screens/money-transactions/money-transactions.screen';
 
 const BottomTab = createBottomTabNavigator<HomeTabsParamList>();
 const Drawer = createDrawerNavigator<HomeDrawerParamList>();
@@ -65,5 +66,6 @@ export const HomeNavigator = (): React.ReactElement => (
 
     <Drawer.Screen name={'UserProfile'} component={UserProfile} />
     <Drawer.Screen name={'EditProfile'} component={EditProfile} />
+    <Drawer.Screen name={'MoneyTransactions'} component={MoneyTransactions} />
   </Drawer.Navigator>
 );

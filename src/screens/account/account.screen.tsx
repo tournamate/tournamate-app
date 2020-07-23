@@ -55,6 +55,7 @@ const Account = ({authData, navigation}: Props) => {
       description: 'Check all the transactions',
       id: 'transactions',
       icon: SwapIcon,
+      onPress: () => navigation.navigate('MoneyTransactions'),
     },
     {
       title: 'Add money',
