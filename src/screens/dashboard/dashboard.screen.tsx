@@ -9,6 +9,7 @@ import {
 import {Layout, Text, StyleService, useStyleSheet} from '@ui-kitten/components';
 import firestore from '@react-native-firebase/firestore';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import compareAsc from 'date-fns/compareAsc';
 
 import {DashboardTopNav} from '../../components/top-navigations/dashboard-top.component';
 import {AuthSchema} from '../../models/user.models';
@@ -60,7 +61,7 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
       .where('organizerInformation.userId', '==', authData.userId)
       .limit(limiters.upcomingOrganizedContests)
       .onSnapshot((documentSnapshot) => {
-        const organizedContests = documentSnapshot?.docs.map((obj) => {
+        let organizedContests = documentSnapshot?.docs.map((obj) => {
           const data = obj.data();
           return {
             id: obj.id,
@@ -68,18 +69,20 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
             contestDate: data.contestDate?.toDate(),
           };
         });
-        setDashboardData((s: any) => ({
-          ...s,
-          upcomingOrganizedContests: organizedContests,
-        }));
         setDashboardLoaders((s) => ({...s, upcomingOrganizedContests: false}));
         if (organizedContests.length < limiters.upcomingOrganizedContests) {
           setFullDataUpdated((s) => ({...s, upcomingOrganizedContests: true}));
         }
+        organizedContests = organizedContests.sort((a, b) =>
+          compareAsc(b.contestDate, a.contestDate),
+        );
+        setDashboardData((s: any) => ({
+          ...s,
+          upcomingOrganizedContests: organizedContests,
+        }));
       });
     return () => subscriber();
   }, [authData, limiters.upcomingOrganizedContests]);
-
   return (
     <>
       <DashboardTopNav
