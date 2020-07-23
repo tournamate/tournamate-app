@@ -106,7 +106,7 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
               {
                 icon: 'person-outline',
                 text: 'Update profile',
-                onPress: () => null,
+                onPress: () => navigation.navigate('EditProfile'),
               },
               {
                 icon: 'pricetags-outline',
@@ -165,7 +165,7 @@ const Dashboard = ({navigation, authData}: DashboardProps) => {
                 getItem={getItem}
                 keyExtractor={(item) => item?.id || ''}
                 ListFooterComponent={
-                  dashboardLoaders.upcomingOrganizedContests ? (
+                  !fullDataUpdated.upcomingOrganizedContests ? (
                     <View style={styles.loadMore}>
                       <ActivityIndicator animating size="large" />
                     </View>

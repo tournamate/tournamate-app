@@ -5851,6 +5851,11 @@ react-native-modal-datetime-picker@^8.7.1:
   dependencies:
     prop-types "^15.7.2"
 
+react-native-razorpay@^2.1.36:
+  version "2.1.36"
+  resolved "https://registry.yarnpkg.com/react-native-razorpay/-/react-native-razorpay-2.1.36.tgz#757a9bbd486a70cf82a591723acf321542a171fa"
+  integrity sha512-SjT59n9eUf0iyp5cN4Pxsnym12EBdT9HlHS8Ghg1iJeMnPSfe05gxJZq9/XdeI/ZPp/kLWcYhwswxEphx0vrKQ==
+
 react-native-reanimated@^1.9.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.9.0.tgz#38676c99dd585504fdc7331efb45e5f48ec7339a"
