@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, ScrollView} from 'react-native';
+import {View, ScrollView, TouchableOpacity} from 'react-native';
 import {
   Button,
   Input,
@@ -15,6 +15,7 @@ import {connect} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import firebase from '@react-native-firebase/app';
+import LinearGradient from 'react-native-linear-gradient';
 
 import {
   PersonLineIcon,
@@ -149,13 +150,20 @@ const EditProfile = ({navigation, authData, signupUserProp}: Props) => {
             <TMStatusBar translucent backgroundColor="transparent" />
           )}
           {isLoading ? <ScreenLoader loading={isLoading} /> : null}
-          <View style={[styles.headerContainer, {paddingTop: insets.top}]}>
-            <Button
-              accessoryLeft={ArrowBackIcon}
-              size="large"
-              style={[styles.backIcon, {top: insets.top}]}
-              onPress={() => navigation.goBack()}
-            />
+          <LinearGradient
+            colors={[
+              styles.headerContainer.backgroundColor as any,
+              styles.listItemContainer.backgroundColor,
+            ]}
+            style={[styles.headerContainer, {paddingTop: insets.top}]}>
+            <TouchableOpacity
+              style={[styles.backIcon, {top: insets.top, padding: 20}]}
+              onPress={() => navigation.goBack()}>
+              <ArrowBackIcon
+                style={styles.listIcon}
+                fill={styles.listIconColor.backgroundColor}
+              />
+            </TouchableOpacity>
             <ProfileAvatar
               source={{
                 uri: authData.photo,
@@ -163,7 +171,7 @@ const EditProfile = ({navigation, authData, signupUserProp}: Props) => {
               style={styles.profileStyle}
               editButton={renderPhotoButton}
             />
-          </View>
+          </LinearGradient>
           <Formik
             initialValues={{
               email: authData.email,
@@ -175,7 +183,7 @@ const EditProfile = ({navigation, authData, signupUserProp}: Props) => {
               freeFireUsername: '',
             }}
             validationSchema={SignupSchema}
-            onSubmit={async (values, actions) => {
+            onSubmit={async (values) => {
               setIsLoading(true);
 
               const payload = {
@@ -188,7 +196,6 @@ const EditProfile = ({navigation, authData, signupUserProp}: Props) => {
                 createdAt: response?.data?.createdAt?.toDate()?.getTime(),
                 dob: response?.data?.dob?.toDate()?.getTime(),
               };
-              console.log(userData, 'data');
               signupUserProp(userData);
               setIsLoading(false);
             }}>
@@ -254,6 +261,10 @@ const themedStyles = StyleService.create({
   container: {
     flex: 1,
   },
+  listItemContainer: {
+    paddingHorizontal: 15,
+    backgroundColor: 'background-basic-color-1',
+  },
   headerContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -296,6 +307,8 @@ const themedStyles = StyleService.create({
     // width: widthPercentageToDP(90),
   },
   backIcon: {position: 'absolute', left: 0},
+  listIcon: {width: 30, height: 30, marginRight: 20},
+  listIconColor: {backgroundColor: 'text-basic-color'},
 });
 
 const mapStateToProps = (state) => {

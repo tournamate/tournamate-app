@@ -6,17 +6,18 @@ import {
   StyleService,
   useStyleSheet,
   Text,
-  Icon,
   List,
 } from '@ui-kitten/components';
 import {connect} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import LinearGradient from 'react-native-linear-gradient';
 
 import {
   CornerLeftDownIcon,
   CornerRightUpIcon,
   PaperPlaneIcon,
+  ArrowBackIcon,
 } from '../../components/icons.component';
 
 import TMStatusBar from '../../components/status-bar.component';
@@ -41,7 +42,6 @@ const MoneyTransactions = ({navigation, authData}: Props) => {
 
   const styles = useStyleSheet(themedStyles);
 
-  const BackAccessory = (s) => <Icon {...s} name="arrow-back" />;
   const isScreenFocused = useIsFocused();
   const insets = useSafeAreaInsets();
   const navigationTiles = [
@@ -70,6 +70,7 @@ const MoneyTransactions = ({navigation, authData}: Props) => {
         GlobalStyles.flexRowWrap1,
         GlobalStyles.aiCenter,
         GlobalStyles.pv10,
+        styles.itemBorder,
       ]}>
       <View style={[GlobalStyles.flexRow, GlobalStyles.aiCenter]}>
         <PaperPlaneIcon
@@ -102,23 +103,27 @@ const MoneyTransactions = ({navigation, authData}: Props) => {
         <TMStatusBar translucent backgroundColor="transparent" />
       )}
       {isLoading ? <ScreenLoader loading={isLoading} /> : null}
-      <View style={[styles.headerContainer, {paddingTop: insets.top}]}>
-        <Button
-          accessoryLeft={BackAccessory}
-          size="giant"
-          style={[styles.backIcon, {top: insets.top}]}
-          onPress={() => navigation.goBack()}
-        />
+      <LinearGradient
+        colors={[
+          styles.headerContainer.backgroundColor as any,
+          styles.listItemContainer.backgroundColor,
+        ]}
+        style={[styles.headerContainer, {paddingTop: insets.top}]}>
+        <TouchableOpacity
+          style={[styles.backIcon, {top: insets.top, padding: 20}]}
+          onPress={() => navigation.goBack()}>
+          <ArrowBackIcon
+            style={styles.listIcon}
+            fill={styles.listIconColor.backgroundColor}
+          />
+        </TouchableOpacity>
         <View>
           <Text
             category="h1"
-            status="control"
             style={[GlobalStyles.mb20, GlobalStyles.tAlignCenter]}>
             ₹{numberWithCommas(1000)}
             {'\n'}
-            <Text category="label" status="control">
-              (Available Balance)
-            </Text>
+            <Text category="label">(Available Balance)</Text>
           </Text>
         </View>
         <View style={GlobalStyles.flexRowWrap1}>
@@ -131,7 +136,7 @@ const MoneyTransactions = ({navigation, authData}: Props) => {
             </TouchableOpacity>
           ))}
         </View>
-      </View>
+      </LinearGradient>
       <Layout style={[GlobalStyles.flex1, styles.bodyContainer]}>
         <View
           style={[
@@ -210,9 +215,10 @@ const themedStyles = StyleService.create({
     marginTop: -15,
   },
   tileIcon: {width: 40, height: 40},
-  listIcon: {width: 20, height: 20, marginRight: 20},
+  listIcon: {width: 30, height: 30, marginRight: 20},
   listIconColor: {backgroundColor: 'text-basic-color'},
   backIcon: {position: 'absolute', left: 0},
+  itemBorder: {borderBottomColor: '#888888', borderBottomWidth: 0.5},
 });
 
 const mapStateToProps = (state) => {
